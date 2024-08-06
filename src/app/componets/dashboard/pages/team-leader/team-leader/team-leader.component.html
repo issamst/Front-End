@@ -1,0 +1,869 @@
+<div class="card flex justify-content-center">
+
+<p-card >
+  <div style="text-align: center; font-family:'Avenir, sans-serif';  font-size: 45px; font-weight: bold;"> 
+    <strong>Team Leader</strong>
+</div>
+    <div class="card-body">
+            <p-table
+                #dt1
+                [value]="Ideas"
+                [paginator]="true"
+                [rows]="30"
+                dataKey="id"
+                [loading]="loading"
+                responsiveLayout="stack" 
+                styleClass="p-datatable-striped" 
+                [scrollable]="true" 
+                scrollHeight="450px"
+                [resizableColumns]="true"
+                [first]="first"
+                [showCurrentPageReport]="true"
+                [tableStyle]="{ 'min-width': '60rem' }"
+                currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+                (onPage)="pageChange($event)"
+                [rowsPerPageOptions]="[30, 50, 100, 200]"
+                [globalFilterFields]="['speciality', 'teid.fullName']">
+                <ng-template pTemplate="caption">
+                <div class="flex">
+                    <p-button label="Clear" [outlined]="true" icon="fa fa-filter" (click)="clear(dt1)" />
+                    <span class="p-input-icon-left ml-auto">
+                    <i class="fa fa-search"></i>
+                    <input pInputText type="text" placeholder="Search" [(ngModel)]="searchText" (ngModelChange)="globalSearch()" />
+                    </span> 
+                  </div>
+                </ng-template>	
+
+
+                <ng-template pTemplate="header" let-columns>
+                    <tr>
+                        <th style="width:9%" *ngIf="showColumns.Responsible">
+                            <div pSortableColumn="title" class="flex align-items-center">
+                                <p-columnFilter type="text" field="title" display="menu"></p-columnFilter>
+                                Responsible 
+                                  <p-sortIcon field="title" />
+                            </div>
+                        </th>
+                        <th style="width:9%" *ngIf="showColumns.title">
+                          <div pSortableColumn="title" class="flex align-items-center">
+                              <p-columnFilter type="text" field="title" display="menu"></p-columnFilter>
+                              Title 
+                                <p-sortIcon field="title" />
+                          </div>
+                      </th>
+                        <th pSortableColumn="description" style="width:9%" *ngIf="showColumns.description">							
+                            <div class="flex align-items-center">
+                                <p-columnFilter type="text" field="description" display="menu"></p-columnFilter>
+                                Description
+                                <p-sortIcon field="description" />
+                            </div>
+                        </th>
+
+                        <th pSortableColumn="name_Area" style="width:9%" *ngIf="showColumns.name_Area">							
+                          <div class="flex align-items-center">
+                              <p-columnFilter type="text" field="name_Area" display="menu"></p-columnFilter>
+                              Area
+                              <p-sortIcon field="name_Area" />
+                          </div>
+                        </th>
+                        <th pSortableColumn="project_Name" style="width:9%" *ngIf="showColumns.project_Name">							
+                          <div class="flex align-items-center">
+                              <p-columnFilter type="text" field="project_Name" display="menu"></p-columnFilter>
+                              Project
+                              <p-sortIcon field="project_Name" />
+                          </div>
+                        </th>
+                        <th pSortableColumn="name_Machine" style="width:9%" *ngIf="showColumns.name_Machine">							
+                          <div class="flex align-items-center">
+                              <p-columnFilter type="text" field="name_Machine" display="menu"></p-columnFilter>
+                              Machine
+                              <p-sortIcon field="name_Machine" />
+                          </div>
+                        </th>
+                        <th pSortableColumn="name_Machine" style="width:9%" *ngIf="showColumns.Team_Leader_Approved">							
+                          <div class="flex align-items-center">
+                              <p-columnFilter type="text" field="name_Machine" display="menu"></p-columnFilter>
+                              Team Leader Approval
+                              <p-sortIcon field="name_Machine" />
+                          </div>
+                        </th>
+                        <th pSortableColumn="name_Machine" style="width:9%" *ngIf="showColumns.Team_Leader_Rejected">							
+                          <div class="flex align-items-center">
+                              <p-columnFilter type="text" field="name_Machine" display="menu"></p-columnFilter>
+                              Team Leader Rejected
+                              <p-sortIcon field="name_Machine" />
+                          </div>
+                        </th>
+                        <th pSortableColumn="date_Create" style="width:9%" *ngIf="showColumns.date_Create">
+                            Create Date
+                            <p-sortIcon field="date_Create" />
+                        </th>
+                        <th pSortableColumn="date_Update" style="width:9%" *ngIf="showColumns.date_Update">
+                            Update Date
+                            <p-sortIcon field="date_Update" />
+                        </th>
+                        <th pSortableColumn="date_delete" style="width:9%" *ngIf="showColumns.date_Disabled">
+                            Delete Date
+                            <p-sortIcon field="date_delete" />
+                        </th>
+                        <th style="width:9%">Action</th>
+                        <th style="width:9%"> Approval</th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-idea >
+                    <tr [ngClass]="{'deactivated-row': idea.commenterDisabled}">
+                      <td *ngIf="showColumns.Responsible">
+                        <span class="ml-1 vertical-align-middle">{{ idea.teid.fullName+ '(' +  idea.teid.teid+ ')'}}</span>
+                      </td>
+                      <td *ngIf="showColumns.title">
+                        <span class="ml-1 vertical-align-middle">{{ idea.title}}</span>
+                      </td>
+                      <td *ngIf="showColumns.description">
+                        <span class="ml-1 vertical-align-middle">{{ idea.description}}</span>
+                      </td>
+                      <td *ngIf="showColumns.name_Area">
+                        <span class="ml-1 vertical-align-middle">{{ idea.name_Area}}</span>
+                      </td>
+                      <td *ngIf="showColumns.project_Name">
+                        <span class="ml-1 vertical-align-middle">{{ idea.project_Name}}</span>
+                      </td>
+                      <td *ngIf="showColumns.name_Machine">
+                        <span class="ml-1 vertical-align-middle">{{ idea.name_Machine}}</span>
+                      </td>
+                      <td *ngIf="showColumns.Team_Leader_Approved">
+                        <ng-container *ngFor="let id of idea.team_Leader_Approved; let i = index">
+                          <ng-container *ngIf="getUserFullName(id)">
+                            <span class="badge badge-success custom-badge">
+                              {{ getUserFullName(id) }}
+                              <span *ngIf="i < idea.team_Leader_Approved.length - 1"></span>
+                            </span>
+                          </ng-container>
+                        </ng-container>
+                      </td> 
+                      <td *ngIf="showColumns.Team_Leader_Rejected">
+                        <ng-container *ngFor="let id of idea.team_Leader_Rejected; let i = index">
+                          <ng-container *ngIf="getUserFullName(id)">
+                            <span class="badge badge-danger custom-badge-danger">
+                              {{ getUserFullName(id) }}
+                              <span *ngIf="i < idea.team_Leader_Rejected.length - 1"></span>
+                            </span>
+                          </ng-container>
+                        </ng-container>
+                      </td>
+                        <!-- <td *ngIf="showColumns.responsible">{{ idea.teid.fullName+ ' (' +
+                          idea.teid.teid + ')' }}</td> -->
+                        <td *ngIf="showColumns.date_Create">{{ idea.date_Create !==
+                            '0001-01-01T00:00:00' ? (idea.date_Create |
+                            date:'dd-MM-yyyy / HH:mm:ss') : '  ' }}</td>
+                        <td *ngIf="showColumns.date_Update">{{ idea.date_Update !==
+                            '0001-01-01T00:00:00' ? (idea.date_Update |
+                            date:'dd-MM-yyyy / HH:mm:ss') : '  ' }}</td>
+                        <td *ngIf="showColumns.date_Disabled">{{ idea.date_delete !==
+                            '0001-01-01T00:00:00' ? (idea.date_delete |
+                            date:'dd-MM-yyyy / HH:mm:ss') : '  ' }}
+                        </td>
+                        <td>
+                            <button pButton class="icon view" icon="fa fa-eye"
+                                (click)="selectView(idea.id); openModelView(idea.id)"[pTooltip]="'View Committee'" severity="secondary" tooltipPosition="top" >		
+                            </button>
+                            <button pButton class="icon edit" type="button" icon="fa fa-pencil-alt"
+                                (click)="selectGetSupervisorbyid(idea.id); openModelUpdate(idea.id)"
+                                [disabled]="idea.commenterDisabled"[pTooltip]="'Edit Committee'" severity="secondary" tooltipPosition="top" >									
+                            </button>
+                            <button pButton class="icon delete" type="button" icon="fa fa-ban"
+                                  (click)="DeleteProposeidea(idea.id)"
+                                  [disabled]="idea.commenterDisabled"
+                                  [pTooltip]="'Disable Committee'" severity="secondary"
+                                  tooltipPosition="top" >									
+                            </button>
+                        </td>
+                        <td>
+                          <div class="center-icons wrapper"> 
+                              <a class="icone approved" 
+                                  (click)="idea.status !== 'Approved' && TeamLeaderAnswer(idea.id, 'approved')" 
+                                  data-toggle="modal" 
+                                  [style.pointer-events]="idea.status === 'Approved' ? 'none' : 'auto'" 
+                                  [style.opacity]="idea.status === 'Approved' ? '0.5' : '1'">
+                                  <div class="tooltip">approved</div>
+                                  <span><i class="fa fa-duotone fa-check"></i></span>
+                              </a>
+                              <a class="icone Disabled" 
+                                  (click)="idea.status !== 'Approved' && TeamLeaderAnswer(idea.id, 'rejected')" 
+                                  [style.pointer-events]="idea.status === 'Approved' ? 'none' : 'auto'" 
+                                  [style.opacity]="idea.status === 'Approved' ? '0.5' : '1'">
+                                  <div class="tooltip">Rejected</div>
+                                  <span><i class="fa fa-close"></i></span>
+                              </a>
+                          </div>
+                      </td>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="emptymessage">
+                  <tr>
+                    <td colspan="7">No customers found.</td>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="paginatorleft">
+                    <p-button type="button" icon="fa fa-plus" styleClass="p-button-text" />
+                </ng-template>
+                <ng-template pTemplate="paginatorright">
+                    <p-button type="button" icon="fa fa-cloud" styleClass="p-button-text" />
+                </ng-template>
+            </p-table>
+        </div>
+    </p-card>
+
+</div>
+
+
+
+<p-dialog header="Add New Propose idea" id="AddCommittee" [(visible)]="displayModal" [modal]="true" [style]="{width: '50%', height: '90%'}">
+  <form [formGroup]="ideaSaveForm">
+    <div class="p-fluid">
+      <p-splitter [style]="{ 'border': '0px solid #3f3f46', 'border-radius': '6px', 'color': '#ffffff' }" styleClass="p-mb-2">
+        <ng-template pTemplate>
+          <div class="col flex align-items-center justify-content-center" style="margin-right: 25px;">
+            <div class="p-field" style="color: black;">
+              <label for="speciality">Title</label>
+              <input pInputText formControlName="title"style="color:black; 
+              font-size: 17px; 
+              font-weight: bold; width: 100%;"  type="text" placeholder="speciality" id="speciality" />
+            </div>
+
+            <div class="p-field" style="color: black;">
+              <label for="speciality">Description</label>
+              <textarea 
+                  rows="3"
+                  cols="5" 
+                  pInputTextarea 
+                  formControlName="description"style="color:black; 
+                  font-size: 17px; 
+                  font-weight: bold; width: 100%;" 
+              ></textarea>
+              <div class="col-md-4 col-sm-6 mb-3">
+              <button class="btn btn-success w-100" (click)="toggleDetails()">Success</button>
+            </div>
+
+            <div class="p-field" style="color: black;"  *ngIf="showDetails">
+              <label for="speciality">The current situation</label>
+            <textarea 
+                rows="3"
+                cols="5" 
+                pInputTextarea 
+                formControlName="descriptionSituation"
+                style="color:black; 
+                  font-size: 17px; 
+                  font-weight: bold; width: 100%;" 
+            ></textarea>
+              <input 
+                  (change)="onFilesChange($event, 'fileSituationPath')" 
+                  style="
+                      color:black; 
+                      background-color: #ecf0f400; 
+                      border: 4px solid #ecf0f4; 
+                      width: 100%; 
+                      font-size: 18px; 
+                      font-weight: bold; 
+                      text-align: center;
+                      " 
+                  class="form-control-1032" 
+                  type="file" 
+                  multiple>
+
+              </div>
+            <div class="p-field" style="color: black;" *ngIf="showDetails">
+              <label for="speciality">description Solution</label>
+              <textarea 
+              rows="3"
+              cols="5" 
+              pInputTextarea 
+              formControlName="descriptionSolution"
+              style="color:black; 
+                  font-size: 17px; 
+                  font-weight: bold; width: 100%;" 
+              ></textarea>
+              <input 
+                  (change)="onFilesChange($event, 'fileSolutionPath')" 
+                  style="
+                      color:black; 
+                      background-color: #ecf0f400; 
+                      border: 4px solid #ecf0f4; 
+                      width: 100%; 
+                      font-size: 18px; 
+                      font-weight: bold; 
+                      text-align: center;
+                      " 
+                  class="form-control-1032" 
+                  type="file" 
+                  multiple>
+
+              </div>
+
+
+
+            </div>
+
+
+
+
+
+          </div>
+        </ng-template>
+
+
+
+        <ng-template pTemplate>
+          <div class="col flex align-items-center justify-content-center" style="margin-left: 25px;">
+            <div class="p-field" style="color: black;">
+                  <label for="areaID">Areas</label>
+                  <p-multiSelect 
+                    [options]="Areas" 
+                    optionValue="name_Area" 
+                    optionLabel="name_Area" 
+                    formControlName="name_Area" 
+                    placeholder="Select Area" 
+                    [ngStyle]="{
+                      'color': 'black',
+                      'font-size': '17px',
+                      'font-weight': 'bold',
+                      'width': '90%'
+                    }" 
+                    (onChange)="onAreIDSelected($event.value)">
+                </p-multiSelect>
+
+              
+              </div>
+            <div class="p-field" style="color: black;" *ngIf="ProjectById && ProjectById.length > 0">
+                  <label for="userID">Projets</label>
+                  <p-multiSelect 
+                  [options]="ProjectById" 
+                  optionValue="project_Name" 
+                  optionLabel="project_Name" 
+                  formControlName="project_Name" 
+                  placeholder="Select Project" [ngStyle]="{
+                    'color': 'black',
+                    'font-size': '17px',
+                    'font-weight': 'bold',
+                    'width': '90%'
+                  }" 
+                  (onChange)="onProjectIDSelected($event.value)">
+              </p-multiSelect>
+            </div>
+
+            <div class="p-field" style="color: black;" *ngIf="MachineById && MachineById.length > 0"> 
+                  <label for="name_Machine">Machines</label>
+                  <p-multiSelect 
+                  [options]="MachineById" 
+                  optionValue="machine_Name" 
+                  optionLabel="machine_Name" 
+                  formControlName="name_Machine"  [ngStyle]="{
+                    'color': 'black',
+                    'font-size': '17px',
+                    'font-weight': 'bold',
+                    'width': '90%'
+                  }" 
+                  placeholder="Select Machine">
+              </p-multiSelect>
+            </div>
+
+            <div class="p-field">
+              <label for="userID">Upload Files</label>
+              <input 
+                  (change)="onFilesChange($event, 'fileIdeaPath')" 
+                  style="
+                      color:black; 
+                      background-color: #ecf0f400; 
+                      border: 4px solid #ecf0f4; 
+                      width: 100%; 
+                      font-size: 18px; 
+                      font-weight: bold; 
+                      text-align: center;
+                      " 
+                  class="form-control-1032" 
+                  type="file" 
+                  multiple>
+
+              </div>
+          
+          </div>
+        </ng-template>
+      </p-splitter>
+    </div>
+    <div class="p-dialog-footer" style="margin-top: 45%">   
+      <button pButton type="button" label="Create" (click)="onSaveIdea()" class="btn-primary-create"></button>
+      <button pButton type="button" label="Close" (click)="displayModal=false" class="btn-danger"></button>
+    </div>
+  </form>
+</p-dialog>
+   
+<p-dialog header="Update Propose idea" [(visible)]="displayUpdateModal" [modal]="true" [style]="{width: '40%', height: '90%'}">
+  <form [formGroup]="ideaUpdateFrom">
+    <div class="p-fluid">
+      <p-splitter [style]="{ 'border': '0px solid #3f3f46', 'border-radius': '6px', 'color': '#ffffff' }" styleClass="p-mb-2">
+        <ng-template pTemplate>
+          <div class="col flex align-items-center justify-content-center" style="margin-right: 25px;">
+            <div class="p-field" style="color: black;">
+              <label for="speciality">Title</label>
+              <input pInputText formControlName="title"style="color:black; 
+              font-size: 17px; 
+              font-weight: bold; width: 90%;"  type="text" placeholder="speciality" id="speciality" />
+            </div>
+            <div class="p-field" style="color: black;">
+              <label for="speciality">Description</label>
+              <textarea 
+                  rows="3"
+                  cols="5" 
+                  pInputTextarea 
+                  formControlName="description"style="color:black; 
+                  font-size: 17px; 
+                  font-weight: bold; width: 100%;" 
+              ></textarea>
+              <div class="col-md-4 col-sm-6 mb-3">
+              <button class="btn btn-success w-100" (click)="toggleDetails()">Success</button>
+            </div>
+            <div class="p-field" style="color: black;"  *ngIf="showDetails">
+              <label for="speciality">The current situation</label>
+            <textarea 
+                rows="3"
+                cols="5" 
+                pInputTextarea 
+                formControlName="descriptionSituation"
+                style="color:black; 
+                  font-size: 17px; 
+                  font-weight: bold; width: 100%;" 
+            ></textarea>
+              <input 
+                  (change)="onFilesChange($event, 'fileSituationPath')" 
+                  style="
+                      color:black; 
+                      background-color: #ecf0f400; 
+                      border: 4px solid #ecf0f4; 
+                      width: 100%; 
+                      font-size: 18px; 
+                      font-weight: bold; 
+                      text-align: center;
+                      " 
+                  class="form-control-1032" 
+                  type="file" 
+                  multiple>
+                  <div class="container-download">
+                    <div class="item" *ngFor="let fileSituation of fileSituationName">
+                      <div class="filename">
+                        <p>{{ fileSituation.substring(0, 7) }}...{{ fileSituation.substring(fileSituation.length - 8, fileSituation.length) }}</p>
+                    </div>
+                        <button (click)="downloadfileSituation(fileSituation)">Download</button>
+                    </div>
+                </div>
+              </div>
+            <div class="p-field" style="color: black;" *ngIf="showDetails">
+              <label for="speciality">description Solution</label>
+              <textarea 
+              rows="3"
+              cols="5" 
+              pInputTextarea 
+              formControlName="descriptionSolution"
+              style="color:black; 
+                  font-size: 17px; 
+                  font-weight: bold; width: 100%;" 
+              ></textarea>
+              <input 
+                  (change)="onFilesChange($event, 'fileSolutionPath')" 
+                  style="
+                      color:black; 
+                      background-color: #ecf0f400; 
+                      border: 4px solid #ecf0f4; 
+                      width: 100%; 
+                      font-size: 18px; 
+                      font-weight: bold; 
+                      text-align: center;" 
+                  class="form-control-1032" 
+                  type="file" 
+                  multiple>
+                  <div class="container-download">
+                    <div class="item" *ngFor="let fileSolution of fileSolutionName">
+                      <div class="filename">
+                        <p>{{ fileSolution.substring(0, 7) }}...{{ fileSolution.substring(fileSolution.length - 8, fileSolution.length) }}</p>
+                    </div>
+                        <button (click)="downloadfileSolution(fileSolution)">Download</button>
+                    </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ng-template>
+
+        <ng-template pTemplate>
+          <div class="col flex align-items-center justify-content-center" style="margin-left: 25px;">
+            <div class="p-field" style="color: black;">
+                  <label for="areaID">Areas</label>
+                  <p-multiSelect 
+                    [options]="Areas" 
+                    optionValue="name_Area" 
+                    optionLabel="name_Area" 
+                    formControlName="name_Area" 
+                    placeholder="Select Area" 
+                    [ngStyle]="{
+                      'color': 'black',
+                      'font-size': '17px',
+                      'font-weight': 'bold',
+                      'width': '90%'
+                    }" 
+                    (onChange)="onAreIDSelected($event.value)">
+                </p-multiSelect>
+
+              
+              </div>
+            <div class="p-field" style="color: black;" >
+                  <label for="userID">Projets</label>
+                  <p-multiSelect 
+                  [options]="ProjectById" 
+                  optionValue="project_Name" 
+                  optionLabel="project_Name" 
+                  formControlName="project_Name" 
+                  placeholder="Select Project"
+                    [ngStyle]="{
+                    'color': 'black',
+                    'font-size': '17px',
+                    'font-weight': 'bold',
+                    'width': '90%'}" 
+                  (onChange)="onProjectIDSelected($event.value)">
+              </p-multiSelect>
+            </div>
+
+            <div class="p-field" style="color: black;" > 
+                  <label for="name_Machine">Machines</label>
+                  <p-multiSelect 
+                  [options]="MachineById" 
+                  optionValue="machine_Name" 
+                  optionLabel="machine_Name" 
+                  formControlName="name_Machine"  
+                  [ngStyle]="{
+                    'color': 'black',
+                    'font-size': '17px',
+                    'font-weight': 'bold',
+                    'width': '90%'}" 
+                  placeholder="Select Machine">
+              </p-multiSelect>
+            </div>
+
+            <div class="p-field">
+              <label for="userID">Upload Files</label>
+              <input 
+                  (change)="onFilesChange($event, 'fileIdeaPath')" 
+                  style="
+                      color:black; 
+                      background-color: #ecf0f400; 
+                      border: 4px solid #ecf0f4; 
+                      width: 100%; 
+                      font-size: 18px; 
+                      font-weight: bold; 
+                      text-align: center; " 
+                      class="form-control-1032" 
+                      type="file" 
+                      multiple>
+                      <div class="container-download">
+                        <div class="item" *ngFor="let file of fileIdeaName">
+                            <div class="filename">
+                                <p>{{ file.substring(0, 7) }}...{{ file.substring(file.length - 8, file.length) }}</p>
+                            </div>
+                            <button (click)="downloadfileIdea(file)">Download</button>
+                        </div>
+                </div>
+
+              </div>
+          
+          </div>
+        </ng-template>
+      </p-splitter>
+    </div>
+    <div class="p-dialog-footer">
+      <button pButton type="button" label="Update Committee" (click)="updateIdea(UideaId, ideaUpdateFrom.value)"class="btn-primary-update"></button>
+      <button pButton type="button" label="Close" class="btn btn-danger" (click)="displayUpdateModal=false"></button>
+    </div>
+  </form>
+      
+    
+</p-dialog>
+  
+<p-dialog header="View Propose idea" [(visible)]="displayViewModal" [modal]="true" [style]="{width: '50%', height: '90%'}">
+  <form [formGroup]="ideaViewFrom">
+      <div class="p-fluid">
+        <p-splitter [style]="{ 'border': '0px solid #3f3f46', 'border-radius': '6px', 'color': '#ffffff' }" styleClass="p-mb-2"  [panelSizes]="[50, 50]" >
+          <ng-template pTemplate>
+            <div class="col flex align-items-center justify-content-center" style="margin-right: 5px;">
+              <div class="p-field" *ngIf="ideaViewFrom.get('commenterDisabled')?.value !== null">
+                  <label for="commenterDisabled" style="font-size: 20px;">Delete Reason</label>
+                  <ng-container *ngIf="ideaViewFrom.get('commenterDisabled')?.value.length > 20">
+                    <textarea
+                      pInputTextarea
+                      formControlName="commenterDisabled"
+                      id="commenterDisabled"
+                      placeholder="Status"
+                      readonly
+                      style="font-weight: bold; width: 70%;font-size: 30px; color: white; background-color: #BC1F00;">
+                    </textarea>
+                  </ng-container>
+                  <ng-container *ngIf="ideaViewFrom.get('commenterDisabled')?.value.length <= 20">
+                    <input
+                      pInputText
+                      formControlName="commenterDisabled"
+                      id="commenterDisabled"
+                      type="text"
+                      placeholder="Status"
+                      readonly
+                      style="font-weight: bold; font-size: 30px; color: white;  width: 70%;background-color: #BC1F00;" />
+                  </ng-container>
+                </div>
+              <div class="p-field" style="color: black;">
+                <label for="speciality">Title</label>
+                <input pInputText formControlName="title" style="
+                color:black; 
+                font-size: 17px; 
+                font-weight: bold; 
+                width: 90%;
+                  " type="text" placeholder="speciality" id="speciality" />
+              </div>
+
+              <div class="p-field" style="color: black;">
+                <label for="speciality">Description</label>
+                <textarea 
+                    rows="3"
+                    cols="5" 
+                    style="
+                      color:black; 
+                      font-size: 17px; 
+                      font-weight: bold; 
+                      width: 90%;
+                        " 
+                    pInputTextarea 
+                    formControlName="description"
+                ></textarea>
+                <div class="col-md-4 col-sm-6 mb-3">
+                <button class="btn btn-success w-100" (click)="toggleDetails()">Success</button>
+              </div>
+
+              <div class="p-field" style="color: black;"  *ngIf="showDetails">
+                <label for="speciality">The current situation</label>
+              <textarea 
+                  rows="3"
+                  cols="5" 
+                  pInputTextarea 
+                  formControlName="descriptionSituation"
+                  style="
+                  color:black; 
+                  font-size: 17px; 
+                  font-weight: bold; 
+                  width: 90%;
+                    "
+              ></textarea>
+                  <div class="container-download">
+                    <div class="item" *ngFor="let fileSituation of fileSituationName">
+                      <div class="filename">
+                        <p>{{ fileSituation.substring(0, 7) }}...{{ fileSituation.substring(fileSituation.length - 8, fileSituation.length) }}</p>
+                      </div>
+                        <button (click)="downloadfileSituation(fileSituation)">Download</button>
+                      </div>
+                  </div>
+                </div>
+              <div class="p-field" style="color: black;" *ngIf="showDetails">
+                <label for="speciality">description Solution</label>
+                <textarea 
+                rows="3"
+                cols="5" 
+                pInputTextarea 
+                style="
+                color:black; 
+                font-size: 17px; 
+                font-weight: bold; 
+                width: 90%;
+                  "
+                formControlName="descriptionSolution"
+                ></textarea>
+                  <div class="container-download">
+                    <div class="item" *ngFor="let fileSolution of fileSolutionName">
+                      <div class="filename">
+                        <p>{{ fileSolution.substring(0, 7) }}...{{ fileSolution.substring(fileSolution.length - 8, fileSolution.length) }}</p>
+                      </div>
+                        <button (click)="downloadfileSolution(fileSolution)">Download</button>
+                      </div>
+                  </div>
+                </div>
+                
+              </div>
+            </div>
+          </ng-template>
+
+
+
+          <ng-template pTemplate>
+            <div class="col flex align-items-center justify-content-center" style="margin-left: 25px;">
+
+              <div class="p-field" style="color: black;">
+                  <label for="areaID">Areas</label>
+                  <input pInputText formControlName="name_Area" style="
+                  color:black; 
+                  font-size: 17px; 
+                  font-weight: bold; 
+                  width: 85%;"  
+                  type="text" placeholder="name_Area" id="name_Area" />
+              </div>
+
+              <div class="p-field" style="color: black;" >
+                  <label for="userID">Projets</label>
+                  <input pInputText formControlName="project_Name" style="
+                  color:black; 
+                  font-size: 17px; 
+                  font-weight: bold; 
+                  width: 85%;"  
+                  type="text" placeholder="name_Area" id="name_Area" />
+              </div>
+
+              <div class="p-field" style="color: black;" > 
+                  <label for="name_Machine">Machines</label>
+                  <input pInputText formControlName="name_Machine"  
+                  style="color:black; 
+                  font-size: 17px; 
+                  font-weight: bold; width: 85%;"  
+                  type="text" placeholder="name_Area" id="name_Area" />
+              </div>
+
+              <div class="p-field">
+                <label for="userID">Upload Files</label>
+                <div class="container-download">
+                  <div class="item" *ngFor="let file of fileIdeaName">
+                      <div class="filename">
+                          <p>{{ file.substring(0, 7) }}...{{ file.substring(file.length - 8, file.length) }}</p>
+                      </div>
+                      <button (click)="downloadfileIdea(file)">Download</button>
+                  </div>
+              </div>
+                </div>
+            </div>
+          </ng-template>
+        </p-splitter>
+      </div>
+    </form>
+</p-dialog>
+  
+
+<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-"></script>
+<script src="bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+<script src="bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.datatables.net/2.0.5/js/dataTables.js"></script>
+<script
+  src="https://cdn.datatables.net/2.0.5/js/dataTables.bootstrap5.js"></script>
+<script> $(document).ready(function() {
+  $('#example').DataTable();
+  });
+  </script>
+
+<script>
+  $(document).ready(function() {
+      $('#ingredients').multiselect();
+  }); 
+</script>
+
+<ng-template #CommitteeOverlay>
+    <div class="overlay overlay-user overlay-fall" cdkMenu>
+        <ul>
+            <li>
+                <label>
+                    <input type="checkbox" [(ngModel)]="showColumns.title" disabled>
+                    Title
+                </label>
+            </li>
+
+            <li>
+                <label>
+                    <input type="checkbox" [(ngModel)]="showColumns.description" disabled>
+                    Description
+                </label>
+            </li>
+
+            <li>
+                <label>
+                    <input type="checkbox" [(ngModel)]="showColumns.descriptionSituation" disabled>
+                    Description Situation
+                </label>
+            </li>
+
+            <li>
+                <label>
+                    <input type="checkbox" [(ngModel)]="showColumns.descriptionSolution">
+                    Description Solution
+                </label>
+            </li>
+            <li>
+                <label>
+                    <input type="checkbox" [(ngModel)]="showColumns.name_Area">
+                    Areas
+                </label>
+            </li>
+
+            <li>
+                <label>
+                    <input type="checkbox" [(ngModel)]="showColumns.project_Name" disabled>
+                    Projets
+                </label>
+            </li>
+
+            <li>
+                <label>
+                    <input type="checkbox" [(ngModel)]="showColumns.name_Machine">
+                    Machines
+                </label>
+            </li>
+
+            <li>
+              <label>
+                  <input type="checkbox" [(ngModel)]="showColumns.Team_Leader_Approved">
+                  Team Leader Approved
+              </label>
+          </li>
+
+          <li>
+            <label>
+                <input type="checkbox" [(ngModel)]="showColumns.Team_Leader_Rejected">
+                Team Leader Rejected
+            </label>
+        </li>
+            <li>
+              <label>
+                  <input type="checkbox" [(ngModel)]="showColumns.name_Impact">
+                  Impact
+              </label>
+              </li>
+
+            <li>
+                <label>
+                    <input type="checkbox" [(ngModel)]="showColumns.date_Create">
+                    Create Date
+                </label>
+            </li>
+            <li>
+                <label>
+                    <input type="checkbox" [(ngModel)]="showColumns.date_Update">
+                    Update Date
+                </label>
+            </li>
+            <li>
+                <label>
+                    <input type="checkbox" [(ngModel)]="showColumns.date_Disabled">
+                    Delete Date
+                </label>
+            </li>
+
+        </ul>
+    </div>
+</ng-template>
+
+<ng-template #importexport>
+    <div class="overlay overlay-user overlay-fall" cdkMenu>
+        <ul>
+            <li (click)="Import()">Import</li>
+            <li (click)="Export()">Export</li>
+            <li (click)="downloadExcel()">Download Template</li>
+        </ul>
+    </div>
+</ng-template>

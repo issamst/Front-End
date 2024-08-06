@@ -1,0 +1,231 @@
+<div class="head" [ngClass]="getHeadClass()">
+<div class="head-content">
+    <div class="head-content-left">
+        <div class="searsh-container">
+        <img src="https://www.fclane.com/sites/default/files/partner_logos/polamcote-logo2.png" style="width: 190px;height: 70px;">
+        </div>
+    </div>
+
+ 
+<div class="head-content-right">
+    <div class="head-menu">
+
+        <div class="head-content-left head-menu-item">
+    
+    
+                <div class="searsh-container">
+                    <div  *ngIf="!canShowSearchAsOverlay" class="normal-searsh">
+                        <i class="fa fa-search  searsh-icon" aria-hidden="true"></i>
+                        
+                        <input type="searsh"
+                            class="searsh" name="" id=""
+                            placeholder="searsh......">
+                            
+        
+                    </div>
+        
+                    <div *ngIf="canShowSearchAsOverlay" >
+                        <button [cdkMenuTriggerFor]="searchOverLay"
+                        class="search-menu-btn ripple"
+                        >
+                            <i class="fa fa-search searsh-icon"></i>
+                        </button>
+                    </div>
+                </div>
+        
+        </div>
+
+        <div class="head-menu-item" [cdkMenuTriggerFor]="Traduction" >
+            <ul class="navbar-nav ml-auto mb-2 mb-lg-0">
+                <li class="nav-item d-flex justify-content-end">
+                    <div class="custom-dropdown "
+                        (click)="toggleDropdown()"
+                        (blur)="closeDropdown()" tabindex="0">
+                        <div class="selected-option ">
+                            <img [src]="getFlag(lang)"
+                                alt="{{lang}} Flag"
+                                class="flag-icon" /> {{
+                            getLangName(lang)  | translate}}
+                        </div>
+
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+        <div class="head-menu-item">
+            <button class="head-menu-item-btn ripple" (click)="toggleFullscreen()">
+                <i *ngIf="!isFullscreen" class="fa fa-expand"></i>
+                <i *ngIf="isFullscreen" class="fas fa-compress"></i>
+            </button>
+        </div>
+
+        <div class="head-menu-item">
+            <button class="head-menu-item-btn ripple" [cdkMenuTriggerFor]="notificationOverlay">
+                <i class="far fa-bell menu-icon"></i>
+            </button>
+        </div>
+
+        <div class="head-menu-item">
+            <button class="head-menu-item-btn ripple" >
+                <i class="far fa-comment-alt menu-icon"></i>
+
+            </button>
+        </div>
+
+        <div class="head-user-avatar head-user-avatar-1" [cdkMenuTriggerFor]="userOverlay">
+
+            <div class="dropdown dropdown-text-end">
+                <a  class="d-block link-dark text-decoration-none"
+                    aria-expanded="false" (click)="toggleDropdownList()">
+                    <img src="https://media.istockphoto.com/id/517998264/vector/male-user-icon.jpg?s=612x612&w=0&k=20&c=4RMhqIXcJMcFkRJPq6K8h7ozuUoZhPwKniEke6KYa_k="
+                        alt="mdo" width="32" height="32" class="rounded-circle">
+                    <span class="navbar-text me-1"> <strong style="color: rgb(0, 0, 0);">{{ fullName }}</strong></span>
+                    <i *ngIf="!isUserOverlayOpen" class="fa fa-angle-left"></i>
+                    <i *ngIf="isUserOverlayOpen" class="fa fa-angle-down"></i>
+                </a>
+            </div>
+        </div>
+        
+    </div> 
+
+    </div>
+</div>
+
+</div>
+
+
+
+
+<ng-template #searchOverLay>
+    <div class="overlay overlay-search overlay-fall" cdkMenu>
+        <input type="search" name="" class="search" id=""  placeholder="Search....">
+        <button class="search-btn">
+            <i class="fa fa-search search-icon" aria-hidden="true"></i>
+        </button>
+    </div>
+</ng-template>
+
+
+
+<ng-template #languageOverlay>
+<div class="panel-heading form-group">
+    <ul class="navbar-nav ml-auto mb-2 mb-lg-0">
+        <li class="nav-item d-flex justify-content-end">
+            <div class="custom-dropdown "
+                (click)="toggleDropdown()"
+                (blur)="closeDropdown()" tabindex="0">
+                <div class="selected-option ">
+                    <img [src]="getFlag(lang)"
+                        alt="{{lang}} Flag"
+                        class="flag-icon" /> {{
+                    getLangName(lang)  | translate}}
+                </div>
+                <div class="dropdown-options"
+                    [class.show]="dropdownOpen">
+                    <div class="dropdown-option"
+                        *ngFor="let option of langOptions"
+                        (click)="changeLang($event, option.value)">
+                        <img [src]="getFlag(option.value)"
+                            alt="{{option.label}} Flag"
+                            class="flag-icon" />{{
+                                option.label | translate }}
+                    </div>
+                </div>
+            </div>
+        </li>
+    </ul>
+</div> 
+</ng-template>
+
+
+<ng-template #notificationOverlay>
+    <div class="overlay overlay-notification overlay-fall" cdkMenu>
+        <ul>
+            <li class="notification-head-container" >
+                <div class="notification-head">Notication
+
+                </div>
+                <span class="view-all-link">
+                    <a>View All</a>
+                </span>
+
+            
+            </li>
+
+
+            <li class="notification-message-container"   *ngFor="let notification of notifications " cdkMenuItem>
+                <i [class]="notification.icon"></i>
+                <div>
+                    <div class="notification-subject">
+                        {{notification.subject}}
+                    </div>
+                    <p class="notification-desc">{{notification.description}}</p>
+                </div>
+            </li>
+        </ul>
+    </div>
+</ng-template>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+
+<ng-template #userOverlay>
+    <div class="overlay overlay-user overlay-fall " cdkMenu>
+        <ul>
+            <li>  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+                
+                <a style="color:inherit;text-decoration: none;" id="forget" routerLink="../pages/Profile" >
+                    <i class="icon far fa-user" ></i>Profile
+            </a>
+        
+            <!-- </li>
+        <li   *ngFor="let user of userItem " cdkMenuItem>
+            
+            
+                <a>
+                    <i class="icon" [ngClass]="user.icon"></i>
+                    <span>{{user.label}}</span>
+                </a>
+            </li> -->
+
+            
+            <li> 
+                
+                
+                <a (click)="logout()">
+                    <i class="icon fas fa-sign-out-alt"></i> Logout
+                </a>
+            </li>
+        </ul>
+    </div>
+</ng-template>
+<ng-template #Traduction>
+<div class="panel-heading form-group ">
+    <ul class="navbar-nav ml-auto mb-2 mb-lg-0">
+        <li class="nav-item d-flex justify-content-end">
+            <div class="custom-dropdown "
+                (click)="toggleDropdown()"
+                (blur)="closeDropdown()" tabindex="0">
+                <div class="selected-option ">
+                    <img [src]="getFlag(lang)"
+                        alt="{{lang}} Flag"
+                        class="flag-icon" /> {{
+                    getLangName(lang)  | translate}}
+                </div>
+                <div class="dropdown-options"
+                    [class.show]="dropdownOpen">
+                    <div class="dropdown-option"
+                        *ngFor="let option of langOptions"
+                        (click)="changeLang($event, option.value)">
+                        <img [src]="getFlag(option.value)"
+                            alt="{{option.label}} Flag"
+                            class="flag-icon" />{{
+                                option.label | translate }}
+                    </div>
+                </div>
+            </div>
+        </li>
+    </ul>
+</div> 
+</ng-template>

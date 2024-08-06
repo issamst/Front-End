@@ -1,0 +1,486 @@
+<div class="card flex justify-content-center">
+
+<p-card >
+<div style="text-align: center; font-family:'Avenir, sans-serif';  font-size: 45px; font-weight: bold;"> 
+    <strong>Committees</strong>
+</div>
+	<div class="card-body">
+		<div
+			style="display: flex; justify-content: space-between; align-items: center;margin: 5px;">
+			<div class="form-outline" style="flex: 1;">
+				
+			
+				
+			
+				
+					<!-- <input pInputText
+					type="text"
+					placeholder="Search Keyword..."
+					[(ngModel)]="searchText"
+					(ngModelChange)="globalSearch()"
+				  /> -->
+				</div>
+
+			<div class="head-user-avatar" [cdkMenuTriggerFor]="CommitteeOverlay">
+				<div class="dropdown-text-end">
+					<a class="btn btn-outline-success" aria-expanded="false"
+						(click)="toggleDropdown()">
+						List of columns
+						<i *ngIf="!isCommitteeOverlayOpen" class="fa fa-angle-left"></i>
+						<i *ngIf="isCommitteeOverlayOpen" class="fa fa-angle-down"></i>
+					</a>
+				</div>
+			</div>
+			<div class="head-user-avatar" [cdkMenuTriggerFor]="importexport">
+				<div class="dropdown-text-end">
+					<a class="btn btn-outline-success" aria-expanded="false"
+						(click)="importexportopen()">
+						<i class="fa fa-download" aria-hidden="true"></i>
+						<i *ngIf="!isimportexportopen" class="fa fa-angle-left"></i>
+						<i *ngIf="isimportexportopen" class="fa fa-angle-down"></i>
+					</a>
+				</div>
+			</div>
+			<button class="btn btn-outline-success-" pButton type="button"
+				label="Add New Idea" icon="fa fa-plus" (click)="openModel()"
+				style="margin: 0 10px;"></button>
+		</div>
+
+	
+			<p-table
+				#dt1
+
+				[value]="committees"
+				[paginator]="true"
+				[rows]="5"
+				dataKey="id"
+				[loading]="loading"
+
+				responsiveLayout="stack" 
+				styleClass="p-datatable-striped" 
+				[scrollable]="true" 
+				scrollHeight="450px"
+				[resizableColumns]="true"
+				[first]="first"
+				[showCurrentPageReport]="true"
+				[tableStyle]="{ 'min-width': '60rem' }"
+				currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+				(onPage)="pageChange($event)"
+				[rowsPerPageOptions]="[3, 5, 10, 20]"
+				[globalFilterFields]="['name_Committee', 'responsible.fullName', 'replacement.fullName', 'n_Departement.name_Departement','n_Plant.buildingID','n_Area.name_Area','responsibleTitle.name_Title']"
+
+				>
+
+				<ng-template pTemplate="caption">
+
+				<div class="flex">
+					<p-button label="Clear" [outlined]="true" icon="fa fa-filter" (click)="clear(dt1)" />
+					<span class="p-input-icon-left ml-auto">
+					  <i class="fa fa-search"></i>
+					
+						<input pInputText type="text" placeholder="Search" [(ngModel)]="searchText" (ngModelChange)="globalSearch()" />
+		
+					</span> 
+
+					<div class="my-right-div">
+						<p-button
+							type="button"
+							icon="fa fa-chevron-left"
+							(click)="prev()"
+							[disabled]="isFirstPage()"
+							styleClass="p-button-text" />
+						<p-button
+							type="button"
+							icon="fa fa-refresh"
+							(click)="reset()"
+							styleClass="p-button-text" />
+						<p-button
+							type="button"
+							icon="fa fa-chevron-right"
+							(click)="next()"
+							[disabled]="isLastPage()"
+							styleClass="p-button-text" />
+					</div>
+			
+				  </div>
+				</ng-template>	
+
+
+				<ng-template pTemplate="header" let-columns>
+					<tr>
+						<th style="min-width:15rem">
+							<div pSortableColumn="name_Committee" class="flex align-items-center">
+								<p-columnFilter type="text" field="name_Committee" display="menu"></p-columnFilter>
+								Committee 
+								 <p-sortIcon field="name_Committee" />
+							</div>
+						</th>
+						<th pSortableColumn="responsible.fullName" style="width:9%" *ngIf="showColumns.responsible">							
+							<div class="flex align-items-center">
+								<p-columnFilter type="text" field="responsible.fullName" display="menu"></p-columnFilter>
+								Responsible
+								<p-sortIcon field="responsible.fullName" />
+							</div>
+						</th>
+						<th pSortableColumn="responsibleTitle.name_Title" style="width:9%" *ngIf="showColumns.responsibleTitle">
+							<div class="flex align-items-center">
+								<p-columnFilter type="text" field="responsibleTitle.name_Title" display="menu"></p-columnFilter>
+								Responsible Title	
+								<p-sortIcon field="responsibleTitle.name_Title" />
+							</div>						
+						</th>
+
+						<th pSortableColumn="replacement.fullName" style="width:9%" *ngIf="showColumns.replacement">							
+							<div class="flex align-items-center">
+								<p-columnFilter type="text" field="replacement.fullName" display="menu"></p-columnFilter>
+								Replacement
+								<p-sortIcon field="replacement.fullName" />
+							</div>
+						</th>
+
+						<th pSortableColumn="n_Departement.name_Departement" style="width:9%" *ngIf="showColumns.departement">							
+							<div class="flex align-items-center">
+								<p-columnFilter type="text" field="n_Departement.name_Departement" display="menu"></p-columnFilter>
+								Departement 
+								<p-sortIcon field="n_Departement.name_Departement" />
+							</div>
+						</th>
+
+						<th pSortableColumn="n_Plant.buildingID" style="width:9%" *ngIf="showColumns.plant">
+							<div class="flex align-items-center">
+								<p-columnFilter type="text" field="n_Plant.buildingID" display="menu"></p-columnFilter>
+								Plant 
+								<p-sortIcon field="n_Plant.buildingID" />
+							</div>
+						</th>
+						
+						<th pSortableColumn="n_Area.name_Area" style="width:9%" *ngIf="showColumns.area">
+							<div class="flex align-items-center">
+								<p-columnFilter type="text" field="n_Area.name_Area" display="menu"></p-columnFilter>
+								Area
+								<p-sortIcon field="n_Area.name_Area" />
+							</div>
+						</th>
+
+						<th pSortableColumn="date_Create" style="width:9%" *ngIf="showColumns.Date_Create">
+							Create Date
+							<p-sortIcon field="date_Create" />
+						</th>
+						<th pSortableColumn="date_Update" style="width:9%" *ngIf="showColumns.Date_Update">
+							Update Date
+							<p-sortIcon field="date_Update" />
+						</th>
+						<th pSortableColumn="date_delete" style="width:9%" *ngIf="showColumns.Date_Delete">
+							Delete Date
+							<p-sortIcon field="date_delete" />
+						</th>
+						<th style="width:9%">Action</th>
+					</tr>
+				</ng-template>
+				<ng-template pTemplate="body" let-Committee >
+					<tr [ngClass]="{'deactivated-row': Committee.commenterDelete}">
+						<td *ngIf="showColumns.name_Committee">
+							<span class="ml-1 vertical-align-middle">{{ Committee.name_Committee}}</span>
+						</td>
+						<td *ngIf="showColumns.responsible">{{ Committee.responsible.teid+ ' (' +
+							Committee.responsible.fullName + ')' }}</td>
+						<td *ngIf="showColumns.responsibleTitle">{{Committee.responsibleTitle.name_Title}}</td>
+
+						<td *ngIf="showColumns.replacement">{{ Committee.replacement.teid+ ' (' +
+							Committee.replacement.fullName + ')' }}</td>
+						<td
+							*ngIf="showColumns.departement">{{Committee.n_Departement.name_Departement}}</td>
+						<td *ngIf="showColumns.plant">{{Committee.n_Plant.buildingID+ ' (' +
+							Committee.n_Plant.sapBuildingNumber + ')'}}</td>
+						<td *ngIf="showColumns.area">{{ Committee.n_Area.name_Area }}</td>
+
+
+						<td *ngIf="showColumns.Date_Create">{{ Committee.date_Create !==
+							'0001-01-01T00:00:00' ? (Committee.date_Create |
+							date:'dd-MM-yyyy / HH:mm:ss') : '  ' }}</td>
+						<td *ngIf="showColumns.Date_Update">{{ Committee.date_Update !==
+							'0001-01-01T00:00:00' ? (Committee.date_Update |
+							date:'dd-MM-yyyy / HH:mm:ss') : '  ' }}</td>
+						<td *ngIf="showColumns.Date_Delete">{{ Committee.date_delete !==
+							'0001-01-01T00:00:00' ? (Committee.date_delete |
+							date:'dd-MM-yyyy / HH:mm:ss') : '  ' }}
+						</td>
+						<td>
+							<button pButton class="icon view" icon="fa fa-eye"
+								(click)="selectView(Committee.id); openModelView(Committee.id)"[pTooltip]="'View Committee'" severity="secondary" tooltipPosition="top" >		
+							</button>
+							<button pButton class="icon edit" type="button" icon="fa fa-pencil-alt"
+								(click)="selectGetcommitteesbyid(Committee.id); openModelUpdate(Committee.id)"
+								[disabled]="Committee.commenterDelete"[pTooltip]="'Edit Committee'" severity="secondary" tooltipPosition="top" >									
+							</button>
+							<button pButton class="icon delete" type="button" icon="fa fa-ban"
+								 (click)="deleteCommittees(Committee.id)"
+								 [disabled]="Committee.commenterDelete"
+								 [pTooltip]="'Disable Committee'" severity="secondary"
+								 tooltipPosition="top" >									
+							</button>
+						</td>
+					</tr>
+				</ng-template>
+				<ng-template pTemplate="emptymessage">
+					<tr>
+						<td colspan="7">No customers found.</td>
+					</tr>
+				</ng-template>
+		
+				<ng-template pTemplate="paginatorleft">
+					<p-button type="button" icon="fa fa-plus" styleClass="p-button-text" />
+				</ng-template>
+				<ng-template pTemplate="paginatorright">
+					<p-button type="button" icon="fa fa-cloud" styleClass="p-button-text" />
+				</ng-template>
+			</p-table>
+		</div>
+
+	</p-card>
+
+</div>
+
+
+
+<p-dialog header="Add New Committee" id="AddCommittee" [(visible)]="displayModal" [modal]="true" [style]="{width: '40%'}">
+		<form [formGroup]="committeesForm">
+		  <div class="p-fluid">
+			<div class="p-field">
+			  <label for="name_Committee">Committee <span style="color:red; font-weight: bold; ">*</span> </label>
+			  <input pInputText formControlName="name_Committee" type="text" placeholder="Committee Name" id="name_Committee" />
+			</div>
+			<div class="p-field">
+			  <label for="responsibleID">Responsible <span style="color:red; font-weight: bold; ">*</span> </label>
+			  <p-dropdown [options]="users" optionValue="id" optionLabel="fullName" formControlName="responsibleID" placeholder="Select Responsible" id="responsibleID"></p-dropdown>
+			</div>
+			<div class="p-field">
+				<label for="responsibleTitleID">Responsible Title <span style="color:red; font-weight: bold; ">*</span> </label>
+				<p-dropdown [options]="titles" optionValue="id" optionLabel="name_Title" formControlName="responsibleTitleID" placeholder="Select Responsible Title" id="responsibleTitleID"></p-dropdown>
+			</div>
+			
+			<div class="p-field">
+			  <label for="replacementID">Replacement <span style="color:red; font-weight: bold; ">*</span> </label>
+			  <p-dropdown [options]="users" optionValue="id" optionLabel="fullName" formControlName="replacementID" placeholder="Select Replacement" id="replacementID"></p-dropdown>
+			</div>
+			<div class="p-field">
+			  <label for="departementID">Department <span style="color:red; font-weight: bold; ">*</span> </label>
+			  <p-dropdown [options]="departements" optionValue="id" optionLabel="name_Departement" formControlName="departementID" placeholder="Select Departement" id="departementID"></p-dropdown>
+			</div>
+			<div class="p-field">
+			  <label for="plantID">Plant <span style="color:red; font-weight: bold; ">*</span> </label>
+			  <p-dropdown [options]="plants" optionValue="id" optionLabel="sapBuildingNumber" formControlName="plantID" placeholder="Select Plant" id="plantID"></p-dropdown>
+			</div>
+			<div class="p-field">
+			  <label for="areaID">Area <span style="color:red; font-weight: bold; ">*</span> </label>
+			  <p-dropdown [options]="areas" optionValue="id" optionLabel="name_Area" formControlName="areaID" placeholder="Select Area" id="areaID"></p-dropdown>
+			</div>
+
+			
+
+		  </div>
+		  <div class="p-dialog-footer">
+			
+			<button pButton type="button" label="Create" (click)="SaveCommittees()" class="btn-primary-create"></button>
+			<button pButton type="button" label="Close" (click)="displayModal=false" class="btn-danger"></button>
+		  </div>
+		</form>
+</p-dialog>
+	  
+
+	  
+<p-dialog header="Update Committee" [(visible)]="displayUpdateModal" [modal]="true" [style]="{width: '40%'}">
+	<form [formGroup]="UpdatecommitteesFrom">
+	  <div class="p-fluid">
+		<div class="p-field">
+		  <label for="name_Committee">Committee <span style="color:red; font-weight: bold; ">*</span> </label>
+		  <input pInputText formControlName="name_Committee" type="text" placeholder="Name Of Committee" id="name_Committee" />
+		</div>
+		<div class="p-field">
+		  <label for="responsibleID">Responsible <span style="color:red; font-weight: bold; ">*</span> </label>
+		  <p-dropdown [options]="users" optionValue="id" optionLabel="fullName" formControlName="responsibleID" placeholder="Select Responsible" id="responsibleID"></p-dropdown>
+		</div>
+
+		<div class="p-field">
+			<label for="responsibleTitleID">Responsible  <span style="color:red; font-weight: bold; ">*</span> </label>
+			<p-dropdown [options]="titles" optionValue="id" optionLabel="name_Title" formControlName="responsibleTitleID" placeholder="Select responsible Title"></p-dropdown>
+		  </div>
+		<div class="p-field">
+		  <label for="replacementID">Replacement <span style="color:red; font-weight: bold; ">*</span> </label>
+		  <p-dropdown [options]="users" optionValue="id" optionLabel="fullName" formControlName="replacementID" placeholder="Select Replacement" id="replacementID"></p-dropdown>
+		</div>
+		<div class="p-field">
+		  <label for="departementID">Department <span style="color:red; font-weight: bold; ">*</span>  <span style="color:red; font-weight: bold; ">*</span> </label>
+		  <p-dropdown [options]="departements" optionValue="id" optionLabel="name_Departement" formControlName="departementID" placeholder="Select Departement" id="departementID"></p-dropdown>
+		</div>
+		<div class="p-field">
+		  <label for="plantID">Plant <span style="color:red; font-weight: bold; ">*</span> </label>
+		  <p-dropdown [options]="plants" optionValue="id" optionLabel="buildingID" formControlName="plantID" placeholder="Select Plant" id="plantID"></p-dropdown>
+		</div>
+		<div class="p-field">
+		  <label for="areaID">Area <span style="color:red; font-weight: bold; ">*</span> </label>
+		  <p-dropdown [options]="areas" optionValue="id" optionLabel="name_Area" formControlName="areaID" placeholder="Select Area" id="areaID"></p-dropdown>
+		</div>
+	
+	  </div>
+	  <div class="p-dialog-footer">
+		<button pButton type="button" label="Update Committee" (click)="updateCommittee(UcommitteesId, UpdatecommitteesFrom.value)"class="btn-primary-update"></button>
+		<button pButton type="button" label="Close" class="btn btn-danger" (click)="displayUpdateModal=false"></button>
+	  </div>
+	</form>
+</p-dialog>
+  
+<p-dialog header="View Committee" [(visible)]="displayViewModal" [modal]="true" [style]="{width: '40%'}">
+	<form [formGroup]="Viewcommittees">
+	  <div class="p-fluid">
+		<div class="p-field" *ngIf="Viewcommittees.get('commenterDelete')?.value !== null">
+		  <label for="commenterDelete" style="font-size: 20px;">Delete Reason</label>
+		  <ng-container *ngIf="Viewcommittees.get('commenterDelete')?.value.length > 20">
+			<textarea pInputTextarea formControlName="commenterDelete" id="commenterDelete" placeholder="Status" readonly style="font-weight: bold; font-size: 30px; color: white; background-color: #BC1F00;"></textarea>
+		  </ng-container>
+		  <ng-container *ngIf="Viewcommittees.get('commenterDelete')?.value.length <= 20">
+			<input pInputText formControlName="commenterDelete" id="commenterDelete" type="text"
+			 placeholder="Status" readonly style="font-weight: bold; font-size: 30px; color: white; background-color: #BC1F00;" />
+		  </ng-container>
+		</div>
+		<div class="p-field">
+		  <label for="name_Committee">Committee</label>
+		  <input pInputText formControlName="name_Committee" type="text" placeholder="Committee Name"  />
+		</div>
+		<div class="p-field">
+		  <label for="responsibleID">Responsible</label>
+		  <input pInputText type="text" placeholder="Responsible Name" [value]="getUserName(Viewcommittees.get('responsibleID')?.value)" disabled >
+		</div>
+		<div class="p-field">
+			<label for="responsibleTitleID">Responsible Title</label>
+			<input pInputText  type="text" placeholder="Title Job Name" [value]="getTitleName(Viewcommittees.get('responsibleTitleID')?.value)" disabled>
+		</div>
+		<div class="p-field">
+		  <label for="replacementID">Replacement</label>
+		  <input pInputText type="text" placeholder="Replacement Name" [value]="getUserName(Viewcommittees.get('replacementID')?.value)" disabled >
+		</div>
+		<div class="p-field">
+		  <label for="departementID">Department</label>
+		  <input pInputText type="text" placeholder="Department Name" [value]="getDepartementName(Viewcommittees.get('departementID')?.value)" disabled >
+		</div>
+		<div class="p-field">
+		  <label for="plantID">Plant</label>
+		  <input pInputText  type="text" placeholder="Plant Name" [value]="getPlantName(Viewcommittees.get('plantID')?.value)" disabled >
+		</div>
+		<div class="p-field">
+			<label for="areaID">Area</label>
+			<input pInputText type="text" placeholder="Area Name" [value]="getAreaName(Viewcommittees.get('areaID')?.value)" disabled>
+		</div>
+		
+	  </div>
+	  <div class="p-dialog-footer">
+		<button pButton type="button" label="Close" class="btn btn-danger" (click)="displayViewModal=false"></button>
+	  </div>
+	</form>
+</p-dialog>
+  
+	  
+<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-"></script>
+<script src="bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+<script src="bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.datatables.net/2.0.5/js/dataTables.js"></script>
+<script
+	src="https://cdn.datatables.net/2.0.5/js/dataTables.bootstrap5.js"></script>
+<script> $(document).ready(function() {
+  $('#example').DataTable();
+  });
+  </script>
+
+<script>
+  
+  $(document).ready(function() {
+	  $('#ingredients').multiselect();
+  });
+  
+</script>
+
+<ng-template #CommitteeOverlay>
+	<div class="overlay overlay-user overlay-fall" cdkMenu>
+		<ul>
+			<li>
+				<label>
+					<input type="checkbox" [(ngModel)]="showColumns.name_Committee" disabled>
+					Committee
+				</label>
+			</li>
+
+			<li>
+				<label>
+					<input type="checkbox" [(ngModel)]="showColumns.responsible" disabled>
+					Responsible
+				</label>
+			</li>
+
+			<li>
+				<label>
+					<input type="checkbox" [(ngModel)]="showColumns.replacement" disabled>
+					Replacement
+				</label>
+			</li>
+
+			<li>
+				<label>
+					<input type="checkbox" [(ngModel)]="showColumns.plant">
+					Plant
+				</label>
+			</li>
+			<li>
+				<label>
+					<input type="checkbox" [(ngModel)]="showColumns.area">
+					Area
+				</label>
+			</li>
+
+			<li>
+
+				<label>
+					<input type="checkbox" [(ngModel)]="showColumns.departement" disabled>
+					Department
+				</label>
+			</li>
+
+			<li>
+				<label>
+					<input type="checkbox" [(ngModel)]="showColumns.responsibleTitle">
+					Responsible Title
+				</label>
+			</li>
+
+			<li>
+				<label>
+					<input type="checkbox" [(ngModel)]="showColumns.Date_Create">
+					Create Date
+				</label>
+			</li>
+			<li>
+				<label>
+					<input type="checkbox" [(ngModel)]="showColumns.Date_Update">
+					Update Date
+				</label>
+			</li>
+			<li>
+				<label>
+					<input type="checkbox" [(ngModel)]="showColumns.Date_Delete">
+					Delete Date
+				</label>
+			</li>
+
+		</ul>
+	</div>
+</ng-template>
+
+<ng-template #importexport>
+	<div class="overlay overlay-user overlay-fall" cdkMenu>
+		<ul>
+			<li (click)="Import()">Import</li>
+			<li (click)="Export()">Export</li>
+			<li (click)="downloadExcel()">Download Template</li>
+		</ul>
+	</div>
+</ng-template>

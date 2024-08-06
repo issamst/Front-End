@@ -1,0 +1,731 @@
+
+/* ::-webkit-scrollbar {
+  display: none;
+} */
+
+
+.outer {
+  background-color: #fff;
+  height: 100vh; /* Sets the height to 100% of the viewport height */
+  font-family: 'Avenir', sans-serif; /* Applies the font */
+  /* background-image: url(/assets/background/lightbulb.png); */
+  background-image: url(/assets/background/undraw_Content_team_re_6rlg.png);
+  background-repeat: no-repeat;
+  background-size: 50%;
+  background-position: left 104px; /* Adjusts the vertical position to add a margin-top */
+}
+
+
+
+
+
+.signup-title{
+
+
+  color: #E98300; 
+  display: flex;
+justify-content: center;
+margin: 20px;
+font-size: 50px;
+
+}
+
+
+
+/* .signup-title{
+
+
+  color: #ffffff; 
+  padding: 10px;
+} */
+
+.panel-heading{
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+/* 
+.title-container {
+  background-color: #E98300;
+  padding: 20px;
+  margin: 20px;
+  text-align: center;
+    font-family: 'Avenir', sans-serif;
+
+  font-weight: bold;
+  font-size: 1.5em;
+  position: relative;
+  border-radius:8px ;
+  -webkit-border-radius:8px ;
+  -moz-border-radius:8px ;
+  -ms-border-radius:8px ;
+  -o-border-radius:8px ;
+}
+
+
+.title-container .line {
+  display: block;
+  width: 100%;
+  position: relative;
+}
+
+
+.title-container .line::before {
+  content: '';
+  height: 5px;
+  background-color: #ffffff;
+  position: absolute;
+  top: 0;
+  left: -10.1%;
+  width: 62%;
+  
+}
+
+.title-container .line::after {
+  content: '';
+  display: block;
+  height: 5px;
+  background-color: #ffffff;
+  position: absolute;
+ 
+  bottom: 0;
+  right: -5.2%;
+  width: 51%;
+}
+
+.line {
+     padding: 10px;
+     margin: 10px;
+     justify-content: center;
+
+} */
+
+
+
+
+.panel-heading.form-group {
+  margin: 0 10px 0;
+  padding: 0 10px 0; /* Remove default padding */
+}
+
+.container{
+  display: flex;
+  justify-content: end;
+  margin-left: 300px;
+}
+
+
+
+.row{
+  margin: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+  width: 40%;
+  justify-content: center;
+}
+
+.custom-dropdown {
+  position: relative;
+  display: inline-block;
+  width: 120px;
+  cursor: pointer;
+}
+
+.selected-option {
+  padding: 8px;
+  border: 1px solid #ccc;
+  background: #fff;
+  display: flex-end;
+  align-items: center;
+  border-radius: 8px;
+
+}
+
+.selected-option .flag-icon {
+  margin-right: 8px;
+  width: 20px;
+  height: 20px;
+}
+
+.dropdown-options {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  border: 1px solid #ccc;
+  background: #fff;
+  display: none;
+  z-index: 1000;
+  border-radius: 8px;
+
+}
+
+.dropdown-options.show {
+  display: inline-table;
+}
+.dropdown-options .dropdown-option {
+  padding: 8px;
+  cursor: pointer;
+
+  display: flex;
+  align-items: center;
+}
+
+.dropdown-options .dropdown-option:hover {
+  background: #f1f1f1;
+}
+
+.dropdown-options .flag-icon {
+  margin-right: 8px;
+  width: 20px;
+  height: 20px;
+}
+
+
+
+.panel-heading.form-group .form-select {
+  width: 30%;
+  
+  padding: 10px; 
+  font-size: 1rem;
+  line-height: 1;
+  color: #495057;
+  background-color: #fff;
+  border: transparent;
+  border-radius: 8px;
+  box-shadow: none;
+}
+
+/* Style for the dropdown arrow */
+.panel-heading.form-group .form-select::after {
+  left: 10px; /* Adjust the position of the arrow */
+
+}
+
+/* Style for the select container */
+.panel-heading.form-group ul.navbar-nav {
+  border-radius: 8px;
+  margin: 5px 0; /* Add margin */
+  padding: 0; /* Remove default padding */
+}
+.custom-select .form-select{
+  color: #838383;
+}
+
+
+
+.panel-heading.form-group ul.navbar-nav .nav-item {
+  border-radius: 8px;
+ 
+  list-style: none; /* Remove default list style */
+}
+
+
+#forget{
+    min-width: 100px;
+    margin-left: auto;
+    text-decoration:none ;
+    cursor: pointer;
+}
+a:hover{
+    text-decoration: none;
+
+}
+.form-inline label{
+    padding-left: 10px;
+    margin: 0 ;
+    cursor: pointer;
+}
+.btn{
+    margin-top: 20px ;
+    border-radius: 15px;
+}
+.panel{
+    min-height: 380px;
+    box-shadow: 20px 20px 80px rgb(218, 218, 218);
+    border-radius: 12px ;
+    margin-top: 50px;
+    margin-right: 33px;
+
+
+}
+
+.input-field{
+  border-radius: 8px;
+  padding: 5px; 
+  margin: 3px 0 ;
+  display: flex;
+  align-items:center ;
+  cursor: pointer;
+  border: 1px solid #ddd;
+  color:#E98300;
+}
+
+input:disabled{
+  background-color: transparent;
+
+}
+
+
+.input-field.error{
+  border: 1px solid #BC1F00;
+  color :#BC1F00;
+
+}
+input[type='text'],
+input[type='password']{
+    border: none;
+    outline:none;
+    box-shadow: none;
+    width: 100%;
+
+}
+
+.fa-eye-slash.btn{
+    border: none;
+    outline:none;
+    box-shadow: none;
+   
+}
+.fa-user{
+  padding: 5px;
+}
+
+
+img{
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+    border-radius: 50%;
+    position: relative;
+
+}
+.bordert{
+    border-top: 1px solid #aaa;
+    position: relative;
+}
+.bordert::after{
+    content: "or connect with";
+    position: absolute;
+    top:-15px;
+    left: 33%;
+    background-color: #fff;
+    padding: 0 8px;
+
+}
+
+
+
+  
+ /* Style the close button */
+ .btn-close {
+    font-size: 1.5rem;
+    color: #999; 
+    position: absolute;
+    top: 10px;
+    right: 10px;
+  }
+  
+
+  /* Style the scan button */
+.btn-scan{
+
+  background-color: #E98300; /* Green background */
+  border: none;
+  color: white;
+  padding: 4px ;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 15px;
+  margin: 0;
+  cursor: pointer;
+  border-radius: 8px;
+  transition-duration: 0.4s;
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+
+}
+
+
+
+/* Change background color on hover */
+.btn-scan:hover {
+  background-color: #E98300; /* Darker green on hover */
+}
+  
+.btn-scan::before {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 100%;
+  height: 228%;
+  width: 128%;
+  background-color: #04215D;
+  border-radius: 50%;
+  z-index: -1;
+  transition: all 0.6s ease;
+}
+
+.btn-scan:hover::before{
+  top: -50%;
+  left: -10%;
+}
+
+
+/*loder4 TE*/
+
+
+.loadeer {
+  --color: #E98300;
+  --width: 80px; 
+  --height: 19px; 
+  position: relative;
+  width: calc(var(--width) * 1.5);
+  height: calc(var(--height) * 3 + 20px); /* Height considering the gaps */
+  margin: 50px auto; /* Centering the loader */
+}
+
+.loadeer span {
+  position: absolute;
+  background-color: var(--color);
+  border-radius: 10px; /* Rounded ends */
+  animation: loader-animation 1.5s infinite ease-in-out;
+}
+
+.loadeer span:nth-child(1) {
+  width: var(--width);
+  height: var(--height);
+  top: 0;
+  left: 30px; /* Adjust to center */
+  animation-delay: 0ms;
+}
+
+.loadeer span:nth-child(2) {
+  width: var(--width); /* Shorter span */
+  height: var(--height);
+  top: calc(var(--height) + 4px); /* Adjust to the second row */
+  left: 0;
+  animation-delay: 150ms;
+}
+
+.loadeer span:nth-child(3) {
+  width: var(--width); /* Longer span */
+  height: var(--height);
+  top: calc(var(--height) * 2 + 8px); /* Adjust to the third row */
+  left: 18px; /* Adjust to center */
+  animation-delay: 300ms;
+}
+
+@keyframes loader-animation {
+  0%, 100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  50% {
+    transform: translateX(20px);
+    opacity: 0.6;
+    
+}
+}
+
+.loadeer .text {
+  position: absolute;
+  top: -40px;
+  margin-bottom: 10px ;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-transform: lowercase;
+  font-weight: 500;
+  font-size: 20px;
+  letter-spacing: 0.2px;
+}
+
+.loadeer .text::before,
+.loadeer .text::after {
+  content: attr(data-text);
+}
+
+.loadeer .text::before {
+  color: var(--text-color);
+}
+
+.loadeer .text::after {
+ /* color: var(--front-color-in);*/
+
+  color: #E98300;
+  animation: text-animation76 3.6s ease infinite;
+  position: absolute;
+  left: 0;
+}
+
+
+
+  /* Style the text and link below the Login button */
+  .text-below-button {
+
+    width: 100%; /* Make the width the same as other divs */
+
+    margin-top: 20px; /* Adjust spacing from the button */
+    font-size: 16px;
+    color: #333; /* Dark text color */
+  }
+  
+  .text-below-button a {
+    font-weight: bold;
+
+    color: #E98300; /* Blue color for the link */
+    text-decoration: none;
+    margin-left: 5px; /* Add space between text and link */
+  }
+  
+  .text-below-button a:hover {
+    color: #04215D; /* Darker blue on hover */
+
+    text-decoration: none; /* Underline the link on hover */
+  }
+  
+
+
+  h6{
+    margin: 10px;
+    position: static;
+  }
+
+
+
+  .switch {
+    /* switch */
+    --switch-width: 46px;
+    --switch-height: 24px;
+    --switch-bg: rgb(131, 131, 131);
+    --switch-checked-bg: rgb(233, 113, 0);
+    --switch-offset: calc((var(--switch-height) - var(--circle-diameter)) / 2);
+    --switch-transition: all .2s cubic-bezier(0.27, 0.2, 0.25, 1.51);
+    /* circle */
+    --circle-diameter: 18px;
+    --circle-bg: #fff;
+    --circle-shadow: 1px 1px 2px rgba(146, 146, 146, 0.45);
+    --circle-checked-shadow: -1px 1px 2px rgba(163, 163, 163, 0.45);
+    --circle-transition: var(--switch-transition);
+    /* icon */
+    --icon-transition: all .2s cubic-bezier(0.27, 0.2, 0.25, 1.51);
+    --icon-cross-color: var(--switch-bg);
+    --icon-cross-size: 6px;
+    --icon-checkmark-color: var(--switch-checked-bg);
+    --icon-checkmark-size: 10px;
+    /* effect line */
+    --effect-width: calc(var(--circle-diameter) / 2);
+    --effect-height: calc(var(--effect-width) / 2 - 1px);
+    --effect-bg: var(--circle-bg);
+    --effect-border-radius: 1px;
+    --effect-transition: all .2s ease-in-out;
+  
+  }
+  
+  .switch input {
+    display: none;
+  }
+  
+  .switch {
+    display: inline-block;
+    margin: 0;
+   
+  }
+  
+  .switch svg {
+    -webkit-transition: var(--icon-transition);
+    -o-transition: var(--icon-transition);
+    transition: var(--icon-transition);
+    position: absolute;
+    height: auto;
+  }
+  
+  .switch .checkmark {
+    width: var(--icon-checkmark-size);
+    color: var(--icon-checkmark-color);
+    -webkit-transform: scale(0);
+    -ms-transform: scale(0);
+    transform: scale(0);
+  }
+  
+  .switch .cross {
+    width: var(--icon-cross-size);
+    color: var(--icon-cross-color);
+  }
+  
+  .slider {
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    width: var(--switch-width);
+    height: var(--switch-height);
+    background: var(--switch-bg);
+    border-radius: 999px;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    position: relative;
+    -webkit-transition: var(--switch-transition);
+    -o-transition: var(--switch-transition);
+    transition: var(--switch-transition);
+    cursor: pointer;
+  }
+  
+  .circle {
+    width: var(--circle-diameter);
+    height: var(--circle-diameter);
+    background: var(--circle-bg);
+    border-radius: inherit;
+    -webkit-box-shadow: var(--circle-shadow);
+    box-shadow: var(--circle-shadow);
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    -webkit-transition: var(--circle-transition);
+    -o-transition: var(--circle-transition);
+    transition: var(--circle-transition);
+    z-index: 1;
+    position: absolute;
+    left: var(--switch-offset);
+  }
+  
+  .slider::before {
+    content: "";
+    position: absolute;
+    width: var(--effect-width);
+    height: var(--effect-height);
+    left: calc(var(--switch-offset) + (var(--effect-width) / 2));
+    background: var(--effect-bg);
+    border-radius: var(--effect-border-radius);
+    -webkit-transition: var(--effect-transition);
+    -o-transition: var(--effect-transition);
+    transition: var(--effect-transition);
+  }
+  
+  /* actions */
+  
+  .switch input:checked+.slider {
+    background: var(--switch-checked-bg);
+  }
+  
+  .switch input:checked+.slider .checkmark {
+    -webkit-transform: scale(1);
+    -ms-transform: scale(1);
+    transform: scale(1);
+  }
+  
+  .switch input:checked+.slider .cross {
+    -webkit-transform: scale(0);
+    -ms-transform: scale(0);
+    transform: scale(0);
+  }
+  
+  .switch input:checked+.slider::before {
+    left: calc(100% - var(--effect-width) - (var(--effect-width) / 2) - var(--switch-offset));
+  }
+  
+  .switch input:checked+.slider .circle {
+    left: calc(100% - var(--circle-diameter) - var(--switch-offset));
+    -webkit-box-shadow: var(--circle-checked-shadow);
+    box-shadow: var(--circle-checked-shadow);
+  }
+  
+  .input-field .fa {
+    padding: 5px;
+  }
+
+  .form-group{
+    padding: 5px;
+  }
+
+
+
+
+
+  
+   
+
+/* Style pour l'icône elle-même */
+.icon {
+    font-size: 3rem; /* Taille de l'icône */
+    color: rgb(233, 131, 0); /* Couleur de l'icône (vert dans cet exemple) */
+}
+ /* .spinner-border.spinner-border-lg 
+  {
+      color: rgb(231, 104, 13);
+      margin-top: 3em;
+      margin-bottom: 3em;
+      width: 5rem;
+       height: 5rem;
+  }*/
+
+  .spinner-container {
+    display: flex;
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    height: 100%; /* Ensure the container takes up full height */
+}
+
+
+
+/* Style the Login button */
+.btn-signup {
+  background-color: #E98300; 
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  position: relative;
+  cursor: pointer;
+  border-radius: 8px;
+  transition-duration: 0.4s;
+  width: 100%; 
+  margin-top: 20px; 
+  z-index: 1;
+  overflow: hidden;
+
+}
+
+/* Change background color on hover */
+.btn-signup:hover {
+  background-color: #E98300; /* Darker green on hover */
+}
+
+
+.btn-signup::before {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 100%;
+  height: 228%;
+  width: 128%;
+  background-color: #04215D;
+  border-radius: 50%;
+  z-index: -1;
+  transition: all 0.6s ease;
+}
+
+.btn-signup:hover::before{
+  top: -50%;
+  left: -10%;
+}
+
+.modal-header{
+  border-bottom: none;
+  padding: 10px;
+}

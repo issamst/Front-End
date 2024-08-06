@@ -1,0 +1,304 @@
+   
+<div class="card flex justify-content-center">
+  <p-card >
+    <div style="text-align: center; font-family:'Avenir, sans-serif';  font-size: 45px; font-weight: bold;"> 
+      <strong>Impacts</strong>
+  </div>
+    <div class="card-body">
+		<div
+			style="display: flex; justify-content: space-between; align-items: center;margin: 5px;">
+			<div class="form-outline" style="flex: 1;">
+				
+			
+					<!-- <input pInputText
+					type="text"
+					placeholder="Search Keyword..."
+					[(ngModel)]="searchText"
+					(ngModelChange)="globalSearch()"
+				  /> -->
+				</div>
+
+			<div class="head-user-avatar" [cdkMenuTriggerFor]="userOverlay">
+				<div class="dropdown-text-end">
+					<a class="btn btn-outline-success" aria-expanded="false"
+						(click)="toggleDropdown()">
+						List of columns
+						<i *ngIf="!isImpactOverlayOpen" class="fa fa-angle-left"></i>
+						<i *ngIf="isImpactOverlayOpen" class="fa fa-angle-down"></i>
+					</a>
+				</div>
+			</div>
+			<div class="head-user-avatar" [cdkMenuTriggerFor]="importexport">
+				<div class="dropdown-text-end">
+					<a class="btn btn-outline-success" aria-expanded="false"
+						(click)="importexportopen()">
+						<i class="fa fa-download" aria-hidden="true"></i>
+						<i *ngIf="!isimportexportopen" class="fa fa-angle-left"></i>
+						<i *ngIf="isimportexportopen" class="fa fa-angle-down"></i>
+					</a>
+				</div>
+			</div>
+			<button class="btn btn-outline-success-" pButton type="button"
+				label="Add New Impact" icon="fa fa-plus" (click)="openModel()"
+				style="margin: 0 10px;"></button>
+		</div>
+
+   
+
+			<p-table
+				#dt1
+
+				[value]="Impacts"
+				[paginator]="true"
+				[rows]="5"
+				dataKey="id"
+				[loading]="loading"
+
+				responsiveLayout="stack" 
+				styleClass="p-datatable-striped" 
+
+				[resizableColumns]="true"
+				[first]="first"
+				[showCurrentPageReport]="true"
+				[tableStyle]="{ 'min-width': '60rem' }"
+				currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+				(onPage)="pageChange($event)"
+				[rowsPerPageOptions]="[3, 5, 10, 20]"
+				[globalFilterFields]="['Impact', 'Responsible', 'Replacement', 'Departement User','Plant','Area','Type']"
+
+				>
+
+				<ng-template pTemplate="caption">
+					<div class="flex">
+						<p-button label="Clear" [outlined]="true" icon="fa fa-filter" (click)="clear(dt1)" />
+						<span class="p-input-icon-left ml-auto">
+							<i class="fa fa-search"></i>
+              <input pInputText type="text" placeholder="Search" [(ngModel)]="searchText" (ngModelChange)="globalSearch()" />
+						</span>
+<!-- 
+					  <div class="my-right-div">
+              <p-button
+                type="button"
+                icon="fa fa-chevron-left"
+                (click)="prev()"
+                [disabled]="isFirstPage()"
+                styleClass="p-button-text" />
+              <p-button
+                type="button"
+                icon="fa fa-refresh"
+                (click)="reset()"
+                styleClass="p-button-text" />
+              <p-button
+                type="button"
+                icon="fa fa-chevron-right"
+                (click)="next()"
+                [disabled]="isLastPage()"
+                styleClass="p-button-text" />
+            </div> -->
+					</div>
+				</ng-template>	
+
+				<ng-template pTemplate="header" let-columns>
+					<tr>
+						<th pSortableColumn="name_Impact" style="width:20%">
+							<div class="flex align-items-center">
+								<p-columnFilter type="text" field="name_Impact" display="menu"></p-columnFilter>
+								Impact
+                <p-sortIcon field="name_Impact" />
+
+							</div>
+						</th>
+						<th pSortableColumn="description" style="width:40%" *ngIf="showColumns.description">
+              <p-columnFilter type="text" field="description" display="menu"></p-columnFilter>
+
+              Impact Description
+              <p-sortIcon field="description" />
+
+            </th>
+						
+						<th pSortableColumn="date_Create"  style="width:20%" *ngIf="showColumns.date_Create">
+              Create Date
+              <p-sortIcon field="date_Create" />
+            </th>
+						<th pSortableColumn="date_Update" style="width:20%" *ngIf="showColumns.date_Update">
+              Update Date
+              <p-sortIcon field="date_Update" />
+            </th>
+						<th pSortableColumn="date_delete" style="width:20%" *ngIf="showColumns.date_delete">
+              Delete Date
+              <p-sortIcon field="date_delete" />
+            </th>
+						<th style="width:5%">Action</th>
+					</tr>
+				</ng-template>
+				<ng-template pTemplate="body" let-Impact >
+          <tr [ngClass]="{'deactivated-row': Impact.commenterDelete}">
+						<td *ngIf="showColumns.name_Impact">
+							<span class="ml-1 vertical-align-middle">{{ Impact.name_Impact}}</span>
+						</td>
+            <!-- <td *ngIf="showColumns.name_Impact">{{Impact.name_Impact}}</td> -->
+            <td *ngIf="showColumns.description">{{ Impact.description +'   ...' | slice:0 :80 }}</td>
+
+            <td *ngIf="showColumns.date_Create">{{ Impact.date_Create !== '0001-01-01T00:00:00' ? (Impact.date_Create | date:'dd-MM-yyyy / HH:mm:ss') : '  ' }}</td>
+            <td *ngIf="showColumns.date_Update">{{ Impact.date_Update !== '0001-01-01T00:00:00' ? (Impact.date_Update | date:'dd-MM-yyyy / HH:mm:ss') : '  ' }}</td>
+            <td *ngIf="showColumns.date_delete">{{ Impact.date_delete !== '0001-01-01T00:00:00' ? (Impact.date_delete | date:'dd-MM-yyyy / HH:mm:ss') : '  ' }}</td>
+
+            <td>
+							<button pButton class="icon view" icon="fa fa-eye"
+								(click)="selectView(Impact.id); openModelView(Impact.id)"[pTooltip]="'View Impact'" severity="secondary" tooltipPosition="top" >		
+							</button>
+							<button pButton class="icon edit" type="button" icon="fa fa-pencil-alt"
+								(click)="selectGetImpactbyid(Impact.id); openModelImpact(Impact.id)"
+								[disabled]="Impact.commenterDelete"[pTooltip]="'Edit Impact'" severity="secondary" tooltipPosition="top" >									
+							</button>
+							<button pButton class="icon delete" type="button" icon="fa fa-ban"
+								 (click)="DeleteImpact(Impact.id)"
+								 [disabled]="Impact.commenterDelete"
+								 [pTooltip]="'Disable Impact'" severity="secondary"
+								 tooltipPosition="top" >									
+							</button>
+						</td>
+					</tr>
+				</ng-template>
+				<ng-template pTemplate="emptymessage">
+					<tr>
+						<td colspan="7">No Impact found.</td>
+					</tr>
+				</ng-template>
+		
+			
+			</p-table>
+		</div>
+  </p-card>
+
+<p-dialog header="Add New Impact" id="AddImpact" [(visible)]="displayModal" [modal]="true" [style]="{width: '40%'}">
+      <form [formGroup]="ImpactForm">
+        <div class="p-fluid">
+          <div class="p-field">        
+              <label for="">Name Impact <span style="color:red; font-weight: bold; ">*</span> </label>
+              <input pInputText formControlName="name_Impact" type="text" placeholder="Impact">
+          </div>
+          <div class="p-field">
+              <label for="">Description <span style="color:red; font-weight: bold; ">*</span> </label>
+              <input pInputText formControlName="description" type="text" placeholder="description" >
+          </div>
+        </div>
+    
+          <div class="p-dialog-footer">
+            <button pButton  (click)="SaveImpact()" label="Save" type="button" style=" border-radius: 8px;" class="btn  btn-block mt-1 w-1  btn-save"></button>
+            <button pButton  (click)="onClear()" label="Clear" type="button"  style=" border-radius: 8px;" class="  mt-1 w-1 btn-close-clear"></button>
+            <button pButton  (click)="displayUpdateModal=false" label="Close" type="button"  style=" border-radius: 8px;" class=" btn btn-danger mt-1 w-1 btn-close-down"></button>
+          </div>
+      </form>
+
+
+</p-dialog>
+    
+<p-dialog header="Update Impact" [(visible)]="displayUpdateModal" [modal]="true" [style]="{width: '40%'}">
+
+      <form [formGroup]="UpdateImpact">
+        <div class="p-fluid">
+            <div class="p-field">        
+                <label for="">Name Impact <span style="color:red; font-weight: bold; ">*</span> </label>
+                <input pInputText formControlName="name_Impact" type="text" placeholder="Impact">
+            </div>
+            <div class="p-field">
+                <label for="">Description <span style="color:red; font-weight: bold; ">*</span> </label>
+                <input pInputText formControlName="description" type="text" placeholder="description" >
+            </div>
+          </div>
+          <div class="p-dialog-footer">
+            <button pButton  (click)="updateImpact(selectedImpactId, UpdateImpact.value)" label="Save" type="button" style=" border-radius: 8px;" class="btn  btn-block mt-1 w-1  btn-update"></button>
+            <button pButton  (click)="onClear()" label="Clear" type="button"  style=" border-radius: 8px;" class="  mt-1 w-1 btn-close-clear"></button>
+            <button pButton  (click)="displayUpdateModal=false" label="Close" type="button"  style=" border-radius: 8px;" class=" btn btn-danger mt-1 w-1 btn-close-down"></button>
+          </div>
+      </form>
+</p-dialog>
+    
+
+<p-dialog header="View Impact" [(visible)]="displayViewModal" [modal]="true" [style]="{width: '40%'}">
+      <form [formGroup]="ViewImpact">
+        <div class="p-fluid">
+          <div class="p-field" *ngIf="ViewImpact.get('commenterDelete')?.value !== null">
+            <label for="commenterDelete" style="font-size: 20px;">Delete Reason</label>
+            <ng-container *ngIf="ViewImpact.get('commenterDelete')?.value.length > 20">
+              <textarea pInputTextarea formControlName="commenterDelete" id="commenterDelete" placeholder="Status" readonly style="font-weight: bold; font-size: 30px; color: white; background-color: #BC1F00;"></textarea>
+            </ng-container>
+            <ng-container *ngIf="ViewImpact.get('commenterDelete')?.value.length <= 20">
+              <input pInputText formControlName="commenterDelete" id="commenterDelete" type="text"
+               placeholder="Status" readonly style="font-weight: bold; font-size: 30px; color: white; background-color: #BC1F00;" />
+            </ng-container>
+          </div>
+          <div class="p-field">        
+            <label for="">Name Impact</label>
+            <input pInputText formControlName="name_Impact" type="text" placeholder="Impact">
+          </div>
+          <div class="p-field">
+            <label for="">Description</label>
+            <input pInputText formControlName="description" type="text" placeholder="description" >
+          </div>
+        </div>
+        <div class="p-dialog-footer">
+          <button pButton  (click)="displayUpdateModal=false" label="Close" type="button"  style=" border-radius: 8px;" class=" btn btn-danger mt-1 w-1 btn-close-down"></button>
+
+        </div>
+      </form>
+
+</p-dialog>
+
+<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-"></script>
+<script src="bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+<script src="bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.datatables.net/2.0.5/js/dataTables.js"></script>
+<script src="https://cdn.datatables.net/2.0.5/js/dataTables.bootstrap5.js"></script>
+<script > $(document).ready(function() {
+$('#example').DataTable();
+});
+</script>
+
+
+<script >
+
+$(document).ready(function() {
+    $('#ingredients').multiselect();
+});
+
+</script>
+    
+    
+    
+    
+<ng-template #userOverlay>
+<div class="overlay overlay-user overlay-fall" cdkMenu>
+<ul>
+  <li>
+    <label>
+      <input type="checkbox" [(ngModel)]="showColumns.name_Impact" disabled>
+      name Title
+    </label>
+  </li>
+  <li>
+  <label>
+    <input type="checkbox" [(ngModel)]="showColumns.description" disabled>
+    description
+  </label>
+</li>
+
+</ul>
+</div>
+</ng-template>
+    
+<ng-template #importexport>
+  <div class="overlay overlay-user overlay-fall" cdkMenu>
+      <ul>
+          <li (click)="Import()">Import</li>
+          <li (click)="Export()">Export</li>
+          <li (click)="downloadExcel()">Download Template</li>
+      </ul>
+  </div>
+</ng-template>
+  
+  
+  
+  

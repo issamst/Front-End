@@ -1,0 +1,30 @@
+.body{
+    width: calc(100% - 5rem);
+    /* height: 100vh; */
+    margin-top: 92px;
+    margin-left: 5rem;
+    z-index: 1;
+    position: relative;
+    top: 25px;
+    transition: all .5s ease;
+    background: #f4f7f4;
+    padding: 3rem;
+    font-family: 'Avenir', sans-serif; 
+
+}
+
+
+.body-trimmed{
+width: calc(100% - 20.5625rem);
+margin-left:20.5625rem ;
+font-family: 'Avenir', sans-serif; 
+
+}
+
+
+.body-md-screen{
+    width: calc(100% - 5rem);
+    margin-left:5rem ;
+    font-family: 'Avenir', sans-serif; 
+
+}

@@ -1,0 +1,357 @@
+
+  
+     
+  <div class="card flex justify-content-center">
+    <p-card >
+      <div style="text-align: center; font-family:'Avenir, sans-serif';  font-size: 45px; font-weight: bold;"> 
+        <strong>Projects</strong>
+    </div>
+      <div class="card-body">
+		<div
+			style="display: flex; justify-content: space-between; align-items: center;margin: 5px;">
+			<div class="form-outline" style="flex: 1;">
+				
+			
+					<!-- <input pInputText
+					type="text"
+					placeholder="Search Keyword..."
+					[(ngModel)]="searchText"
+					(ngModelChange)="globalSearch()"
+				  /> -->
+				</div>
+
+			<div class="head-user-avatar" [cdkMenuTriggerFor]="UserOverlay">
+				<div class="dropdown-text-end">
+					<a class="btn btn-outline-success" aria-expanded="false"
+						(click)="toggleDropdown()">
+						List of columns
+						<i *ngIf="!isProjectOverlayOpen" class="fa fa-angle-left"></i>
+						<i *ngIf="isProjectOverlayOpen" class="fa fa-angle-down"></i>
+					</a>
+				</div>
+			</div>
+			<div class="head-user-avatar" [cdkMenuTriggerFor]="importexport">
+				<div class="dropdown-text-end">
+					<a class="btn btn-outline-success" aria-expanded="false"
+						(click)="importexportopen()">
+						<i class="fa fa-download" aria-hidden="true"></i>
+						<i *ngIf="!isimportexportopen" class="fa fa-angle-left"></i>
+						<i *ngIf="isimportexportopen" class="fa fa-angle-down"></i>
+					</a>
+				</div>
+			</div>
+			<button class="btn btn-outline-success-" pButton type="button"
+				label="Add New Project" icon="fa fa-plus" (click)="openModel()"
+				style="margin: 0 10px;"></button>
+		</div>
+
+
+
+			<p-table
+				#dt1
+
+				[value]="Projects"
+				[paginator]="true"
+				[rows]="5"
+				dataKey="id"
+				[loading]="loading"
+
+				responsiveLayout="stack" 
+				styleClass="p-datatable-striped" 
+
+				[resizableColumns]="true"
+				[first]="first"
+				[showCurrentPageReport]="true"
+				[tableStyle]="{ 'min-width': '60rem' }"
+				currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+				(onPage)="pageChange($event)"
+				[rowsPerPageOptions]="[3, 5, 10, 20]"
+				[globalFilterFields]="['Plant', 'Responsible', 'Replacement', 'Departement User','Plant','Area','Type']"
+
+				>
+
+				<ng-template pTemplate="caption">
+					<div class="flex">
+						<p-button label="Clear" [outlined]="true" icon="fa fa-filter" (click)="clear(dt1)" />
+						<span class="p-input-icon-left ml-auto">
+							<i class="fa fa-search"></i>
+              <input pInputText type="text" placeholder="Search" [(ngModel)]="searchText" (ngModelChange)="globalSearch()" />
+						</span>
+					</div>
+				</ng-template>	
+
+				<ng-template pTemplate="header" let-columns>
+					<tr>
+						<th pSortableColumn="project_Name" style="width:15%">
+							<div class="flex align-items-center">
+								<p-columnFilter type="text" field="project_Name" display="menu"></p-columnFilter>
+								Project Name
+                <p-sortIcon field="project_Name" />
+
+							</div>
+						</th>
+						<!-- <th style="width:15%" *ngIf="showColumns.name_Plant">Name Plant</th> -->
+						 <th pSortableColumn="building_ID" style="width:15%" *ngIf="showColumns.building_ID">
+              <p-columnFilter type="text" field="building_ID" display="menu"></p-columnFilter>
+              Plant
+              <p-sortIcon field="building_ID" />
+            </th>
+						 <th pSortableColumn="name_Area.name_Area" style="width:15%" *ngIf="showColumns.areaID">
+              <p-columnFilter type="text" field="name_Area.name_Area" display="menu"></p-columnFilter>
+              Area
+              <p-sortIcon field="name_Area.name_Area" />
+            </th>
+
+						<th pSortableColumn="date_Create" style="width:15%" *ngIf="showColumns.date_Create">
+              Create Date
+              <p-sortIcon field="date_Create" />
+            </th>
+						<th pSortableColumn="date_Update" style="width:15%" *ngIf="showColumns.date_Update">
+              Update Date
+              <p-sortIcon field="date_Update" />
+
+            </th>
+						<th pSortableColumn="date_delete" style="width:15%" *ngIf="showColumns.date_delete">
+              Delete Date
+              <p-sortIcon field="date_delete" />
+
+            </th>
+						<th style="width:10% ">Action</th>
+					</tr>
+				</ng-template>
+				<ng-template pTemplate="body" let-Project >
+          <tr [ngClass]="{'deactivated-row': Project.commenterDelete}">
+						<td *ngIf="showColumns.project_Name">
+							<span class="ml-1 vertical-align-middle">{{ Project.project_Name}}</span>
+						</td>
+            <td *ngIf="showColumns.building_ID">{{ Project.building_ID }}</td>
+            <td *ngIf="showColumns.areaID">{{Project.name_Area.name_Area}}</td>
+
+            <td *ngIf="showColumns.date_Create">{{ Project.date_Create  !== '0001-01-01T00:00:00' ? (Project.date_Create  | date:'dd-MM-yyyy / HH:mm:ss') : '  ' }}</td>
+            <td *ngIf="showColumns.date_Update">{{ Project.date_Update !== '0001-01-01T00:00:00' ? (Project.date_Update | date:'dd-MM-yyyy / HH:mm:ss') : '  ' }}</td>
+            <td *ngIf="showColumns.date_delete">{{ Project.date_delete !== '0001-01-01T00:00:00' ? (Project.date_delete | date:'dd-MM-yyyy / HH:mm:ss') : '  ' }}</td>
+
+            <td>
+							<button pButton class="icon view" icon="fa fa-eye"
+								(click)="selectView(Project.id); openModelView(Project.id)"[pTooltip]="'View Project'" severity="secondary" tooltipPosition="top" >		
+							</button>
+							<button pButton class="icon edit" type="button" icon="fa fa-pencil-alt"
+								(click)="selectGetProjectbyid(Project.id); openModelUpdate(Project.id)"
+								[disabled]="Project.commenterDelete"[pTooltip]="'Edit Project'" severity="secondary" tooltipPosition="top" >									
+							</button>
+							<button pButton class="icon delete" type="button" icon="fa fa-ban"
+								 (click)="DeleteProject(Project.id)"
+								 [disabled]="Project.commenterDelete"
+								 [pTooltip]="'Disable Project'" severity="secondary"
+								 tooltipPosition="top" >									
+							</button>
+						</td>
+					</tr>
+				</ng-template>
+				<ng-template pTemplate="emptymessage">
+					<tr>
+						<td colspan="7">No Projects found.</td>
+					</tr>
+				</ng-template>
+		
+				
+			</p-table>
+		</div>
+    </p-card>
+
+    <p-dialog header="Add New Project" id="AddProject" [(visible)]="displayModal" [modal]="true" [style]="{width: '40%'}">
+      <form [formGroup]="ProjectForm">
+        <div class="p-fluid">
+          <div class="p-field">  
+            <label for="project_Name">Name Project <span style="color:red; font-weight: bold; ">*</span> </label>
+            <input pInputText formControlName="project_Name" type="text" placeholder="Project Name">
+          </div>
+          <div class="p-field">
+            <label for="buildingID">Plant <span style="color:red; font-weight: bold; ">*</span> </label>
+            <p-dropdown 
+              [options]="plants" 
+              optionValue="buildingID" 
+              optionLabel="buildingID" 
+              formControlName="building_ID" 
+              placeholder="Select Plant" 
+              id="buildingID"
+              (onChange)="onBuildingIDSelected($event)">
+            </p-dropdown>
+          </div>
+          <div *ngIf="AreasById && AreasById.length > 0" class="p-field">
+            <label for="areaID">Area <span style="color:red; font-weight: bold; ">*</span> </label>
+            <p-dropdown 
+              [options]="AreasById" 
+              optionValue="id" 
+              optionLabel="name_Area" 
+              formControlName="areaID" 
+              placeholder="Select Area" 
+              id="areaID">
+            </p-dropdown>
+          </div>
+        </div>
+        <div class="p-dialog-footer">
+          <button pButton (click)="SaveProject()" label="Save" type="button" style="border-radius: 8px;" class="btn btn-block mt-1 w-1 btn-save"></button>
+          <button pButton label="Clear" type="button" style="border-radius: 8px;" class="mt-1 w-1 btn-close-clear"></button>
+          <button pButton (click)="displayModal=false ; Close()" label="Close" type="button" style="border-radius: 8px;" class="btn btn-danger mt-1 w-1 btn-close-down"></button>
+        </div>
+      </form>
+    </p-dialog>
+    
+    
+    
+    <p-dialog header="Update Project" [(visible)]="displayUpdateModal" [modal]="true" [style]="{width: '40%'}">
+      <form [formGroup]="UpdateProjectFrom">
+        <div class="p-fluid">
+          <div class="p-field">
+              <label for="">Name project <span style="color:red; font-weight: bold; ">*</span> </label>
+              <input pInputText formControlName="project_Name" type="text"  placeholder="Project Name" >
+          </div>
+          <div class="p-field">
+            <label for="buildingID">Plant <span style="color:red; font-weight: bold; ">*</span> </label>
+            <p-dropdown 
+              [options]="plants" 
+              optionValue="buildingID" 
+              optionLabel="buildingID" 
+              formControlName="building_ID"
+              placeholder="Select Plant" 
+              id="buildingID"
+              (onChange)="onBuildingIDSelected($event)">
+            </p-dropdown>
+          </div>
+          <div *ngIf="AreasById && AreasById.length > 0" class="p-field">
+            <label for="areaID">Area <span style="color:red; font-weight: bold; ">*</span> </label>
+            <p-dropdown 
+              [options]="AreasById" 
+              optionValue="id" 
+              optionLabel="name_Area" 
+              formControlName="areaID" 
+              placeholder="Select Area" 
+              id="areaID">
+            </p-dropdown>
+          </div>
+        </div>
+       
+          <div class="p-dialog-footer">
+            <button pButton  (click)="updateProject(UProjectId, UpdateProjectFrom.value)" label="Update" type="button" style=" border-radius: 8px;" class="btn  btn-block mt-1 w-1  btn-update"></button>
+            <button pButton   label="Clear" type="button"  style=" border-radius: 8px;" class="  mt-1 w-1 btn-close-clear"></button>
+            <button pButton  (click)="displayUpdateModal=false ; Close()" label="Close" type="button"  style=" border-radius: 8px;" class=" btn btn-danger mt-1 w-1 btn-close-down"></button>
+          </div>
+      </form>
+
+
+    </p-dialog>
+    
+
+    <p-dialog header="View Project" [(visible)]="displayViewModal" [modal]="true" [style]="{width: '40vw'}">
+      <form [formGroup]="ViewProject">
+        <div class="p-fluid">
+          <div class="p-field" *ngIf="ViewProject.get('commenterDelete')?.value !== null">
+            <label for="commenterDelete" style="font-size: 20px;">Delete Reason</label>
+            <ng-container *ngIf="ViewProject.get('commenterDelete')?.value.length > 20">
+            <textarea pInputTextarea formControlName="commenterDelete" id="commenterDelete" placeholder="Status" readonly style="font-weight: bold; font-size: 30px; color: white; background-color: #BC1F00;"></textarea>
+            </ng-container>
+            <ng-container *ngIf="ViewProject.get('commenterDelete')?.value.length <= 20">
+            <input pInputText formControlName="commenterDelete" id="commenterDelete" type="text"
+             placeholder="Status" readonly style="font-weight: bold; font-size: 30px; color: white; background-color: #BC1F00;" />
+            </ng-container>
+          </div>
+          <div class="p-field">       
+              <label for="">Name Project</label>
+              <input pInputText formControlName="project_Name" type="text" placeholder="View Project">
+          </div>
+          <div class="p-field">
+            <label for="">Plant</label>
+            <input pInputText formControlName="building_ID" type="text"  placeholder="View Plant" >          
+          </div>
+          
+        	<div class="p-field">
+            <label for="areaID">Area</label>
+            <input pInputText  type="text" placeholder="Area Name" [value]="getAreaName(ViewProject.get('areaID')?.value)" disabled>
+          </div>
+        </div>
+        <div class="p-dialog-footer">
+          <button pButton  (click)="displayViewModal=false ; Close()" label="Close" type="button"  style=" border-radius: 8px;" class=" btn btn-danger mt-1 w-1 btn-close-down"></button>
+
+        </div>
+      </form>
+    
+    </p-dialog>
+
+<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-"></script>
+<script src="bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+<script src="bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.datatables.net/2.0.5/js/dataTables.js"></script>
+<script src="https://cdn.datatables.net/2.0.5/js/dataTables.bootstrap5.js"></script>
+<script > $(document).ready(function() {
+$('#example').DataTable();
+});
+</script>
+
+
+<script >
+
+$(document).ready(function() {
+    $('#ingredients').multiselect();
+});
+
+</script>
+    
+    
+    
+    
+<ng-template #UserOverlay>
+<div class="overlay overlay-user overlay-fall" cdkMenu>
+<ul>
+  <li>
+    <label>
+      <input type="checkbox" [(ngModel)]="showColumns.project_Name" disabled>
+      Name project
+    </label>
+  </li>
+  <li>
+    <label>
+      <input type="checkbox" [(ngModel)]="showColumns.building_ID" disabled>
+      building ID
+    </label>
+  </li>
+  <li>
+    <label>
+      <input type="checkbox" [(ngModel)]="showColumns.areaID">
+      areaID
+    </label>
+  </li>
+
+  <li>
+    <label>
+      <input type="checkbox" [(ngModel)]="showColumns.date_Create">
+      Date Create
+    </label>
+  </li>
+  <li>
+    <label>
+      <input type="checkbox" [(ngModel)]="showColumns.date_Update">
+      Date Update
+    </label>
+  </li>
+  <li>
+    <label>
+      <input type="checkbox" [(ngModel)]="showColumns.date_delete">
+      Date Delete
+    </label>
+  </li>
+</ul>
+</div>
+</ng-template>
+    
+<ng-template #importexport>
+  <div class="overlay overlay-user overlay-fall" cdkMenu>
+      <ul>
+          <li (click)="Import()">Import</li>
+          <li (click)="Export()">Export</li>
+          <li (click)="downloadExcel()">Download Template</li>
+      </ul>
+  </div>
+</ng-template>
+  

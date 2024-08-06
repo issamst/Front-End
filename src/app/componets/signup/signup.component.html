@@ -1,0 +1,314 @@
+<div class="outer">
+    <div class="container">
+        <div class="row">
+                <div class="panel border bg-white">
+                    <div class="title-container">
+                        <h2 class="signup-title">
+                            <span class="line">{{'Sign Up'|translate}}</span>
+                        </h2>
+                        
+                    </div>
+                    <div class="panel-heading form-group">
+                        <ul class="navbar-nav ml-auto mb-2 mb-lg-0">
+                            <li class="nav-item d-flex justify-content-end">
+                                <div class="custom-dropdown "
+                                    (click)="toggleDropdown()"
+                                    (blur)="closeDropdown()" tabindex="0">
+                                    <div class="selected-option ">
+                                        <img [src]="getFlag(lang)"
+                                            alt="{{lang}} Flag"
+                                            class="flag-icon" /> {{
+                                        getLangName(lang) | translate }}
+                                    </div>
+                                    <div class="dropdown-options"
+                                        [class.show]="dropdownOpen">
+                                        <div class="dropdown-option"
+                                            *ngFor="let option of langOptions"
+                                            (click)="changeLang($event, option.value)">
+                                            <img [src]="getFlag(option.value)"
+                                                alt="{{option.label}} Flag"
+                                                class="flag-icon" /> {{
+                                            option.label | translate }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div class="panel-body p-3">
+                        <form [formGroup]="signupForm">
+                           <div class="form-group">
+                                <div
+                                    style="display: flex; align-items: center;">
+                                    <h6
+                                        class="phrase">{{'Are you an Operator ?'|translate}}
+                                    </h6>
+                                    <label class="switch">
+                                        <input (change)="toggleNotOperator()"
+                                            type="checkbox">
+                                        <div class="slider">
+                                            <div class="circle">
+                                                <svg class="cross"
+                                                    xml:space="preserve"
+                                                    style="enable-background:new 0 0 512 512"
+                                                    viewBox="0 0 365.696 365.696"
+                                                    y="0" x="0" height="6"
+                                                    width="6"
+                                                    xmlns:xlink="http://www.w3.org/1999/xlink"
+                                                    version="1.1"
+                                                    xmlns="http://www.w3.org/2000/svg">
+                                                    <g>
+                                                        <path
+                                                            data-original="#000000"
+                                                            fill="currentColor"
+                                                            d="M243.188 182.86 356.32 69.726c12.5-12.5 12.5-32.766 0-45.247L341.238 9.398c-12.504-12.503-32.77-12.503-45.25 0L182.86 122.528 69.727 9.374c-12.5-12.5-32.766-12.5-45.247 0L9.375 24.457c-12.5 12.504-12.5 32.77 0 45.25l113.152 113.152L9.398 295.99c-12.503 12.503-12.503 32.769 0 45.25L24.48 356.32c12.5 12.5 32.766 12.5 45.247 0l113.132-113.132L295.99 356.32c12.503 12.5 32.769 12.5 45.25 0l15.081-15.082c12.5-12.504 12.5-32.77 0-45.25zm0 0"></path>
+                                                    </g>
+                                                </svg>
+                                                <svg class="checkmark"
+                                                    xml:space="preserve"
+                                                    style="enable-background:new 0 0 512 512"
+                                                    viewBox="0 0 24 24" y="0"
+                                                    x="0" height="10" width="10"
+                                                    xmlns:xlink="http://www.w3.org/1999/xlink"
+                                                    version="1.1"
+                                                    xmlns="http://www.w3.org/2000/svg">
+                                                    <g>
+                                                        <path class
+                                                            data-original="#000000"
+                                                            fill="currentColor"
+                                                            d="M9.707 19.121a.997.997 0 0 1-1.414 0l-5.646-5.647a1.5 1.5 0 0 1 0-2.121l.707-.707a1.5 1.5 0 0 1 2.121 0L9 14.171l9.525-9.525a1.5 1.5 0 0 1 2.121 0l.707.707a1.5 1.5 0 0 1 0 2.121z"></path>
+                                                    </g>
+                                                </svg>
+                                            </div>
+                                        </div>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="input-field">
+                                    <span class="fa fa-id-badge"></span>
+                                    <input type="text" placeholder="Badge ID"
+                                        disabled [value]="scannedID">
+                                    <button type="button"
+                                        class="btn btn-primary btn-block mt-0  w-100 btn-scan"
+                                        (click)="triggerScanner()"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#exampleModal">{{'Click to scan '|translate}}</button>
+                                </div>
+                            </div>
+                            <!-- The modal code -->
+                            <div class="modal fade" id="exampleModal"
+                                tabindex="-1"
+                                aria-labelledby="exampleModalLabel"
+                                aria-hidden="true" [class.show]="showModal">
+                                <div
+                                    class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button
+                                                formControlName="Badge_id"
+                                                type="button"
+                                                class="btn-close"
+                                                data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="loadeer"
+                                                *ngIf="!badgeIdDetected">
+                                                <span></span>
+                                                <span></span>
+                                                <span></span>
+                                                <div data-text="Loading..."
+                                                    class="text"></div>
+                                            </div>
+                                            <div *ngIf="badgeIdDetected"
+                                                class="checkmark">
+                                                <span
+                                                    style="font-size: 25px;font-weight:700">Badge
+                                                    Detected Successfully
+                                                </span>
+                                                <i
+                                                    class="fa fa-check-circle icon"
+                                                    aria-hidden="true"></i>
+                                                <br>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <span></span>
+                            <div class="form-group ">
+                                <div class="input-field"
+                                    [class.error]="signupForm.controls['TEID'].dirty && signupForm.hasError('required','TEID')">
+                                    <span class="fa fa-id-card p"></span>
+                                    <input formControlName="TEID" type="text"
+                                        placeholder="TE ID">
+                                </div>
+
+                            </div>
+                            <small
+                                *ngIf="signupForm.controls['TEID'].dirty && signupForm.hasError('required','TEID')"
+                                class="text-danger">{{'TE ID is required'|translate}}</small>
+
+                            <div class="form-group ">
+                                <div class="input-field"
+                                    [class.error]="signupForm.controls['FirstName'].dirty && signupForm.hasError('required','FirstName')">
+                                    <span class="fa fa-user"></span>
+                                    <input formControlName="FirstName"
+                                        type="text"
+                                        placeholder="{{'First Name'|translate}}">
+                                </div>
+                            </div>
+                            <small
+                                *ngIf="signupForm.controls['FirstName'].dirty && signupForm.hasError('required','FirstName')"
+                                class="text-danger">{{'First Name is required'|translate}}</small>
+
+                            <div class="form-group">
+                                <div class="input-field"
+                                    [class.error]="signupForm.controls['LastName'].dirty && signupForm.hasError('required','LastName')">
+                                    <span class="fa fa-user"></span>
+                                    <input formControlName="LastName"
+                                        type="text"
+                                        placeholder="{{'Last Name'|translate}}">
+                                </div>
+                            </div>
+                            <small
+                                *ngIf="signupForm.controls['LastName'].dirty && signupForm.hasError('required','LastName')"
+                                class="text-danger">{{'Last Name is required'|translate}}</small>
+                            <div class="form-group">
+                                <div class="input-field"
+                                    [class.error]="signupForm.controls['Phone'].dirty && signupForm.hasError('required','Phone')">
+                                    <span class="fa fa-phone"></span>
+                                    <input formControlName="Phone" type="text"
+                                        placeholder="Phone Number">
+                                </div>
+                            </div>
+                            <small
+                                *ngIf="signupForm.controls['Phone'].dirty && signupForm.hasError('required','Phone')"
+                                class="text-danger">{{'Phone is required'|translate}}</small>
+                            <div class="form-group">
+                                <div class="input-field"
+                                    *ngIf="!isNotOperatorChecked">
+                                    <span class="fa fa-at"></span>
+                                    <input formControlName="Email" type="text"
+                                        placeholder="{{'Email'|translate}}">
+                                </div>
+                                <div *ngIf="isNotOperatorChecked"
+                                    class="text-muted">{{"is do not enter email for 'operator'"|translate}}</div>
+                            </div>
+
+                            <small
+                                *ngIf="signupForm.controls['Email'].dirty && signupForm.hasError('required','Email')"
+                                class="text-danger">{{'Email is required'|translate}}</small>
+
+                            <div class="form-group">
+                                <div class="input-field"
+                                    [class.error]="signupForm.controls['Password'].dirty && signupForm.hasError('required','Password')">
+                                    <span class="fa fa-key"></span>
+                                    <input formControlName="Password"
+                                        [type]="type"
+                                        placeholder="{{'Password'|translate}}">
+                                    <span (click)="hideShowPass()"
+                                        class="fa {{eyeIcon}}"></span>
+                                </div>
+                            </div>
+
+                            <small
+                                *ngIf="signupForm.controls['Password'].dirty && signupForm.hasError('required','Password')"
+                                class="text-danger">
+                                {{'Password is required'|translate}}</small>
+                            <small
+                                class="text-danger">{{passwordStrengthMessage}}</small>
+
+
+                                <div class="form-group">
+                                    <ul class="navbar-nav ml-5 mb-0 mb-lg-0">
+                                        <li class="nav-item">
+                                            <div class="custom-select">
+                                                <select class="form-select"
+                                                    aria-label="TitleID"
+                                                    formControlName="TitleID"
+                                                    name="TitleID" id="TitleID">
+                                                    <option selected disabled hidden
+                                                        value>{{ 'Select Your Title' |
+                                                        translate }}</option>
+                                                    <option
+                                                        *ngFor="let title of titles"
+                                                        [value]="title.id">{{
+                                                        title.name_Title }}</option>
+                                                </select>
+    
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <small
+                                    *ngIf="signupForm.controls['TitleID'].dirty && signupForm.hasError('required','TitleID')"
+                                    class="text-danger">{{'Title is required'|translate}}</small>
+
+                            <div class="form-group">
+                                <ul class="navbar-nav ml-5 mb-0 mb-lg-0">
+                                    <li class="nav-item">
+                                        <div class="custom-select">
+                                            <select class="form-select"
+                                                aria-label="PlantID"
+                                                formControlName="PlantID"
+                                                name="PlantID" id="PlantID">
+                                                <option selected disabled hidden
+                                                    value>{{ 'Select Your Plant'
+                                                    | translate }}</option>
+                                                <option
+                                                    *ngFor="let plant of plantList"
+                                                    [value]="plant.id">{{
+                                                    plant.buildingID + ' (' +
+                                                    plant.sapBuildingNumber +
+                                                    ')' }}</option>
+
+                                            </select>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <div class="form-group">
+                                <ul class="navbar-nav ml-5 mb-0 mb-lg-0">
+                                    <li class="nav-item">
+                                        <div class="custom-select">
+                                            <select class="form-select"
+                                                aria-label="DepartementID"
+                                                formControlName="DepartementID"
+                                                name="DepartementID"
+                                                id="DepartementID">
+                                                <option selected disabled hidden
+                                                    value>{{
+                                                    'Select Your Departement' |
+                                                    translate }}</option>
+                                                <option
+                                                    *ngFor="let departement of departementList"
+                                                    [value]="departement.id">{{
+                                                    departement.name_Departement
+                                                    }}</option>
+                                            </select>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <button (click)="onSignup()" type="submit"
+                                    class="btn btn-primary btn-block mt-4 w-100 btn-signup"
+                                    [disabled]="isSubmitting">{{ 'Sign Up' | translate }}</button>
+
+                            <div
+                                class="text-center pt-4 text-muted text-below-button">
+                                {{'Already have account ?'|translate}}
+                                <a id=" forget" routerLink="/login">{{'Login'|translate}}</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+        </div>
+    </div>
+</div>
+

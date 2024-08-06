@@ -1,0 +1,518 @@
+<div class="card flex justify-content-center">
+
+<p-card >
+	<div style="text-align: center; font-family:'Avenir, sans-serif';  font-size: 45px; font-weight: bold;"> 
+		<strong>Team Leaders</strong>
+	</div>
+	<div class="card-body">
+		<div
+			style="display: flex; justify-content: space-between; align-items: center;margin: 5px;">
+			<div class="form-outline" style="flex: 1;">
+				
+			
+				
+				<!-- <input pInputText
+					type="text"
+					placeholder="Search Keyword ..."
+					[(ngModel)]="searchText"
+					(ngModelChange)="globalSearch()"
+				/> -->
+			</div>
+
+			<div class="head-user-avatar" [cdkMenuTriggerFor]="TeamLeadersOverlay">
+				<div class="dropdown-text-end">
+					<a class="btn btn-outline-success" aria-expanded="false"
+						(click)="toggleDropdown()">
+						List of columns
+						<i *ngIf="!isTeamLeaderOverlayOpen" class="fa fa-angle-left"></i>
+						<i *ngIf="isTeamLeaderOverlayOpen" class="fa fa-angle-down"></i>
+					</a>
+				</div>
+			</div>
+			<div class="head-user-avatar" [cdkMenuTriggerFor]="importexport">
+				<div class="dropdown-text-end">
+					<a class="btn btn-outline-success" aria-expanded="false"
+						(click)="importexportopen()">
+						<i class="fa fa-download" aria-hidden="true"></i>
+						<i *ngIf="!isimportexportopen" class="fa fa-angle-left"></i>
+						<i *ngIf="isimportexportopen" class="fa fa-angle-down"></i>
+					</a>
+				</div>
+			</div>
+			<button class="btn btn-outline-success-" pButton type="button"
+				label="Add New TeamLeaders" icon="fa fa-plus" (click)="openModel()"
+				style="margin: 0 10px;"></button>
+		</div>
+
+		
+		
+	
+
+		<p-table #dt1 
+		 [value]="TeamLeaders"
+		 [paginator]="true"
+		 [scrollable]="true" 
+		 scrollHeight="450px"
+		 [rows]="5"
+		 dataKey="id"
+		 [loading]="loading"
+		 responsiveLayout="stack"
+		 styleClass="p-datatable-striped"
+		 [resizableColumns]="true"
+		 [first]="first"
+		 [showCurrentPageReport]="true"
+		 [tableStyle]="{ 'min-width': '60rem' }"
+	  	 currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" (onPage)="pageChange($event)"
+		 [rowsPerPageOptions]="[3, 5, 10, 20]"
+		 [expandedRowKeys]="expandedRows" (onRowExpand)="onRowExpand($event)"
+		(onRowCollapse)="onRowCollapse($event)">
+		
+			<ng-template pTemplate="caption">
+				<div class="button-container">
+				 <div>
+					<p-button label="Clear" [outlined]="true" icon="fa fa-filter" (click)="clear(dt1)"></p-button>
+					<span class="p-input-icon-left">
+						<i class="fa fa-search"></i>
+						<input pInputText type="text" placeholder="Search" [(ngModel)]="searchText" (ngModelChange)="globalSearch()" />
+					</span>
+				 </div>
+				  <div>
+					<p-button label="Expand All" icon="fa fa-plus" text (onClick)="expandAll()"></p-button>
+					<p-button label="Collapse All" icon="fa fa-minus" text (onClick)="collapseAll()"></p-button>
+
+				  </div>
+				  <div>
+					<p-button type="button" icon="fa fa-chevron-left" (click)="prev()" [disabled]="isFirstPage()" styleClass="p-button-text"></p-button>
+					<p-button type="button" icon="fa fa-refresh" (click)="reset()" styleClass="p-button-text"></p-button>
+					<p-button type="button" icon="fa fa-chevron-right" (click)="next()" [disabled]="isLastPage()" styleClass="p-button-text"></p-button>
+				  </div>
+				</div>
+				
+	    	</ng-template>
+			<ng-template pTemplate="header" let-columns>
+				<tr>
+					<th style="width: 5%"></th>
+					<th pSortableColumn="teamleader_Name" style="min-width:15rem">
+						<div class="flex align-items-center">
+							<p-columnFilter type="text" field="teamleader_Name" display="menu"></p-columnFilter>
+							Team Leader
+							<p-sortIcon field="teamleader_Name" />
+						</div>
+					</th>
+					<!-- <th pSortableColumn="userID" style="width:11%" *ngIf="showColumns.user">
+						<div class="flex align-items-center">
+							User
+							<p-columnFilter type="text" field="n_User.firstName" display="menu"></p-columnFilter>
+						</div>
+					</th> -->
+					<th pSortableColumn="n_Project.project_Name" style="width:11%" *ngIf="showColumns.project">
+						<div class="flex align-items-center">
+							<p-columnFilter type="text" field="n_Project.project_Name" display="menu"></p-columnFilter>
+							Project
+							<p-sortIcon field="n_Project.project_Name" />
+
+						</div>
+					</th>
+					<th pSortableColumn="n_Area.name_Area" style="width:11%" *ngIf="showColumns.area">
+						<div class="flex align-items-center">
+							<p-columnFilter type="text" field="n_Area.name_Area" display="menu"></p-columnFilter>
+							Area
+							<p-sortIcon field="n_Area.name_Area" />
+						</div>
+					
+					
+					</th>
+					<th pSortableColumn="shift" style="width:11%" *ngIf="showColumns.shift">						
+						<div class="flex align-items-center">
+							<p-columnFilter type="text" field="shift" display="menu"></p-columnFilter>
+							Shift
+							<p-sortIcon field="shift" />
+						</div>
+					
+					</th>
+					<th pSortableColumn="date_Create" style="width:11%" *ngIf="showColumns.Date_Create">
+						Create Date
+						<p-sortIcon field="date_Create" />
+					</th>
+					<th pSortableColumn="date_Update" style="width:11%" *ngIf="showColumns.Date_Update">
+						Update Date
+						<p-sortIcon field="date_Update" />
+					</th>
+					<th pSortableColumn="date_delete" style="width:11%" *ngIf="showColumns.Date_Delete">
+						Delete Date
+						<p-sortIcon field="date_delete" />
+					</th>
+					<th style="width:11%">Action</th>
+					<!-- <th style="width: 4rem"></th> -->
+				</tr>
+			</ng-template>
+		
+			<ng-template pTemplate="body" let-teamLeader let-expanded="expanded">
+				<tr [ngClass]="{'deactivated-row': teamLeader.commenterDelete}">
+					<td>
+						<p-button type="button" pRipple [pRowToggler]="teamLeader" [text]="true" [rounded]="true" [plain]="true" [icon]="expanded ? 'fa fa-chevron-down' : 'fa fa-chevron-right'" />
+					</td>
+					<td *ngIf="showColumns.teamleader_name">
+						<span class="ml-1 vertical-align-middle">{{ teamLeader.teamleader_Name }}</span>
+					</td>
+					<!-- <td *ngIf="showColumns.user">
+					  <ng-container *ngFor="let user of teamLeader.n_User; let i = index">
+						{{ user.firstName }} {{ user.lastName }}{{ i < teamLeader.n_User.length - 1 ? ', ' : '' }}
+					  </ng-container>
+					</td> -->
+					<td *ngIf="showColumns.project">{{ teamLeader.n_Project.project_Name + ' (' + teamLeader.n_Project.building_ID + ')' }}</td>
+					<td *ngIf="showColumns.area">{{ teamLeader.n_Area.name_Area }}</td>
+					<td *ngIf="showColumns.shift">{{ teamLeader.shift }}</td>
+					<td *ngIf="showColumns.Date_Create">{{ teamLeader.date_Create !== '0001-01-01T00:00:00' ? (teamLeader.date_Create | date: 'dd-MM-yyyy / HH:mm:ss') : ' ' }}</td>
+					<td *ngIf="showColumns.Date_Update">{{ teamLeader.date_Update !== '0001-01-01T00:00:00' ? (teamLeader.date_Update | date: 'dd-MM-yyyy / HH:mm:ss') : ' ' }}</td>
+					<td *ngIf="showColumns.Date_Delete">{{ teamLeader.date_delete !== '0001-01-01T00:00:00' ? (teamLeader.date_delete | date: 'dd-MM-yyyy / HH:mm:ss') : ' ' }}</td>
+					<td>
+						<button pButton class="icon view" icon="fa fa-eye" 
+								(click)="selectView(teamLeader.id); openModelView(teamLeader.id)" 
+								[pTooltip]="'View TeamLeader'" severity="secondary" tooltipPosition="top"
+								[disabled]="teamLeader.commenterDelete"></button>
+						<button pButton class="icon edit" type="button" icon="fa fa-pencil-alt" 
+								(click)="selectGetTeamLeadersbyid(teamLeader.id); openModelUpdate(teamLeader.id)" 
+								[disabled]="teamLeader.commenterDelete" [pTooltip]="'Edit TeamLeader'" severity="secondary" tooltipPosition="top"></button>
+						<button pButton class="icon delete" type="button" icon="fa fa-ban" 
+								(click)="deleteTeamLeaders(teamLeader.id)" [disabled]="teamLeader.commenterDelete" 
+								[pTooltip]="'Disable TeamLeader'" severity="secondary" tooltipPosition="top"></button>
+					</td>
+				</tr>
+			</ng-template>
+		
+			<ng-template pTemplate="rowexpansion" let-teamLeader>
+				<tr>
+				  <td colspan="10">
+					<p-table [value]="teamLeader.n_User" class="custom-table">
+					  <ng-template pTemplate="header">
+						<tr>
+						  <th pSortableColumn="teid" style="width:5%">
+							<p-columnFilter type="text" field="teid" display="menu"></p-columnFilter>
+							TE ID
+							<p-sortIcon field="teid"></p-sortIcon>
+						  </th>
+						  <th pSortableColumn="fullName" style="width:5%">
+							<p-columnFilter type="text" field="fullName" display="menu"></p-columnFilter>
+							Full Name
+							<p-sortIcon field="fullName"></p-sortIcon>
+						  </th>
+						  <th pSortableColumn="firstName" style="width:5%">
+							<p-columnFilter type="text" field="firstName" display="menu"></p-columnFilter>
+							First Name	
+							<p-sortIcon field="firstName" />
+						  </th>
+						  <th pSortableColumn="lastName" style="width:5%">
+							<p-columnFilter type="text" field="lastName" display="menu"></p-columnFilter>
+							Last Name
+							<p-sortIcon field="lastName" />
+						</th>
+						  <th pSortableColumn="email" style="width:5%">
+							<p-columnFilter type="text" field="email" display="menu"></p-columnFilter>
+							Email
+							<p-sortIcon field="email" />
+						</th>
+						  <th pSortableColumn="name_Title.name_Title" style="width:5%">
+							<p-columnFilter type="text" field="name_Title.name_Title" display="menu"></p-columnFilter>
+
+							<p-sortIcon field="name_Title.name_Title" />
+							Title Job</th>
+						  <th pSortableColumn="phone"style="width:5%">
+							<p-columnFilter type="text" field="phone" display="menu"></p-columnFilter>
+							Phone
+							<p-sortIcon field="phone" />
+						  </th>
+						</tr>
+					  </ng-template>
+					  <ng-template pTemplate="body" let-user>
+						<tr>
+   						  <td>{{ user.teid }}</td>
+						  <td>{{ user.fullName }}</td>
+						  <td>{{ user.firstName }}</td>
+						  <td>{{ user.lastName }}</td>
+						  <td>{{ user.email }}</td>
+						  <td>{{ user.name_Title.name_Title }}</td>
+						  <td>{{ user.phone }}</td>
+						</tr>
+					  </ng-template>
+					</p-table>
+				  </td>
+				</tr>
+			  </ng-template>
+			  
+		
+		<ng-template pTemplate="emptymessage" let-columns>
+		  <tr>
+			<td colspan="10">No Teamleader found</td>
+		  </tr>
+		</ng-template>
+			<ng-template pTemplate="paginatorleft">
+					<p-button type="button" icon="fa fa-lightbulb-o" styleClass="p-button-text" />
+				</ng-template>
+				<ng-template pTemplate="paginatorright">
+					<p-button type="button" icon="fa fa-cloud" styleClass="p-button-text" />
+				</ng-template>
+	  </p-table>
+	</div>
+</p-card>
+</div>
+
+
+
+
+		
+<p-dialog header="Add New TeamLeader" [(visible)]="displayAddTeamLeader" [modal]="true" [style]="{width: '40%'}">
+	<form [formGroup]="TeamLeadersForm">
+	  <div class="p-fluid">
+		<div class="p-field">
+		  <label for="teamleader_name">Teamleader<span style="color:red; font-weight: bold; ">*</span> </label>
+		  <input pInputText formControlName="teamleader_name" type="text" placeholder="TeamLeader Name" />
+		</div>
+		<div class="p-field">
+			<label for="shift">Shift<span style="color:red; font-weight: bold; ">*</span> </label>
+			<p-dropdown formControlName="shift" [options]="shifts" optionLabel="name" placeholder="Select a Shift"></p-dropdown>
+		  </div>
+		<div class="p-field">
+		  <label for="userID">User<span style="color:red; font-weight: bold; ">*</span> </label>
+		  <p-multiSelect formControlName="userID" [options]="users" optionLabel="fullName" optionValue="id" placeholder="Select users"></p-multiSelect>
+		</div>
+		<div class="p-field">
+			<label for="areaID">Area<span style="color:red; font-weight: bold; ">*</span> </label>
+			<p-dropdown formControlName="areaID" [options]="areas" optionLabel="name_Area" optionValue="id" placeholder="Select Area"></p-dropdown>
+		  </div>
+		<div class="p-field">
+		  <label for="projectID">Project<span style="color:red; font-weight: bold; ">*</span> </label>
+		  <p-dropdown formControlName="projectID" [options]="projects" optionLabel="project_Name" optionValue="id" placeholder="Select project"></p-dropdown>
+		</div>
+		
+		
+	  </div>
+	  <div class="p-dialog-footer">
+		<button pButton (click)="SaveTeamLeaders()" label="Create" type="button" class="btn-primary-create"></button>
+		<button pButton type="button" label="Close" class="btn-danger" (click)="displayAddTeamLeader=false"></button>
+	  </div>
+	</form>
+  </p-dialog>
+  
+  <p-dialog header="Update TeamLeaders" [(visible)]="displayUpdateTeamLeaders" [modal]="true" [style]="{width: '40%'}">
+	<form [formGroup]="UpdateTeamLeadersFrom">
+	  <div class="p-fluid">
+		<div class="p-field">
+		  <label for="teamleader_name">TeamLeader <span style="color:red; font-weight: bold; ">*</span> </label>
+		  <input pInputText formControlName="teamleader_name" type="text" placeholder="TeamLeader Name" />
+		</div>
+		<div class="p-field">
+			<label for="shift">Shift<span style="color:red; font-weight: bold; ">*</span> </label>
+			<p-dropdown formControlName="shift" [options]="shifts" optionLabel="name" placeholder="Select a Shift"></p-dropdown>
+	    </div>
+		<div class="p-field">
+		  <label for="userID">User<span style="color:red; font-weight: bold; ">*</span> </label>
+		  <p-multiSelect formControlName="userID" [options]="users" optionLabel="fullName" optionValue="id" placeholder="Select users" *ngIf="ViewTeamLeaders.get('userID')"></p-multiSelect>
+		</div>
+		<div class="p-field">
+			<label for="areaID">Area<span style="color:red; font-weight: bold; ">*</span> </label>
+			<p-dropdown formControlName="areaID" [options]="areas" optionLabel="name_Area" optionValue="id" placeholder="Select Area"></p-dropdown>
+		  </div>
+		<div class="p-field">
+		  <label for="projectID">Project<span style="color:red; font-weight: bold; ">*</span> </label>
+		  <p-dropdown formControlName="projectID" [options]="projects" optionLabel="project_Name" optionValue="id" placeholder="Select project"></p-dropdown>
+		</div>
+		
+	
+	  </div>
+	  <div class="p-dialog-footer">
+		<button pButton label="Update TeamLeader" type="button" class="btn-primary-update" (click)="updateTeamLeader(UTeamLeadersId, UpdateTeamLeadersFrom.value)"></button>
+		<button pButton label="Close" type="button" class="btn-danger" (click)="displayUpdateTeamLeaders=false"></button>
+	  </div>
+	</form>
+  </p-dialog>
+  
+
+
+   <p-dialog header="View TeamLeader" [(visible)]="displayViewTeamLeaders" [modal]="true" [style]="{width: '40%'}" (onHide)="closeModal()">
+	<form [formGroup]="ViewTeamLeaders">
+	  <div class="p-fluid">
+  
+	    <!-- commenterDelete Section -->
+		<div class="p-field" *ngIf="ViewTeamLeaders.get('commenterDelete')?.value !== null">
+			<label for="commenterDelete" style="font-size: 20px;">Delete Reason</label>
+			
+			<ng-container *ngIf="ViewTeamLeaders.get('commenterDelete')?.value?.length > 20">
+			  <textarea pInputTextarea formControlName="commenterDelete" id="commenterDelete" placeholder="Status" readonly style="font-weight: bold; font-size: 30px; color: white; background-color: #BC1F00;"></textarea>
+			</ng-container>
+			<ng-container *ngIf="ViewTeamLeaders.get('commenterDelete')?.value?.length <= 20">
+			  <input pInputText formControlName="commenterDelete" id="commenterDelete" type="text" placeholder="Status" readonly style="font-weight: bold; font-size: 30px; color: white; background-color: #BC1F00;" />
+			</ng-container>
+		  </div>
+		
+		<!-- <div class="p-field" *ngIf="ViewTeamLeaders.get('commenterDelete')?.value !== null">
+		  <label for="commenterDelete" style="font-size: 20px;">Delete Reason</label>
+		  <ng-container *ngIf="ViewTeamLeaders.get('commenterDelete')?.value">
+			<ng-container *ngIf="ViewTeamLeaders.get('commenterDelete')?.value.length > 20">
+			  <textarea pInputTextarea formControlName="commenterDelete" id="commenterDelete" placeholder="Status" readonly
+				style="font-weight: bold; font-size: 30px; color: white; background-color: #BC1F00;"></textarea>
+			</ng-container>
+			<ng-container *ngIf="ViewTeamLeaders.get('commenterDelete')?.value.length <= 20">
+			  <input pInputText formControlName="commenterDelete" id="commenterDelete" type="text" placeholder="Status" readonly
+				style="font-weight: bold; font-size: 30px; color: white; background-color: #BC1F00;">
+			</ng-container>
+		  </ng-container>
+		</div> -->
+  
+		<!-- TeamLeader Name -->
+		<div class="p-field">
+		  <label for="teamleader_name">TeamLeader</label>
+		  <input pInputText formControlName="teamleader_name" id="teamleader_name" type="text" placeholder="TeamLeader Name" readonly>
+		</div>
+  
+		<!-- Project Name -->
+		<div class="p-field">
+		  <label>Project</label>
+		  <!-- <p-dropdown [options]="projects" optionValue="id" optionLabel="project_Name" formControlName="projectID" placeholder="Select Project" ></p-dropdown> -->
+		  <input pInputText type="text" placeholder="project Name" [value]="getProjectName(ViewTeamLeaders.get('projectID')?.value)" disabled>
+
+		</div>
+  
+		<!-- Area Name -->
+		<div class="p-field">
+			<label for="areaID">Area</label>
+			<input pInputText type="text" placeholder="Area Name" [value]="getAreaName(ViewTeamLeaders.get('areaID')?.value)" disabled >
+		</div>
+  
+		<!-- Shift -->
+		<div class="p-field">
+		  <label for="shift">Shift</label>
+		  <input pInputText formControlName="shift" id="shift" type="text" placeholder="Shift" [value]="getShiftName(ViewTeamLeaders.get('shiftID')?.value)">
+		</div>
+  
+		<!-- Users -->
+		<div class="p-field">
+		  <label for="userID">Users</label>
+		  <ng-container *ngIf="ViewTeamLeaders.get('userID')?.value.length > 0; else noUsersList">
+
+		  <input pInputText formControlName="userID" type="text" optionValue="id" optionLabel="fullName" placeholder="{{ dropdownPlaceholder }}" >
+		</ng-container>
+
+		  <!-- 
+		  <ng-container *ngIf="ViewTeamLeaders.get('userID'); else noUsers">
+			<input pInputText id="users" type="text" placeholder="{{ dropdownPlaceholder }}" readonly>
+		  </ng-container> -->
+		  <ng-template #noUsers>
+			<p>No users found.</p>
+		  </ng-template>
+		</div>
+  
+		<!-- Users List -->
+		<div class="p-field">
+		  <label for="userID" class="p-label">Users List</label>
+		  <ng-container *ngIf="ViewTeamLeaders.get('userID')?.value.length > 0; else noUsersList">
+			<p-dropdown [options]="ViewTeamLeaders.get('userID')?.value" placeholder="Tap to see users"></p-dropdown>
+		  </ng-container>
+		  <ng-template #noUsersList>
+			<p>No users found.</p>
+		  </ng-template>
+		</div>
+  
+	  </div>
+	  <div class="p-dialog-footer">
+		<button pButton type="button" label="Close" class="btn btn-danger" (click)="displayViewTeamLeaders = false"></button>
+	  </div>
+	</form>
+  </p-dialog>
+  
+
+		
+<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-"></script>
+<script src="bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+<script src="bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.datatables.net/2.0.5/js/dataTables.js"></script>
+<script
+	src="https://cdn.datatables.net/2.0.5/js/dataTables.bootstrap5.js"></script>
+<script> $(document).ready(function() {
+  $('#example').DataTable();
+  });
+  </script>
+
+<script>
+  
+  $(document).ready(function() {
+	  $('#ingredients').multiselect();
+  });
+  
+  </script>
+
+<ng-template #TeamLeadersOverlay>
+	<div class="overlay overlay-user overlay-fall" cdkMenu>
+		<ul>
+			<li>
+				<label>
+					<input type="checkbox" [(ngModel)]="showColumns.teamleader_name" disabled>
+					TeamLeaders
+				</label>
+			</li>
+
+			<li>
+				<label>
+					<input type="checkbox" [(ngModel)]="showColumns.user" disabled>
+					users
+				</label>
+			</li>
+
+			
+
+			<li>
+				<label>
+					<input type="checkbox" [(ngModel)]="showColumns.project">
+					project
+				</label>
+			</li>
+			<li>
+				<label>
+					<input type="checkbox" [(ngModel)]="showColumns.area">
+					Area
+				</label>
+			</li>
+
+
+			<li>
+				<label>
+					<input type="checkbox" [(ngModel)]="showColumns.shift">
+					Shift
+				</label>
+			</li>
+
+			<li>
+				<label>
+					<input type="checkbox" [(ngModel)]="showColumns.Date_Create">
+					Create Date
+				</label>
+			</li>
+			<li>
+				<label>
+					<input type="checkbox" [(ngModel)]="showColumns.Date_Update">
+					Update Date
+				</label>
+			</li>
+			<li>
+				<label>
+					<input type="checkbox" [(ngModel)]="showColumns.Date_Delete">
+					Delete Date
+				</label>
+			</li>
+
+		</ul>
+	</div>
+</ng-template>
+
+<ng-template #importexport>
+	<div class="overlay overlay-user overlay-fall" cdkMenu>
+		<ul>
+			<li (click)="Import()">Import</li>
+			<li (click)="Export()">Export</li>
+			<li (click)="downloadExcel()">Download Template</li>
+		</ul>
+	</div>
+</ng-template>
+
+

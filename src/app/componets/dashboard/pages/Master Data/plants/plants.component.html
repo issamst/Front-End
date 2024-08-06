@@ -1,0 +1,363 @@
+
+<div class="card flex justify-content-center">
+  <p-card >
+    <div style="text-align: center; font-family:'Avenir, sans-serif';  font-size: 45px; font-weight: bold;"> 
+      <strong>Plants</strong>
+  </div>
+    <div class="card-body">
+		  <div
+			style="display: flex; justify-content: space-between; align-items: center;margin: 5px;">
+			<div class="form-outline" style="flex: 1;"></div>
+
+			<div class="head-user-avatar" [cdkMenuTriggerFor]="userOverlay">
+				<div class="dropdown-text-end">
+					<a class="btn btn-outline-success" aria-expanded="false"
+						(click)="toggleDropdown()">
+						List of columns
+						<i *ngIf="!isPlantOverlayOpen" class="fa fa-angle-left"></i>
+						<i *ngIf="isPlantOverlayOpen" class="fa fa-angle-down"></i>
+					</a>
+				</div>
+			</div>
+			<div class="head-user-avatar" [cdkMenuTriggerFor]="importexport">
+				<div class="dropdown-text-end">
+					<a class="btn btn-outline-success" aria-expanded="false"
+						(click)="importexportopen()">
+						<i class="fa fa-download" aria-hidden="true"></i>
+						<i *ngIf="!isimportexportopen" class="fa fa-angle-left"></i>
+						<i *ngIf="isimportexportopen" class="fa fa-angle-down"></i>
+					</a>
+				</div>
+			</div>
+			<button class="btn btn-outline-success-" pButton type="button"
+				label="Add New Plant" icon="fa fa-plus" (click)="openModel()"
+				style="margin: 0 10px;"></button>
+		</div>
+
+   
+
+			<p-table
+				#dt1
+
+				[value]="plants"
+				[paginator]="true"
+				[rows]="5"
+				dataKey="id"
+				[loading]="loading"
+
+				responsiveLayout="stack" 
+				styleClass="p-datatable-striped" 
+
+				[resizableColumns]="true"
+				[first]="first"
+				[showCurrentPageReport]="true"
+				[tableStyle]="{ 'min-width': '60rem' }"
+				currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+				(onPage)="pageChange($event)"
+				[rowsPerPageOptions]="[3, 5, 10, 20]"
+				[globalFilterFields]="['Plant', 'Responsible', 'Replacement', 'Departement User','Plant','Area','Type']"
+
+				>
+
+				<ng-template pTemplate="caption">
+					<div class="flex">
+						<p-button label="Clear" [outlined]="true" icon="fa fa-filter" (click)="clear(dt1)" />
+						<span class="p-input-icon-left ml-auto">
+							<i class="fa fa-search"></i>
+              <input pInputText type="text" placeholder="Search" [(ngModel)]="searchText" (ngModelChange)="globalSearch()" />
+						</span>
+					</div>
+				</ng-template>	
+
+				<ng-template pTemplate="header" let-columns>
+					<tr>
+						<th pSortableColumn="buildingID" style="width:13%">
+							<div class="flex align-items-center">
+								<p-columnFilter type="text" field="buildingID" display="menu"></p-columnFilter>
+								Plant
+                <p-sortIcon field="buildingID" />
+
+              </div>
+						</th>
+						<!-- <th style="width:13%" *ngIf="showColumns.name_Plant">Name Plant</th> -->
+						 <th pSortableColumn="sapBuildingNumber" style="width:13%" *ngIf="showColumns.SapBuilding_Number">
+              <p-columnFilter type="text" field="sapBuildingNumber" display="menu"></p-columnFilter>
+              Sap Building Number
+              <p-sortIcon field="sapBuildingNumber" />
+            </th>
+						 <th pSortableColumn="bu" style="width:13%" *ngIf="showColumns.BU">  
+              <p-columnFilter type="text" field="bu" display="menu"></p-columnFilter>
+              BU
+              <p-sortIcon field="bu" />
+
+             </th>
+						 <th pSortableColumn="location" style="width:13%" *ngIf="showColumns.Location"> 
+              <p-columnFilter type="text" field="location" display="menu"></p-columnFilter>
+              Location
+              <p-sortIcon field="location" />
+
+             </th>
+
+						<th pSortableColumn="date_Create" style="width:13%" *ngIf="showColumns.Date_Create">
+              Create Date
+              <p-sortIcon field="date_Create" />
+            </th>
+						<th pSortableColumn="date_Update" style="width:13%" *ngIf="showColumns.Date_Update">
+              <p-sortIcon field="date_Update" />
+              Update Date</th>
+						<th pSortableColumn="date_Delete" style="width:13%" *ngIf="showColumns.Date_Delete">
+              <p-sortIcon field="date_Delete" />
+              Delete Date</th>
+						<th style="width:13%">Action</th>
+					</tr>
+				</ng-template>
+				<ng-template pTemplate="body" let-Plant >
+          <tr [ngClass]="{'deactivated-row': Plant.commenterDelete}">
+						<td *ngIf="showColumns.Building_ID">
+							<span class="ml-1 vertical-align-middle">{{ Plant.buildingID}}</span>
+						</td>
+            <td *ngIf="showColumns.SapBuilding_Number">{{ Plant.sapBuildingNumber }}</td>
+            <td *ngIf="showColumns.BU">{{ Plant.bu }}</td>
+            <td *ngIf="showColumns.Location">{{ Plant.location }}</td>
+
+            <td *ngIf="showColumns.Date_Create">{{ Plant.date_Create  !== '0001-01-01T00:00:00' ? (Plant.date_Create  | date:'dd-MM-yyyy / HH:mm:ss') : '  ' }}</td>
+            <td *ngIf="showColumns.Date_Update">{{ Plant.date_Update !== '0001-01-01T00:00:00' ? (Plant.date_Update | date:'dd-MM-yyyy / HH:mm:ss') : '  ' }}</td>
+            <td *ngIf="showColumns.Date_Delete">{{ Plant.date_Delete !== '0001-01-01T00:00:00' ? (Plant.date_Delete | date:'dd-MM-yyyy / HH:mm:ss') : '  ' }}</td>
+
+
+                 
+            <td>
+
+                <button pButton class="icon view" icon="fa fa-eye"
+                [pTooltip]="view"
+                severity="secondary" 
+                tooltipPosition="top" 
+                (click)="selectView(Plant.id);
+                 openModelView(Plant.id)">
+							  <ng-template #view>
+                  <div class="flex align-items-center">
+                    <span> <b>View</b> Plant  </span>
+                  </div>
+                </ng-template>
+							</button>
+							<button pButton class="icon edit" type="button" icon="fa fa-pencil-alt"
+                  [pTooltip]="edit"
+                  severity="secondary" 
+                  tooltipPosition="top" 
+                  (click)="selectGetPlantbyid(Plant.id); openModelUpdate(Plant.id)"
+                  [disabled]="Plant.commenterDelete">
+                  <ng-template #edit>
+                    <div class="flex align-items-center">
+                      <span> <b>Edit</b> Plant </span>
+                    </div>
+                  </ng-template>
+            </button>
+            <button pButton class="icon delete" type="button" icon="fa fa-ban"
+                [pTooltip]="disable"
+                severity="secondary" 
+                tooltipPosition="top" 
+                (click)="DeletePlant(Plant.id)"
+                [disabled]="Plant.commenterDelete">
+                <ng-template #disable>
+                  <div class="flex align-items-center">
+                    <span> <b>Disable</b> Plant </span>
+                  </div>
+                </ng-template>
+          </button>
+        </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+					<tr>
+						<td colspan="7">No Plant found.</td>
+					</tr>
+				</ng-template>
+		
+				
+			</p-table>
+		</div>
+  </p-card>
+</div>
+
+    
+    
+<p-dialog header="Create New Plant" [(visible)]="displayModal" [modal]="true" [style]="{width: '40%'}">
+  <form [formGroup]="PlantForm">
+    <div class="p-fluid">
+      <div class="p-field">
+        <label for="buildingID">Building ID <span style="color:red; font-weight: bold; ">*</span> </label>
+        <input pInputText formControlName="buildingID" type="text" placeholder="Building ID" id="buildingID"/>
+      </div>
+      <div class="p-field">
+        <label for="sapBuildingNumber">SAP Building Number <span style="color:red; font-weight: bold; ">*</span> </label>
+        <input pInputText formControlName="sapBuildingNumber" type="text" placeholder="SAP Building Number" id="sapBuildingNumber"/>
+      </div>
+      <div class="p-field">
+        <label for="bu">BU <span style="color:red; font-weight: bold; ">*</span> </label>
+        <input pInputText formControlName="bu" type="text" placeholder="BU" id="bu"/>
+      </div>
+      <div class="p-field">
+        <label for="location">Location <span style="color:red; font-weight: bold; ">*</span> </label>
+        <input pInputText formControlName="location" type="text" placeholder="Location" id="location"/>
+      </div>
+    </div>
+    <div class="p-dialog-footer">
+      <button pButton  (click)="SavePlant()" label="Save" type="button" style=" border-radius: 8px;" class="btn  btn-block mt-1 w-1  btn-save"></button>
+      <button pButton   label="Clear" type="button"  style=" border-radius: 8px;" class="  mt-1 w-1 btn-close-clear"></button>
+      <button pButton  (click)="displayModal=false" label="Close" type="button"  style=" border-radius: 8px;" class=" btn btn-danger mt-1 w-1 btn-close-down"></button>
+    </div>
+   
+  </form>
+</p-dialog>
+
+<p-dialog header="Update Plant" [(visible)]="displayUpdateModal" [modal]="true" [style]="{width: '40%'}">
+  <form [formGroup]="UpdatePlant">
+    <div class="p-fluid">
+      <div class="p-field">
+        <label for="buildingID">Building ID <span style="color:red; font-weight: bold; ">*</span> </label>
+        <input pInputText formControlName="buildingID" type="text" placeholder="Building ID" id="buildingID"/>
+      </div>
+      <div class="p-field">
+        <label for="sapBuildingNumber">SAP Building Number <span style="color:red; font-weight: bold; ">*</span> </label>
+        <input pInputText formControlName="sapBuildingNumber" type="text" placeholder="SAP Building Number" id="sapBuildingNumber"/>
+      </div>
+      <div class="p-field">
+        <label for="bu">BU <span style="color:red; font-weight: bold; ">*</span> </label>
+        <input pInputText formControlName="bu" type="text" placeholder="BU" id="bu"/>
+      </div>
+      <div class="p-field">
+        <label for="location">Location <span style="color:red; font-weight: bold; ">*</span> </label>
+        <input pInputText formControlName="location" type="text" placeholder="Location" id="location"/>
+      </div>
+    </div>
+  
+    <div class="p-dialog-footer">
+      <button pButton  (click)="updatePlant(selectedPlantId, UpdatePlant.value)" label="update" type="button" style=" border-radius: 8px;" class="btn  btn-block mt-1 w-1  btn-update"></button>
+      <button pButton   label="Clear" type="button"  style=" border-radius: 8px;" class="  mt-1 w-1 btn-close-clear"></button>
+      <button pButton  (click)="displayUpdateModal=false" label="Close" type="button"  style=" border-radius: 8px;" class=" btn btn-danger mt-1 w-1 btn-close-down"></button>
+    </div>
+  </form>
+</p-dialog>
+
+<p-dialog header="View Plant" [(visible)]="displayViewModal" [modal]="true" [style]="{width: '40%'}">
+  <form [formGroup]="ViewPlant">
+    <div class="p-fluid">
+      <div class="p-field" *ngIf="ViewPlant.get('commenterDelete')?.value !== null">
+        <label for="commenterDelete" style="font-size: 20px;">Delete Reason</label>
+        <ng-container *ngIf="ViewPlant.get('commenterDelete')?.value.length > 20">
+          <textarea pInputTextarea formControlName="commenterDelete" id="commenterDelete" placeholder="Status" readonly style="font-weight: bold; font-size: 30px; color: white; background-color: #BC1F00;"></textarea>
+        </ng-container>
+        <ng-container *ngIf="ViewPlant.get('commenterDelete')?.value.length <= 20">
+          <input pInputText formControlName="commenterDelete" id="commenterDelete" type="text"
+           placeholder="Status" readonly style="font-weight: bold; font-size: 30px; color: white; background-color: #BC1F00;" />
+        </ng-container>
+      </div>
+      <div class="p-field">
+        <label for="buildingID">Building ID</label>
+        <input pInputText formControlName="buildingID" type="text" placeholder="Building ID" readonly id="buildingID"/>
+      </div>  
+      <div class="p-field">
+        <label for="sapBuildingNumber">SAP Building Number</label>
+        <input pInputText formControlName="sapBuildingNumber" type="text" placeholder="SAP Building Number" readonly id="sapBuildingNumber"/>
+      </div>
+      <div class="p-field">
+        <label for="bu">BU</label>
+        <input pInputText formControlName="bu" type="text" placeholder="BU" readonly id="bu"/>
+      </div>
+      <div class="p-field">
+        <label for="location">Location</label>
+        <input pInputText formControlName="location" type="text" placeholder="Location" readonly id="location"/>
+      </div>
+    </div>
+    <div class="p-dialog-footer">
+      <button pButton  (click)="displayViewModal=false" label="Close" type="button"  style=" border-radius: 8px;" class=" btn btn-danger mt-1 w-1 btn-close-down"></button>
+    </div>
+  </form>
+</p-dialog>
+
+
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-"></script>
+    <script src="bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.datatables.net/2.0.5/js/dataTables.js"></script>
+    <script src="https://cdn.datatables.net/2.0.5/js/dataTables.bootstrap5.js"></script>
+    <script > $(document).ready(function() {
+    $('#example').DataTable();
+    });
+    </script>
+    
+    
+    <script >
+    
+    $(document).ready(function() {
+        $('#ingredients').multiselect();
+    });
+    
+    </script>
+    
+    
+    
+    
+    <ng-template #userOverlay>
+    <div class="overlay overlay-user overlay-fall" cdkMenu>
+    <ul>
+      <li>
+        <label>
+          <input type="checkbox" [(ngModel)]="showColumns.Building_ID" disabled>
+          Building ID
+        </label>
+      </li>
+      <li>
+        <label>
+          <input type="checkbox" [(ngModel)]="showColumns.SapBuilding_Number">
+          SapBuilding Number
+        </label>
+      </li>
+      <li>
+        <label>
+          <input type="checkbox" [(ngModel)]="showColumns.BU">
+          BU
+        </label>
+      </li>
+      <li>
+        <label>
+          <input type="checkbox" [(ngModel)]="showColumns.Location">
+          Location
+        </label>
+      </li>
+      <li>
+        <label>
+          <input type="checkbox" [(ngModel)]="showColumns.Date_Create">
+          Date_Create
+        </label>
+      </li>
+      <li>
+        <label>
+          <input type="checkbox" [(ngModel)]="showColumns.Date_Update">
+          Date Update
+        </label>
+      </li>
+      <li>
+        <label>
+          <input type="checkbox" [(ngModel)]="showColumns.Date_Delete">
+          Date Delete
+        </label>
+      </li>
+    </ul>
+    </div>
+    </ng-template>
+    
+    <ng-template #importexport>
+      <div class="overlay overlay-user overlay-fall" cdkMenu>
+          <ul>
+              <li (click)="Import()">Import</li>
+              <li (click)="Export()">Export</li>
+              <li (click)="downloadExcel()">Download Template</li>
+          </ul>
+      </div>
+  </ng-template>
+  
+  
+  
+  

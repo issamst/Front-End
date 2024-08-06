@@ -1,0 +1,494 @@
+888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888
+<div class="card flex justify-content-center">
+
+   
+  <p-card >
+    <div style="text-align: center; font-family:'Avenir, sans-serif';  font-size: 45px; font-weight: bold;"> 
+      <strong>Departments</strong>
+  </div>
+      <div class="card-body">
+        <div
+          style="display: flex; justify-content: space-between; align-items: center;margin: 5px;">
+          <div class="form-outline" style="flex: 1;">
+          
+        
+            <!-- <input pInputText
+            type="text"
+            placeholder="Search Keyword..."
+            [(ngModel)]="searchText"
+            (ngModelChange)="globalSearch()"
+            /> -->
+          </div>
+  
+        <div class="head-user-avatar" [cdkMenuTriggerFor]="DepartementOverlay">
+          <div class="dropdown-text-end">
+            <a class="btn btn-outline-success" aria-expanded="false"
+              (click)="toggleDropdown()">
+              List of columns
+              <i *ngIf="!isDepartementOverlayOpen" class="fa fa-angle-left"></i>
+              <i *ngIf="isDepartementOverlayOpen" class="fa fa-angle-down"></i>
+            </a>
+          </div>
+        </div>
+        <div class="head-user-avatar" [cdkMenuTriggerFor]="importexport">
+          <div class="dropdown-text-end">
+            <a class="btn btn-outline-success" aria-expanded="false"
+              (click)="importexportopen()">
+              <i class="fa fa-download" aria-hidden="true"></i>
+              <i *ngIf="!isimportexportopen" class="fa fa-angle-left"></i>
+              <i *ngIf="isimportexportopen" class="fa fa-angle-down"></i>
+            </a>
+          </div>
+        </div>
+        <button class="btn btn-outline-success-" pButton type="button"
+          label="Add New Departement" icon="fa fa-plus" (click)="openModel()"
+          style="margin: 0 10px;"></button>
+      </div>
+  
+      
+  
+        <p-table
+          #dt1
+  
+          [value]="Departements"
+          [paginator]="true"
+          [rows]="5"
+          dataKey="id"
+          [loading]="loading"
+  
+          responsiveLayout="stack" 
+          styleClass="p-datatable-striped" 
+          [scrollable]="true"
+          scrollHeight="450px" 
+          [resizableColumns]="true"
+          [first]="first"
+          [scrollable]="true" 
+          scrollHeight="450px"  
+          [showCurrentPageReport]="true"
+          [tableStyle]="{ 'min-width': '60rem' }"
+          currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+          (onPage)="pageChange($event)"
+          [rowsPerPageOptions]="[3, 5, 10, 20]"
+          [globalFilterFields]="['Departement', 'Responsible', 'Replacement', 'Departement User','Plant','Area','Type']"
+  
+          >
+  
+          <ng-template pTemplate="caption">
+            <div class="flex">
+              <p-button label="Clear" [outlined]="true" icon="fa fa-filter" (click)="clear(dt1)" />
+              <span class="p-input-icon-left ml-auto">
+                <i class="fa fa-search"></i>						 
+                <input pInputText type="text" placeholder="Search" [(ngModel)]="searchText" (ngModelChange)="globalSearch()" />			
+              </span> 
+              <!-- <div class="my-right-div">
+                <p-button
+                  type="button"
+                  icon="fa fa-chevron-left"
+                  (click)="prev()"
+                  [disabled]="isFirstPage()"
+                  styleClass="p-button-text" />
+                <p-button
+                  type="button"
+                  icon="fa fa-refresh"
+                  (click)="reset()"
+                  styleClass="p-button-text" />
+                <p-button
+                  type="button"
+                  icon="fa fa-chevron-right"
+                  (click)="next()"
+                  [disabled]="isLastPage()"
+                  styleClass="p-button-text" />
+              </div> -->
+            </div>
+          </ng-template>	
+  
+  
+          <ng-template pTemplate="header" let-columns>
+            <tr>
+              <th pSortableColumn="name_Departement"  style="width:13%">
+                <div class="flex align-items-center">
+                  <p-columnFilter type="text" field="name_Departement" display="menu"></p-columnFilter>
+                  Department
+                  <p-sortIcon field="name_Departement" />
+  
+                </div>
+              </th>
+              <th pSortableColumn="buildingID.sapBuildingNumber" style="width:13%" *ngIf="showColumns.Building_ID">
+                <div class="flex align-items-center">
+                  <p-columnFilter type="text" field="buildingID.sapBuildingNumber" display="menu"></p-columnFilter>
+                   Plant
+                  <p-sortIcon field="buildingID.sapBuildingNumber" />
+                </div>  
+              </th>
+              <!-- <th style="width:20%" *ngIf="showColumns.name_Departement">name Departement</th> -->
+              <th pSortableColumn="manger_Email" style="width:13%" *ngIf="showColumns.Email">
+                <div class="flex align-items-center">
+                  <p-columnFilter type="text" field="manger_Email" display="menu"></p-columnFilter>
+                     Email
+                  <p-sortIcon field="manger_Email" />
+                </div>
+              </th>
+              <th pSortableColumn="fullName" style="width:13%" *ngIf="showColumns.Manager">
+                <div class="flex align-items-center">
+                  <p-columnFilter type="text" field="fullName" display="menu"></p-columnFilter>
+                  Manager 
+                  <p-sortIcon field="fullName" />
+               </div>
+              </th>
+              <th pSortableColumn="date_Create" style="width:13%" *ngIf="showColumns.Date_Create">
+                Create Date
+                <p-sortIcon field="date_Create" />
+              </th>
+              <th pSortableColumn="date_Update" style="width:13%" *ngIf="showColumns.Date_Update">
+                Update Date
+                <p-sortIcon field="date_Update" />
+              </th>
+              <th pSortableColumn="date_delete" style="width:13%" *ngIf="showColumns.Date_Delete">
+                Delete Date
+                <p-sortIcon field="date_delete" />
+              </th>
+              <th style="width:13%">Action</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-Departement >
+            <tr [ngClass]="{'deactivated-row': Departement.commenterDelete}">
+              <td *ngIf="showColumns.name_Departement">
+                <span class="ml-1 vertical-align-middle">{{Departement.name_Departement}}</span>
+              </td>
+              <td *ngIf="showColumns.Building_ID">{{ Departement.buildingID.buildingID  }}</td>
+  
+              <td *ngIf="showColumns.Email">{{Departement.manger_Email}}</td>
+  
+              <td
+                *ngIf="showColumns.Manager">{{ Departement.fullName +' (' + Departement.teid + ')' }}</td>
+              
+            
+              <td *ngIf="showColumns.Date_Create">{{ Departement.date_Create !==
+                '0001-01-01T00:00:00' ? (Departement.date_Create |
+                date:'dd-MM-yyyy / HH:mm:ss') : '  ' }}</td>
+              <td *ngIf="showColumns.Date_Update">{{ Departement.date_Update !==
+                '0001-01-01T00:00:00' ? (Departement.date_Update |
+                date:'dd-MM-yyyy / HH:mm:ss') : '  ' }}</td>
+              <td *ngIf="showColumns.Date_Delete">{{ Departement.date_delete !==
+                '0001-01-01T00:00:00' ? (Departement.date_delete |
+                date:'dd-MM-yyyy / HH:mm:ss') : '  ' }}
+              </td>
+  
+              <td>
+                <button pButton class="icon view" icon="fa fa-eye"
+                  (click)="selectView(Departement.id);openModelView(Departement.id,Departement.teid)"[pTooltip]="view" severity="secondary" tooltipPosition="top" >
+                  <ng-template #view>
+                    <div class="flex align-items-center">
+                      <span> <b>View</b> Departement </span>
+                    </div>
+                  </ng-template>
+                    
+                  </button>
+                <button pButton class="icon edit" type="button" icon="fa fa-pencil-alt"
+                  (click)="selectGetDepartementbyid(Departement.id); openModelUpdate(Departement.id)"
+                  [disabled]="Departement.commenterDelete"[pTooltip]="edit" severity="secondary" tooltipPosition="top" >
+                  <ng-template #edit>
+                    <div class="flex align-items-center">
+                      <span> <b>Edit</b> Department </span>
+                    </div>
+                  </ng-template>
+                    
+                  </button>
+                <button pButton class="icon delete" type="button" icon="fa fa-ban"
+                  (click)="DeleteDepartement(Departement.id)"
+                  [disabled]="Departement.commenterDelete"[pTooltip]="disable" severity="secondary" tooltipPosition="top" >
+                  <ng-template #disable>
+                    <div class="flex align-items-center">
+                      <span> <b>Disable</b> Department </span>
+                    </div>
+                  </ng-template>
+                    
+                  </button>
+              </td>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="emptymessage">
+            <tr>
+              <td colspan="7">No Departments found.</td>
+            </tr>
+          </ng-template>
+      
+          
+        </p-table>
+      </div>
+  
+    </p-card>
+  
+  </div>
+  
+  
+  
+  
+      
+  <p-dialog header="Create New Department" [(visible)]="displayModal" [style]="{width: '50vw'}" [modal]="true" >
+    <form [formGroup]="DepartementForm">
+      <div class="p-fluid">
+        <div class="p-field">
+          <label for="name_Departement">Name Department <span style="color:red; font-weight: bold; ">*</span> </label>
+          <input pInputText id="name_Departement" formControlName="name_Departement" placeholder="Name">
+        </div>
+        <div class="p-field">
+          <label for="manger_Email">Manager Email <span style="color:red; font-weight: bold; ">*</span> </label>
+          <input pInputText id="manger_Email" formControlName="manger_Email" placeholder="Manager Email">
+        </div>
+        <div class="p-field">
+          <label for="fullName">Manager <span style="color:red; font-weight: bold; ">*</span> </label>
+          <p-dropdown [options]="users" id="fullName" [(ngModel)]="selectedManagers" formControlName="fullName" placeholder="Select Manager" optionLabel="fullName"></p-dropdown>
+        </div>
+        <div class="p-field">
+          <label for="plant">Plant <span style="color:red; font-weight: bold; ">*</span> </label>
+          <p-dropdown [options]="plants" formControlName="plantID" placeholder="Select Plant" optionLabel="buildingID"></p-dropdown>
+        </div>
+      </div>
+      
+  
+      <div class="p-dialog-footer">
+        <button pButton  (click)="SaveDepartement()" label="Save" type="button" style=" border-radius: 8px;" class="btn  btn-block mt-1 w-1  btn-save"></button>
+        <button pButton  (click)="onClear()" label="Clear" type="button"  style=" border-radius: 8px;" class="  mt-1 w-1 btn-close-clear"></button>
+        <button pButton  (click)="displayModal=false" label="Close" type="button"  style=" border-radius: 8px;" class=" btn btn-danger mt-1 w-1 btn-close-down"></button>
+      </div>
+    </form>
+  </p-dialog>
+  
+      <!-- Update Department Modal -->
+  <p-dialog header="Update Department" [(visible)]="displayUpdateModal" [style]="{width: '50vw'}" [modal]="true" [closable]="false">
+    <form [formGroup]="UpdateDepartementFrom">
+      <div class="p-fluid">
+        <div class="p-field">
+          <label for="name_Departement">Name Department <span style="color:red; font-weight: bold; ">*</span> </label>
+          <input pInputText id="name_Departement" formControlName="name_Departement" placeholder="Name">
+        </div>
+        <div class="p-field">
+          <label for="manger_Email">Manager Email <span style="color:red; font-weight: bold; ">*</span> </label>
+          <input pInputText id="manger_Email" formControlName="manger_Email" placeholder="Manager Email">
+        </div>
+        <div class="p-field">
+          <label for="fullName">Manager <span style="color:red; font-weight: bold; ">*</span> </label>
+          <p-dropdown [options]="users" optionValue="fullName" formControlName="fullName" placeholder="Select Manager" optionLabel="fullName"></p-dropdown>
+        </div>
+        <div class="p-field">
+          <label for="plant">Plant <span style="color:red; font-weight: bold; ">*</span> </label>
+          <p-dropdown [options]="plants" optionValue="id" formControlName="plantID" placeholder="Select Plant" optionLabel="buildingID"></p-dropdown>
+        </div>
+      </div>
+      
+      <div class="p-dialog-footer">
+        <button pButton  (click)="updateDepartement(selectedDepartementId, UpdateDepartementFrom.value)" label="update" type="button" style=" border-radius: 8px;" class="btn  btn-block mt-1 w-1  btn-update"></button>
+        <button pButton  (click)="onClear()" label="Clear" type="button"  style=" border-radius: 8px;" class="  mt-1 w-1 btn-close-clear"></button>
+        <button pButton  (click)="displayUpdateModal=false" label="Close" type="button"  style=" border-radius: 8px;" class=" btn btn-danger mt-1 w-1 btn-close-down"></button>
+      </div>
+    </form>
+  </p-dialog>
+  
+  <!-- View Department Modal -->
+  <p-dialog header="View Departement" [(visible)]="displayViewModal" [style]="{width: '50vw'}" [modal]="true">
+    <form [formGroup]="ViewDepartement">
+      <div class="p-fluid">
+        <div class="p-field" *ngIf="ViewDepartement.get('commenterDelete')?.value !== null">
+          <label for="commenterDelete" style="font-size: 20px;">Delete Reason</label>
+          <ng-container *ngIf="ViewDepartement.get('commenterDelete')?.value.length > 20">
+            <textarea pInputTextarea formControlName="commenterDelete" id="commenterDelete" placeholder="Status" readonly style="font-weight: bold; font-size: 30px; color: white; background-color: #BC1F00;"></textarea>
+          </ng-container>
+          <ng-container *ngIf="ViewDepartement.get('commenterDelete')?.value.length <= 20">
+            <input pInputText formControlName="commenterDelete" id="commenterDelete" type="text"
+             placeholder="Status" readonly style="font-weight: bold; font-size: 30px; color: white; background-color: #BC1F00;" />
+          </ng-container>
+        </div>
+        <div class="p-field">
+          <label for="name_Departement">Name Department</label>
+          <input pInputText id="name_Departement" type="text" formControlName="name_Departement" placeholder="Name" readonly>
+        </div>
+        <div class="p-field">
+          <label for="manger_Email">Manager Email</label>
+          <input pInputText id="manger_Email" type="text" formControlName="manger_Email" placeholder="Manager Email" readonly>
+        </div>
+        <div class="p-field">
+          <label for="fullName">Manager</label>
+          <input pInputText formControlName="fullName" type="text" placeholder="Manager Name" [value]="getUserName(ViewDepartement.get('fullName')?.value)" >
+        </div>
+        <div class="p-field">
+          <label for="">Plant</label>
+          <input pInputText  type="text" placeholder="Plant Name" [value]="getPlantName(ViewDepartement.get('plantID')?.value)" disabled>
+        </div>
+      </div>
+      <div class="p-dialog-footer">
+        <button pButton  (click)="displayViewModal=false" label="Close" type="button"  style=" border-radius: 8px;" class=" btn btn-danger mt-1 w-1 btn-close-down"></button>
+  
+      </div>
+    </form>
+  </p-dialog>
+  
+  <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-"></script>
+  <script src="bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+  <script src="bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.datatables.net/2.0.5/js/dataTables.js"></script>
+  <script src="https://cdn.datatables.net/2.0.5/js/dataTables.bootstrap5.js"></script>
+  <script > $(document).ready(function() {
+  $('#example').DataTable();
+  });
+  </script>
+  
+  
+  <script >
+  
+  $(document).ready(function() {
+      $('#ingredients').multiselect();
+  });
+  
+  </script>
+      
+  
+      
+      
+  <ng-template #DepartementOverlay>
+  <div class="overlay overlay-user overlay-fall" cdkMenu>
+  <ul>
+    <li>
+      <label>
+        <input type="checkbox" [(ngModel)]="showColumns.name_Departement" disabled>
+        Name
+      </label>
+    </li>
+    <li>
+      <label>
+        <input type="checkbox" [(ngModel)]="showColumns.Manager">
+        Manager
+      </label>
+    </li>
+    <li>
+      <label>
+        <input type="checkbox" [(ngModel)]="showColumns.Email">
+        Email
+      </label>
+    </li>
+    <li>
+      <label>
+        <input type="checkbox" [(ngModel)]="showColumns.Building_ID">
+        Building_ID
+      </label>
+    </li>
+    <li>
+      <label>
+        <input type="checkbox" [(ngModel)]="showColumns.Date_Create">
+        Date_Create
+      </label>
+    </li>
+    <li>
+      <label>
+        <input type="checkbox" [(ngModel)]="showColumns.Date_Update">
+        Date Update
+      </label>
+    </li>
+    <li>
+      <label>
+        <input type="checkbox" [(ngModel)]="showColumns.Date_Delete">
+        Date Delete
+      </label>
+    </li>
+  </ul>
+  </div>
+  </ng-template>
+      
+  <ng-template #importexport>
+    <div class="overlay overlay-user overlay-fall" cdkMenu>
+        <ul>
+            <li (click)="Import()">Import</li>
+            <li (click)="Export()">Export</li>
+            <li (click)="downloadExcel()">Download Template</li>
+        </ul>
+    </div>
+  </ng-template>
+    
+    
+  <ng-template #PlantSelection>
+    <div class="overlay overlay-user overlay-fall" cdkMenu>
+      <input type="search" class="form-control" [(ngModel)]="searchtextplantadd" placeholder="Search"  [formControl]="searchControl">
+  
+      <ul>
+        <li *ngFor="let plant of plants |filterUsers:searchtextplantadd" style="font-weight: normal;" >
+          <label>
+            <input type="checkbox" [value]="plant.id" 
+                   [checked]="isPlantSelected(plant)" 
+                   (change)="toggleSelection(plant)">
+            {{ plant.buildingID + ' (' + plant.sapBuildingNumber + ')' }}
+          </label>
+        </li>
+      </ul>
+    </div>
+  </ng-template>
+  
+  <ng-template #PlantSelectionUpdate>
+    <div class="overlay overlay-user overlay-fall" cdkMenu>
+      <input type="search" class="form-control" [(ngModel)]="searchtextplantupdate" placeholder="Search" [formControl]="searchControl" >
+  
+      <ul>
+        <li *ngFor="let plant of plants |filterUsers:searchtextplantupdate" style="font-weight: normal;">
+          <label>
+            <input type="checkbox" [value]="plant.id" 
+                   [checked]="isPlantSelected(plant)" 
+                   (change)="toggleSelection(plant)">
+            {{ plant.buildingID + ' (' + plant.sapBuildingNumber + ')' }}
+          </label>
+        </li>
+      </ul>
+    </div>
+  </ng-template>
+  
+  
+  <ng-template #PlantSelectionView>
+    <div class="overlay overlay-user overlay-fall" cdkMenu>
+      
+    </div>
+  </ng-template>
+  
+  <ng-template #ManagerSelection>
+    <div class="overlay overlay-user overlay-fall" cdkMenu>
+      <input type="search" class="form-control" [(ngModel)]="searchtextmanageradd" placeholder="Search" [formControl]="searchControl">
+  
+      <ul>
+        <li *ngFor="let user of users |filterUsers:searchtextmanageradd" style="font-weight: normal;">
+          <label>
+            <input type="checkbox" [value]="user.teid" 
+                   [checked]="isManagerSelected(user)" 
+                   (change)="toggleManagerSelection(user)">
+            {{ user.teid + ' (' + user.fullName + ')' }}
+          </label>
+        </li>
+      </ul>
+    </div>
+  </ng-template>
+  
+  
+  
+  
+  
+  <ng-template #ManagerSelectionUpdate>
+    <div class="overlay overlay-user overlay-fall" cdkMenu>
+      <input type="search" class="form-control" [(ngModel)]="searchtextmanagerupdate" placeholder="Search" [formControl]="searchControl" >
+  
+      <ul>
+        <li *ngFor="let user of users |filterUsers:searchtextmanagerupdate" style="font-weight: normal;">
+          <label>
+            <input type="checkbox" [value]="user.teid" 
+                   [checked]="isManagerSelected(user)" 
+                   (change)="toggleManagerSelection(user)">
+            {{ user.teid + ' (' + user.fullName + ')' }}
+          </label>
+        </li>
+      </ul>
+    </div>
+  </ng-template>
+    
+  
+  
+  <ng-template #ManagerSelectionView>
+    <div class="overlay overlay-user overlay-fall" cdkMenu>
+      
+    </div>
+  </ng-template>

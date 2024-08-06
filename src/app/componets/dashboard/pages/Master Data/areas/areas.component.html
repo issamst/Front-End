@@ -1,0 +1,382 @@
+<div class="card flex justify-content-center">
+  <p-card >
+    <div style="text-align: center; font-family:'Avenir, sans-serif';  font-size: 45px; font-weight: bold;"> 
+      <strong>Areas</strong>
+  </div>
+    <div class="card-body">
+      <div
+        style="display: flex; justify-content: space-between; align-items: center;margin: 5px;">
+        <div class="form-outline" style="flex: 1;"></div>
+  
+        <div class="head-user-avatar" [cdkMenuTriggerFor]="areaOverlay">
+          <div class="dropdown-text-end">
+            <a class="btn btn-outline-success" aria-expanded="false"
+              (click)="toggleDropdown()">
+              List of columns
+              <i *ngIf="!isAreaOverlayOpen" class="fa fa-angle-left"></i>
+              <i *ngIf="isAreaOverlayOpen" class="fa fa-angle-down"></i>
+            </a>
+          </div>
+        </div>
+        <div class="head-user-avatar" [cdkMenuTriggerFor]="importexport">
+          <div class="dropdown-text-end">
+            <a class="btn btn-outline-success" aria-expanded="false"
+              (click)="importexportopen()">
+              <i class="fa fa-download" aria-hidden="true"></i>
+              <i *ngIf="!isimportexportopen" class="fa fa-angle-left"></i>
+              <i *ngIf="isimportexportopen" class="fa fa-angle-down"></i>
+            </a>
+          </div>
+        </div>
+        <button class="btn btn-outline-success-" pButton type="button"
+          label="Add New Area" icon="fa fa-plus" (click)="openModel()"
+          style="margin: 0 10px;"></button>
+      </div>
+  
+     
+  
+        <p-table
+          #dt1
+  
+          [value]="Areas"
+          [paginator]="true"
+          [rows]="5"
+          dataKey="id"
+          [loading]="loading"
+          [scrollable]="true" scrollHeight="450px" 
+          responsiveLayout="stack" 
+          styleClass="p-datatable-striped" 
+  
+          [resizableColumns]="true"
+          [first]="first"
+          [showCurrentPageReport]="true"
+          [tableStyle]="{ 'min-width': '60rem' }"
+          currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+          (onPage)="pageChange($event)"
+          [rowsPerPageOptions]="[3, 5, 10, 20]"
+          [globalFilterFields]="['name_Area', 'Building ID']"
+  
+          >
+  
+          <ng-template pTemplate="caption">
+            <div class="flex">
+              <p-button label="Clear" [outlined]="true" icon="fa fa-filter" (click)="clear(dt1)" />
+              <span class="p-input-icon-left ml-auto">
+                <i class="fa fa-search"></i> 
+                <input pInputText type="text" placeholder="Search" [(ngModel)]="searchText" (ngModelChange)="globalSearch()" />
+              </span> 
+              
+              <!-- <div class="my-right-div">
+                <p-button
+                  type="button"
+                  icon="fa fa-chevron-left"
+                  (click)="prev()"
+                  [disabled]="isFirstPage()"
+                  styleClass="p-button-text" />
+                <p-button
+                  type="button"
+                  icon="fa fa-refresh"
+                  (click)="reset()"
+                  styleClass="p-button-text" />
+                <p-button
+                  type="button"
+                  icon="fa fa-chevron-right"
+                  (click)="next()"
+                  [disabled]="isLastPage()"
+                  styleClass="p-button-text" />
+              </div> -->
+            </div>
+          </ng-template>	
+  
+          <ng-template pTemplate="header" let-columns>
+            <tr>
+              <th pSortableColumn="name_Area" style="width:15%">
+                <div class="flex align-items-center">
+                  <p-columnFilter type="text" field="name_Area" display="menu"></p-columnFilter>
+                  Area Name
+                  <p-sortIcon field="name_Area" />
+                </div>
+              </th>
+               <th pSortableColumn="buildingID.buildingID" style="width:15%" *ngIf="showColumns.Building_ID">
+                 <p-columnFilter type="text" field="buildingID.buildingID" display="menu"></p-columnFilter>
+                Plant
+                <p-sortIcon field="buildingID.buildingID" />
+              </th>
+  
+              <th pSortableColumn="date_Create" style="width:15%" *ngIf="showColumns.date_Create">
+                Create Date
+                <p-sortIcon field="date_Create" />
+  
+              </th>
+              <th pSortableColumn="date_Update" style="width:15%" *ngIf="showColumns.date_Update">
+                Update Date
+                <p-sortIcon field="date_Update" />
+  
+              </th>
+              <th pSortableColumn="date_delete" style="width:15%" *ngIf="showColumns.date_delete">Delete Date
+                <p-sortIcon field="date_delete" />
+  
+              </th>
+              <th style="width:7% ">Action</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-Area >
+            <tr [ngClass]="{'deactivated-row': Area.commenterDelete}">
+              <td *ngIf="showColumns.name_Area">
+                <span class="ml-1 vertical-align-middle">{{ Area.name_Area}}</span>
+              </td>
+              <td *ngIf="showColumns.Building_ID">{{ Area.buildingID.buildingID+ ' (' + Area.buildingID.sapBuildingNumber + ')' }}</td>
+              <td *ngIf="showColumns.date_Create">{{ Area.date_Create !== '0001-01-01T00:00:00' ? (Area.date_Create  | date:'dd-MM-yyyy / HH:mm:ss') : '  ' }}</td>
+              <td *ngIf="showColumns.date_Update">{{ Area.date_Update !== '0001-01-01T00:00:00' ? (Area.date_Update | date:'dd-MM-yyyy / HH:mm:ss') : '  ' }}</td>
+              <td *ngIf="showColumns.date_delete">{{ Area.date_delete !== '0001-01-01T00:00:00' ? (Area.date_delete | date:'dd-MM-yyyy / HH:mm:ss') : '  ' }}</td>
+             <td>
+                <button pButton class="icon view" icon="fa fa-eye"
+                  (click)="selectView(Area.id); openModelView(Area.id)"[pTooltip]="view" severity="secondary" tooltipPosition="top" >
+                  <ng-template #view>
+                    <div class="flex align-items-center">
+                      <span> <b>View</b> Area </span>
+                    </div>
+                  </ng-template>
+                    
+                  </button>
+                <button pButton class="icon edit" type="button" icon="fa fa-pencil-alt"
+                  (click)="selectGetAreabyid(Area.id); openModelUpdate(Area.id)"
+                  [disabled]="Area.commenterDelete"[pTooltip]="edit" severity="secondary" tooltipPosition="top" >
+                  <ng-template #edit>
+                    <div class="flex align-items-center">
+                      <span> <b>Edit</b> Area </span>
+                    </div>
+                  </ng-template>
+                    
+                  </button>
+                <button pButton class="icon delete" type="button" icon="fa fa-ban"
+                  (click)="DeleteArea(Area.id)"
+                  [disabled]="Area.commenterDelete"[pTooltip]="disable" severity="secondary" tooltipPosition="top" >
+                  <ng-template #disable>
+                    <div class="flex align-items-center">
+                      <span> <b>Disable</b> Area </span>
+                    </div>
+                  </ng-template>
+                    
+                  </button>
+             </td>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="emptymessage">
+            <tr>
+              <td colspan="7">No Area found.</td>
+            </tr>
+          </ng-template>
+      
+          
+        </p-table>
+      </div>
+    </p-card>
+  
+  </div>
+  
+  <p-dialog header="Add New Area" id="AddArea" [(visible)]="displayModal" [modal]="true" [style]="{'width': '40%', 'height': '44%'}">
+
+          <form [formGroup]="AreaForm" (ngSubmit)="SaveArea()">
+            <div class="p-fluid">
+              <div class="p-field">           
+                  <label for="name_Area">Name Area <span style="color:red; font-weight: bold; ">*</span> </label>
+                  <input pInputText class="inputArea" formControlName="name_Area" placeholder="Name">
+              </div>
+              <div class="p-field">
+                  <label for="plantID">Name Plant <span  style="color:red; font-weight: bold; ">*</span> </label>
+                  <p-dropdown [options]="plants"  optionLabel="buildingID" formControlName="plantID" placeholder="Select Plant" (onChange)="onPlantChange($event)"></p-dropdown>            
+              </div>
+            </div>
+   
+            <div class="p-dialog-footer" style="margin-top: 15%;">
+              <button pButton  (click)="SaveArea()" label="Save" type="button" style=" border-radius: 8px;" class="btn  btn-block mt-1 w-1  btn-save"></button>
+              <button pButton  (click)="onClear()" label="Clear" type="button"  style=" border-radius: 8px;" class="  mt-1 w-1 btn-close-clear"></button>
+              <button pButton  (click)="displayModal=false" label="Close" type="button"  style=" border-radius: 8px;" class=" btn btn-danger mt-1 w-1 btn-close-down"></button>
+            </div>
+           
+          </form>
+  </p-dialog>
+    
+  <p-dialog header="Update Area" [(visible)]="displayUpdateModal" [modal]="true" [style]="{'width': '40%', 'height': '44%'}">
+          <form [formGroup]="UpdateAreaForm">
+            
+            <div class="p-fluid">
+              <div class="p-field">
+                  <label for="name_Area">Area <span style="color:red; font-weight: bold; ">*</span> </label>
+                  <input pInputText class="inputArea" formControlName="name_Area" placeholder="Name">
+              </div>
+              <div class="p-field">
+                  <label  for="plantID">Plant <span style="color:red; font-weight: bold; ">*</span> </label>
+                  <p-dropdown [options]="plants"
+                     optionLabel="buildingID"
+                    placeholder="Select Plant"
+                    (onChange)="onPlantChangeUpdate($event)"
+                 >
+                  </p-dropdown>
+                </div>
+              </div>
+              <div class="p-dialog-footer" style="margin-top: 15%;">
+                <button pButton  (click)="updateAreas(UAreaId, UpdateAreaForm.value)" label="Update" type="button" style=" border-radius: 8px;" class="btn  btn-block mt-1 w-1  btn-update"></button>
+                <button pButton  (click)="onClear()" label="Clear" type="button"  style=" border-radius: 8px;" class="  mt-1 w-1 btn-close-clear"></button>
+                <button pButton  (click)="displayUpdateModal=false" label="Close" type="button"  style=" border-radius: 8px;" class=" btn btn-danger mt-1 w-1 btn-close-down"></button>
+              </div>
+             
+          </form>
+  </p-dialog>
+    
+    
+      
+  <p-dialog header="View Area" [(visible)]="displayViewModal" [modal]="true" [style]="{'width': '40%', 'height': '44%'}">
+          <form [formGroup]="ViewArea">
+            <div class="p-fluid">
+              <div class="p-field" *ngIf="ViewArea.get('commenterDelete')?.value !== null">
+                <label for="commenterDelete" style="font-size: 20px;">Delete Reason</label>
+                <ng-container *ngIf="ViewArea.get('commenterDelete')?.value.length > 20">
+                <textarea pInputTextarea formControlName="commenterDelete" id="commenterDelete" placeholder="Status" readonly style="font-weight: bold; font-size: 30px; color: white; background-color: #BC1F00;"></textarea>
+                </ng-container>
+                <ng-container *ngIf="ViewArea.get('commenterDelete')?.value.length <= 20">
+                <input pInputText formControlName="commenterDelete" id="commenterDelete" type="text"
+                 placeholder="Status" readonly style="font-weight: bold; font-size: 30px; color: white; background-color: #BC1F00;" />
+                </ng-container>
+              </div>
+              <div class="p-field">             
+                  <label for="name_Area">Name Area</label>
+                  <input pInputText formControlName="name_Area" type="text"  placeholder="Name" readonly>
+              </div>
+              <div class="p-field">
+                <label for="">Plant</label>
+                <input pInputText  type="text" placeholder="Plant Name" [value]="getPlantName(ViewArea.get('plantID')?.value)" disabled>
+              </div>
+              
+            </div>
+            <div class="p-dialog-footer" >
+              <button pButton  (click)="displayViewModal=false" label="Close" type="button"  style=" border-radius: 8px;" class=" btn btn-danger mt-1 w-1 btn-close-down"></button>
+  
+              </div>
+          </form>
+  </p-dialog>
+    
+  <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-"></script>
+  <script src="bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+  <script src="bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.datatables.net/2.0.5/js/dataTables.js"></script>
+  <script src="https://cdn.datatables.net/2.0.5/js/dataTables.bootstrap5.js"></script>
+  <script > $(document).ready(function() {
+  $('#example').DataTable();
+  });
+  </script>
+  
+  
+  <script >
+  
+  $(document).ready(function() {
+      $('#ingredients').multiselect();
+  });
+  
+  </script>
+      
+      
+      
+      
+  <ng-template #areaOverlay>
+  <div class="overlay overlay-user overlay-fall" cdkMenu>
+  <ul>
+    <li>
+      <label>
+        <input type="checkbox" [(ngModel)]="showColumns.name_Area" Deactivate>
+        name Area
+      </label>
+    </li>
+    <li>
+      <label>
+        <input type="checkbox" [(ngModel)]="showColumns.Building_ID">
+        Plant
+      </label>
+    </li>
+    <li>
+      <label>
+        <input type="checkbox" [(ngModel)]="showColumns.date_Create" >
+        Date_Create
+      </label>
+    </li>
+    <li>
+      <label>
+        <input type="checkbox" [(ngModel)]="showColumns.date_Update">
+        Date Update
+      </label>
+    </li>
+    <li>
+      <label>
+        <input type="checkbox" [(ngModel)]="showColumns.date_delete">
+        Date Delete
+      </label>
+    </li>
+  </ul>
+  </div>
+  </ng-template>
+      
+  <ng-template #importexport>
+    <div class="overlay overlay-user overlay-fall" cdkMenu>
+        <ul>
+            <li (click)="Import()">Import</li>
+            <li (click)="Export()">Export</li>
+            <li (click)="downloadExcel()">Download Template</li>
+        </ul>
+    </div>
+  </ng-template>
+    
+  
+  
+  
+  
+  
+  
+
+  
+  
+  
+  
+  <ng-template #PlantSelection>
+    <div class="overlay overlay-user overlay-fall" cdkMenu>
+      <input type="search" class="form-control" placeholder="Search" [(ngModel)]="searchtextplantadd" [formControl]="searchControl">
+  
+      <ul>
+        <li *ngFor="let plant of plants |filterUsers:searchtextplantadd" style="font-weight: normal;">
+          <label>
+            <input type="checkbox" [value]="plant.id" 
+                   [checked]="isPlantSelected(plant)" 
+                   (change)="toggleSelection(plant)">
+            {{ plant.buildingID + ' (' + plant.sapBuildingNumber + ')' }}
+          </label>
+        </li>
+      </ul>
+    </div>
+  </ng-template>
+  
+  
+  
+  <ng-template #PlantSelectionUpdate>
+    <div class="overlay overlay-user overlay-fall" cdkMenu>
+      <input type="search" class="form-control" placeholder="Search" [(ngModel)]="searchtextplantupdate" [formControl]="searchControl">
+  
+      <ul>
+        <li *ngFor="let plant of plants |filterUsers:searchtextplantupdate " style="font-weight: normal;">
+          <label>
+            <input type="checkbox" [value]="plant.id" 
+                   [checked]="isPlantSelected(plant)" 
+                   (change)="toggleSelection(plant)">
+            {{ plant.buildingID + ' (' + plant.sapBuildingNumber + ')' }}
+          </label>
+        </li>
+      </ul>
+    </div>
+  </ng-template>
+  
+  
+  <ng-template #PlantSelectionView>
+    <div class="overlay overlay-user overlay-fall" cdkMenu>
+      
+    </div>
+  </ng-template>

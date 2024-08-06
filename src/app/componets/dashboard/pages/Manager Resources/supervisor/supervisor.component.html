@@ -1,0 +1,383 @@
+<div class="card flex justify-content-center">
+
+    <p-card >
+        <div style="text-align: center; font-family:'Avenir, sans-serif';  font-size: 45px; font-weight: bold; margin-bottom: 30px;"> 
+            <strong>Supervisor</strong>
+        </div>
+    
+        <div class="card-body">
+            <div
+                style="display: flex; justify-content: space-between; align-items: center;margin: 5px;">
+                <div class="form-outline" style="flex: 1;"></div>
+    
+                <div class="head-user-avatar" [cdkMenuTriggerFor]="CommitteeOverlay">
+                    <div class="dropdown-text-end">
+                        <a class="btn btn-outline-success" aria-expanded="false"
+                            (click)="toggleDropdown()">
+                            List of columns
+                            <i *ngIf="!isCommitteeOverlayOpen" class="fa fa-angle-left"></i>
+                            <i *ngIf="isCommitteeOverlayOpen" class="fa fa-angle-down"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="head-user-avatar" [cdkMenuTriggerFor]="importexport">
+                    <div class="dropdown-text-end">
+                        <a class="btn btn-outline-success" aria-expanded="false"
+                            (click)="importexportopen()">
+                            <i class="fa fa-download" aria-hidden="true"></i>
+                            <i *ngIf="!isimportexportopen" class="fa fa-angle-left"></i>
+                            <i *ngIf="isimportexportopen" class="fa fa-angle-down"></i>
+                        </a>
+                    </div>
+                </div>
+                <button class="btn btn-outline-success-" pButton type="button"
+                    label="Add New Supervisor" icon="fa fa-plus" (click)="openModel()"
+                    style="margin: 0 10px;"></button>
+            </div>
+    
+        
+                <p-table
+                    #dt1
+    
+                    [value]="Supervisor"
+                    [paginator]="true"
+                    [rows]="5"
+                    dataKey="id"
+                    [loading]="loading"
+    
+                    responsiveLayout="stack" 
+                    styleClass="p-datatable-striped" 
+                    [scrollable]="true" 
+                    scrollHeight="450px"
+                    [resizableColumns]="true"
+                    [first]="first"
+                    [showCurrentPageReport]="true"
+                    [tableStyle]="{ 'min-width': '60rem' }"
+                    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+                    (onPage)="pageChange($event)"
+                    [rowsPerPageOptions]="[3, 5, 10, 20]"
+                    [globalFilterFields]="['speciality', 'teid.fullName']"
+    
+                    >
+    
+                    <ng-template pTemplate="caption">
+    
+                    <div class="flex">
+                        <p-button label="Clear" [outlined]="true" icon="fa fa-filter" (click)="clear(dt1)" />
+                        <span class="p-input-icon-left ml-auto">
+                          <i class="fa fa-search"></i>
+                        
+                            <input pInputText type="text" placeholder="Search" [(ngModel)]="searchText" (ngModelChange)="globalSearch()" />
+            
+                        </span> 
+    
+                        <div class="my-right-div">
+                            <p-button
+                                type="button"
+                                icon="fa fa-chevron-left"
+                                (click)="prev()"
+                                [disabled]="isFirstPage()"
+                                styleClass="p-button-text" />
+                            <p-button
+                                type="button"
+                                icon="fa fa-refresh"
+                                (click)="reset()"
+                                styleClass="p-button-text" />
+                            <p-button
+                                type="button"
+                                icon="fa fa-chevron-right"
+                                (click)="next()"
+                                [disabled]="isLastPage()"
+                                styleClass="p-button-text" />
+                        </div>
+                
+                      </div>
+                    </ng-template>	
+    
+    
+                    <ng-template pTemplate="header" let-columns>
+                        <tr>
+                            <th style="min-width:15rem">
+                                <div pSortableColumn="speciality" class="flex align-items-center">
+                                    <p-columnFilter type="text" field="speciality" display="menu"></p-columnFilter>
+                                    speciality 
+                                     <p-sortIcon field="speciality" />
+                                </div>
+                            </th>
+                            <th pSortableColumn="teid.fullName" style="width:9%" *ngIf="showColumns.responsible">							
+                                <div class="flex align-items-center">
+                                    <p-columnFilter type="text" field="teid.fullName" display="menu"></p-columnFilter>
+                                    Supervisor
+                                    <p-sortIcon field="teid.fullName" />
+                                </div>
+                            </th>
+                            <th pSortableColumn="date_Create" style="width:9%" *ngIf="showColumns.Date_Create">
+                                Create Date
+                                <p-sortIcon field="date_Create" />
+                            </th>
+                            <th pSortableColumn="date_Update" style="width:9%" *ngIf="showColumns.Date_Update">
+                                Update Date
+                                <p-sortIcon field="date_Update" />
+                            </th>
+                            <th pSortableColumn="date_delete" style="width:9%" *ngIf="showColumns.Date_Delete">
+                                Delete Date
+                                <p-sortIcon field="date_delete" />
+                            </th>
+                            <th style="width:9%">Action</th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-supervisor >
+                        <tr [ngClass]="{'deactivated-row': supervisor.commenterDisabled}">
+                            <td *ngIf="showColumns.speciality">
+                                <span class="ml-1 vertical-align-middle">{{ supervisor.speciality}}</span>
+                            </td>
+                            <td *ngIf="showColumns.responsible">{{ supervisor.teid.fullName+ ' (' +
+                                supervisor.teid.teid + ')' }}</td>
+                            <td *ngIf="showColumns.Date_Create">{{ supervisor.date_Create !==
+                                '0001-01-01T00:00:00' ? (supervisor.date_Create |
+                                date:'dd-MM-yyyy / HH:mm:ss') : '  ' }}</td>
+                            <td *ngIf="showColumns.Date_Update">{{ supervisor.date_Update !==
+                                '0001-01-01T00:00:00' ? (supervisor.date_Update |
+                                date:'dd-MM-yyyy / HH:mm:ss') : '  ' }}</td>
+                            <td *ngIf="showColumns.Date_Delete">{{ supervisor.date_delete !==
+                                '0001-01-01T00:00:00' ? (supervisor.date_delete |
+                                date:'dd-MM-yyyy / HH:mm:ss') : '  ' }}
+                            </td>
+                            <td>
+                                <button pButton class="icon view" icon="fa fa-eye"
+                                    (click)="selectView(supervisor.id); openModelView(supervisor.id)"[pTooltip]="'View Committee'" severity="secondary" tooltipPosition="top" >		
+                                </button>
+                                <button pButton class="icon edit" type="button" icon="fa fa-pencil-alt"
+                                    (click)="selectGetSupervisorbyid(supervisor.id); openModelUpdate(supervisor.id)"
+                                    [disabled]="Supervisor.commenterDisabled"[pTooltip]="'Edit Committee'" severity="secondary" tooltipPosition="top" >									
+                                </button>
+                                <button pButton class="icon delete" type="button" icon="fa fa-ban"
+                                     (click)="deleteCommittees(supervisor.id)"
+                                     [disabled]="supervisor.commenterDisabled"
+                                     [pTooltip]="'Disable Committee'" severity="secondary"
+                                     tooltipPosition="top" >									
+                                </button>
+                            </td>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="emptymessage">
+                        <tr>
+                            <td colspan="7">No customers found.</td>
+                        </tr>
+                    </ng-template>
+            
+                    <ng-template pTemplate="paginatorleft">
+                        <p-button type="button" icon="fa fa-plus" styleClass="p-button-text" />
+                    </ng-template>
+                    <ng-template pTemplate="paginatorright">
+                        <p-button type="button" icon="fa fa-cloud" styleClass="p-button-text" />
+                    </ng-template>
+                </p-table>
+            </div>
+    
+        </p-card>
+    
+    </div>
+    
+    
+    
+    <p-dialog header="Add New Supervisor" id="AddCommittee" [(visible)]="displayModal" [modal]="true" [style]="{width: '40%',height:'50%'}">
+            <form [formGroup]="supervisorForm">
+              <div class="p-fluid">
+                <div class="p-field">
+                  <label for="speciality">Speciality</label>
+                  <input pInputText formControlName="speciality" type="text" placeholder="speciality" id="speciality" />
+                </div>
+
+                <div class="p-field">
+                    <label for="userID">Supervisor</label>
+                    <p-dropdown formControlName="userID" [options]="users" optionLabel="fullName" optionValue="id" placeholder="Select users"></p-dropdown>
+                  </div>
+                
+    
+              </div>
+              <div class="p-dialog-footer" style="margin-top: 19%"> 
+                
+                <button pButton type="button" label="Create" (click)="Savesupervisor_1()" class="btn-primary-create"></button>
+                <button pButton type="button" label="Close" (click)="displayModal=false" class="btn-danger"></button>
+              </div>
+            </form>
+    </p-dialog>
+ 
+          
+    <p-dialog header="Update Committee" [(visible)]="displayUpdateModal" [modal]="true" [style]="{width: '40%'}">
+        <form [formGroup]="supervisorUpdateFrom">
+          <div class="p-fluid">
+            <div class="p-field">
+              <label for="name_Committee">Committee</label>
+              <input pInputText formControlName="speciality" type="text" placeholder="Name Of Committee" id="speciality" />
+            </div>
+            <div class="p-field">
+                <label for="userID">User</label>
+                    <p-dropdown formControlName="userID" [options]="users" optionLabel="fullName" optionValue="id" placeholder="Select users"></p-dropdown>
+              </div>
+            
+        
+          </div>
+          <div class="p-dialog-footer">
+            <button pButton type="button" label="Update Committee" (click)="updateCommittee(USupervisorId, supervisorUpdateFrom.value)"class="btn-primary-update"></button>
+            <button pButton type="button" label="Close" class="btn btn-danger" (click)="displayUpdateModal=false"></button>
+          </div>
+        </form>
+    </p-dialog>
+      
+    <p-dialog header="View Committee" [(visible)]="displayViewModal" [modal]="true" [style]="{width: '40%'}">
+        <form [formGroup]="ViewSupervisor">
+          <div class="p-fluid">
+            <div class="p-field" *ngIf="ViewSupervisor.get('commenterDisabled')?.value !== null">
+              <label for="commenterDisabled" style="font-size: 20px;">Delete Reason</label>
+              <ng-container *ngIf="ViewSupervisor.get('commenterDisabled')?.value.length > 20">
+                <textarea
+                  pInputTextarea
+                  formControlName="commenterDisabled"
+                  id="commenterDisabled"
+                  placeholder="Status"
+                  readonly
+                  style="font-weight: bold; font-size: 30px; color: white; background-color: #BC1F00;">
+                </textarea>
+              </ng-container>
+              <ng-container *ngIf="ViewSupervisor.get('commenterDisabled')?.value.length <= 20">
+                <input
+                  pInputText
+                  formControlName="commenterDisabled"
+                  id="commenterDisabled"
+                  type="text"
+                  placeholder="Status"
+                  readonly
+                  style="font-weight: bold; font-size: 30px; color: white; background-color: #BC1F00;" />
+              </ng-container>
+            </div>
+
+
+
+
+
+            
+            <div class="p-field">
+                <label for="speciality">Speciality</label>
+                <input pInputText formControlName="speciality" type="text" placeholder="speciality" [disabled]="isDisabled"/>
+              </div>
+              
+            <div class="p-field">
+                <label for="">Supervisor</label>
+                <input pInputText  type="text" placeholder="Supervisor" [value]="getUserName(ViewSupervisor.get('userID')?.value)" disabled>
+            </div>
+            
+          </div>
+          <div class="p-dialog-footer">
+            <button pButton type="button" label="Close" class="btn btn-danger" (click)="displayViewModal = false"></button>
+          </div>
+        </form>
+      </p-dialog>
+      
+      
+          
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-"></script>
+    <script src="bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.datatables.net/2.0.5/js/dataTables.js"></script>
+    <script
+        src="https://cdn.datatables.net/2.0.5/js/dataTables.bootstrap5.js"></script>
+    <script> $(document).ready(function() {
+      $('#example').DataTable();
+      });
+      </script>
+    
+    <script>
+      
+      $(document).ready(function() {
+          $('#ingredients').multiselect();
+      });
+      
+    </script>
+    
+    <ng-template #CommitteeOverlay>
+        <div class="overlay overlay-user overlay-fall" cdkMenu>
+            <ul>
+                <li>
+                    <label>
+                        <input type="checkbox" [(ngModel)]="showColumns.speciality" disabled>
+                        Committee
+                    </label>
+                </li>
+    
+                <li>
+                    <label>
+                        <input type="checkbox" [(ngModel)]="showColumns.responsible" disabled>
+                        Responsible
+                    </label>
+                </li>
+    
+                <li>
+                    <label>
+                        <input type="checkbox" [(ngModel)]="showColumns.replacement" disabled>
+                        Replacement
+                    </label>
+                </li>
+    
+                <li>
+                    <label>
+                        <input type="checkbox" [(ngModel)]="showColumns.plant">
+                        Plant
+                    </label>
+                </li>
+                <li>
+                    <label>
+                        <input type="checkbox" [(ngModel)]="showColumns.area">
+                        Area
+                    </label>
+                </li>
+    
+                <li>
+    
+                    <label>
+                        <input type="checkbox" [(ngModel)]="showColumns.departement" disabled>
+                        Department
+                    </label>
+                </li>
+    
+                <li>
+                    <label>
+                        <input type="checkbox" [(ngModel)]="showColumns.responsibleTitle">
+                        Responsible Title
+                    </label>
+                </li>
+    
+                <li>
+                    <label>
+                        <input type="checkbox" [(ngModel)]="showColumns.Date_Create">
+                        Create Date
+                    </label>
+                </li>
+                <li>
+                    <label>
+                        <input type="checkbox" [(ngModel)]="showColumns.Date_Update">
+                        Update Date
+                    </label>
+                </li>
+                <li>
+                    <label>
+                        <input type="checkbox" [(ngModel)]="showColumns.Date_Delete">
+                        Delete Date
+                    </label>
+                </li>
+    
+            </ul>
+        </div>
+    </ng-template>
+    
+    <ng-template #importexport>
+        <div class="overlay overlay-user overlay-fall" cdkMenu>
+            <ul>
+                <li (click)="Import()">Import</li>
+                <li (click)="Export()">Export</li>
+                <li (click)="downloadExcel()">Download Template</li>
+            </ul>
+        </div>
+    </ng-template>

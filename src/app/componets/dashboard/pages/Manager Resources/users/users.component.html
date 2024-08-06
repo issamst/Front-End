@@ -1,0 +1,1701 @@
+
+<!-- THE Last version of the NEW HTML USING PRIME NG -->
+ 
+<div class="card flex justify-content-center">
+
+ <p-card >
+  <div style="text-align: center; font-family:'Avenir, sans-serif';  font-size: 45px; font-weight: bold; margin-bottom: 30px;"> 
+    <strong>Users</strong>
+</div>
+  <div class="card-body">
+
+    <div style="display: flex; justify-content: space-between; align-items: center;margin: 5px;">
+      <div class="form-outline" style="flex: 1;"></div>
+
+      <div class="head-user-avatar" [cdkMenuTriggerFor]="userOverlay">
+          <div class="dropdown-text-end">
+              <a class="btn btn-outline-success" aria-expanded="false"
+                  (click)="toggleDropdown()">
+                  List of columns
+                  <i *ngIf="!isUserOverlayOpen" class="fa fa-angle-left"></i>
+                  <i *ngIf="isUserOverlayOpen" class="fa fa-angle-down"></i>
+              </a>
+          </div>
+      </div>
+      <div class="head-user-avatar" [cdkMenuTriggerFor]="importexport">
+          <div class="dropdown-text-end">
+              <a class="btn btn-outline-success" aria-expanded="false"
+                  (click)="importexportopen()">
+                  <i class="fa fa-download" aria-hidden="true"></i>
+                  <i *ngIf="!isimportexportopen" class="fa fa-angle-left"></i>
+                  <i *ngIf="isimportexportopen" class="fa fa-angle-down"></i>
+              </a>
+          </div>
+      </div>
+      <button class="btn btn-outline-success-" pButton type="button"
+          label="Add New Committee" icon="fa fa-plus" (click)="openModel()"
+          style="margin: 0 10px;"></button>
+    </div>
+    <nav>
+      <div class="nav nav-tabs nav-fill" id="nav-tab" role="tablist">
+        <a class="nav-item nav-link active" id="nav-All-Users-tab" data-toggle="tab" href="#All-Users" role="tab" aria-controls="nav-home" aria-selected="true">All Users</a>
+        <a class="nav-item nav-link" id="nav-Active Role-tab" data-toggle="tab" href="#Active-Role" role="tab" aria-controls="nav-profile" aria-selected="false">Active Role</a>
+        <a class="nav-item nav-link" id="nav-Users-Pending-tab" data-toggle="tab" href="#Users-Pending" role="tab" aria-controls="nav-contact" aria-selected="false">Pending Users</a>
+        <a class="nav-item nav-link" id="nav-Request Password-tab" data-toggle="tab" href="#Request-Password" role="tab" aria-controls="nav-about" aria-selected="false">Request Password</a>
+        <a class="nav-item nav-link" id="nav-Deactivated Users-tab" data-toggle="tab" href="#Deactivated-Users" role="tab" aria-controls="nav-about" aria-selected="false">Deactivated Users</a>
+      </div>
+    </nav>
+
+
+    <div class="tab-content py-3 px-3 px-sm-0" id="nav-tabContent" style="margin-top: -30px;">
+      <div class="tab-pane fade show active" id="All-Users" role="tabpanel" aria-labelledby="nav-All-Users-tab">
+      <p-table
+      #dt1
+      [value]="getDisplayedUsers()"
+      [paginator]="true"
+      [rows]="30"
+      dataKey="id"
+      [loading]="loading"
+      styleClass="p-datatable-striped" 
+      [scrollable]="true" 
+      scrollHeight="450px"
+      [resizableColumns]="true"
+      [first]="first"
+      [showCurrentPageReport]="true"
+      [tableStyle]="{ 'min-width': '60rem' }"
+      currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+      (onPage)="pageChange($event)"
+      [rowsPerPageOptions]="[30, 50, 1000, 200]"
+      [globalFilterFields]="['teid', 'firstName', 'lastName', 'phone', 'name_Role.name_Role', 'name_Title.name_Title', 'email', 'plant', 'Department', 'status', 'refreshTokenExpiryTime', 'registerTime', 'resetPasswordExpiryTime']" 
+      [responsiveLayout]="'scroll'">
+
+      <ng-template pTemplate="caption">
+
+        <div class="flex">
+          <p-button label="Clear" [outlined]="true" icon="fa fa-filter" (click)="clear(dt1)" />
+          <span class="p-input-icon-left ml-auto">
+            <i class="fa fa-search"></i>
+            <input pInputText type="text" placeholder="Search" [(ngModel)]="searchText" (ngModelChange)="globalSearch()" />
+            </span> 
+       
+            </div>
+          </ng-template>	
+          <ng-template pTemplate="header">
+              <tr>
+                <th pSortableColumn="teid" style="width:9%" *ngIf="showColumns.teid">							
+                  <div class="flex align-items-center">
+                    <p-columnFilter type="text" field="teid" display="menu"></p-columnFilter>
+                    TE ID 
+                    <p-sortIcon field="teid" />
+                  </div>
+                </th>
+                <th pSortableColumn="badge_id" style="width:9%" *ngIf="showColumns.Badge_id">
+                  <div class="flex align-items-center">
+                    <p-columnFilter type="text" field="badge_id" display="menu"></p-columnFilter>
+                    Badge ID   
+                    <p-sortIcon field="badge_id" />
+                  </div>
+                </th>
+                <th pSortableColumn="firstName" style="width:9%" *ngIf="showColumns.firstName">
+                  <div class="flex align-items-center">
+                    <p-columnFilter type="text" field="firstName" display="menu"></p-columnFilter>
+                    First Name
+                    <p-sortIcon field="firstName" />
+                  </div>
+                </th>
+                <th pSortableColumn="lastName" style="width:9%" *ngIf="showColumns.lastName">
+                  <div class="flex align-items-center">
+                    <p-columnFilter type="text" field="lastName" display="menu"></p-columnFilter>
+                    Last Name
+                    <p-sortIcon field="lastName" />
+                  </div>
+                </th>
+                <th pSortableColumn="phone" style="width:9%" *ngIf="showColumns.phone">
+                  <div class="flex align-items-center">
+                    <p-columnFilter type="text" field="phone" display="menu"></p-columnFilter>
+                    Phone
+                    <p-sortIcon field="phone" />
+                  </div>
+                </th>
+                <th pSortableColumn="name_Role.name_Role" style="width:9%" *ngIf="showColumns.role">
+                  <div class="flex align-items-center">
+                    <p-columnFilter type="text" field="name_Role.name_Role" display="menu"></p-columnFilter>
+                    Role
+                    <p-sortIcon field="name_Role.name_Role" />
+                  </div>
+                </th>
+                <th pSortableColumn="name_Title.name_Title" style="width:9%" *ngIf="showColumns.job">
+                  <div class="flex align-items-center">
+                    <p-columnFilter type="text" field="name_Title.name_Title" display="menu"></p-columnFilter>
+                    Job Title
+                    <p-sortIcon field="name_Title.name_Title" />
+                  </div>
+                </th>
+                <th pSortableColumn="email" style="width:9%" *ngIf="showColumns.email">
+                  <div class="flex align-items-center">
+                    <p-columnFilter type="text" field="email" display="menu"></p-columnFilter>
+                    Email
+                    <p-sortIcon field="email" />
+                  </div>
+                </th>
+                <th pSortableColumn="buildingID.buildingID" style="width:9%" *ngIf="showColumns.plant">
+                  <div class="flex align-items-center">
+                    <p-columnFilter type="text" field="buildingID.buildingID" display="menu"></p-columnFilter>
+                    Plant
+                    <p-sortIcon field="buildingID.buildingID" />
+                  </div>
+                </th>
+                <th pSortableColumn="name_Departement.name_Departement" style="width:9%" *ngIf="showColumns.department">
+                  <div class="flex align-items-center">
+                    <p-columnFilter type="text" field="name_Departement.name_Departement" display="menu"></p-columnFilter>
+                    Department
+                    <p-sortIcon field="name_Departement.name_Departement" />
+                  </div>
+                </th>
+                <th pSortableColumn="status" style="width:9%" *ngIf="showColumns.status">
+                  <div class="flex align-items-center">
+                    <p-columnFilter type="text" field="status" display="menu"></p-columnFilter>
+                    Status
+                    <p-sortIcon field="status" />
+                  </div>
+                </th>
+                <th pSortableColumn="refreshTokenExpiryTime" style="width:9%" *ngIf="showColumns.timeOpen">
+                  <div class="flex align-items-center">
+                    <p-columnFilter type="text" field="refreshTokenExpiryTime" display="menu"></p-columnFilter>
+                    Refresh Token Expiry Time
+                    <p-sortIcon field="refreshTokenExpiryTime" />
+                  </div>
+                </th>
+                <th pSortableColumn="registerTime" style="width:9%" *ngIf="showColumns.registerTime">
+                  <div class="flex align-items-center">
+                    <p-columnFilter type="text" field="registerTime" display="menu"></p-columnFilter>
+                    Register Time
+                    <p-sortIcon field="registerTime" />
+                  </div>
+                </th>
+                <th pSortableColumn="resetPasswordExpiryTime" style="width:9%" *ngIf="showColumns.timeChangePassword">
+                  <div class="flex align-items-center">
+                    <p-columnFilter type="text" field="resetPasswordExpiryTime" display="menu"></p-columnFilter>
+                    Reset Password Expiry Time
+                    <p-sortIcon field="resetPasswordExpiryTime" />
+                  </div>
+                </th>
+                <th pSortableColumn="request" style="width:9%" *ngIf="showColumns.requestPassword">
+                  <div class="flex align-items-center">
+                    <p-columnFilter type="text" field="request" display="menu"></p-columnFilter>
+                    Password Reset Request
+                    <p-sortIcon field="request" />
+                  </div>
+                </th>
+                  <th style="width:9%">Action</th>
+                </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-user>
+            <tr [ngClass]="{'deactivated-row': user.commenterDelete}">
+                  <td *ngIf="showColumns.teid">{{user.teid}}</td>
+                  <td *ngIf="showColumns.Badge_id">{{user.badge_id}}</td>
+                  <td *ngIf="showColumns.firstName">{{user.firstName}}</td>
+                  <td *ngIf="showColumns.lastName">{{user.lastName}}</td>
+                  <td *ngIf="showColumns.phone">{{user.phone}}</td>
+                  <td *ngIf="showColumns.role">{{user.name_Role.name_Role}}</td>
+                  <td *ngIf="showColumns.job">{{user.name_Title.name_Title}}</td>
+                  <td *ngIf="showColumns.email">{{user.email}}</td>
+                  <td *ngIf="showColumns.plant">{{user.buildingID.buildingID}}</td>
+                  <td *ngIf="showColumns.department">{{user.name_Departement.name_Departement}}</td>
+                  <td *ngIf="showColumns.status">
+                    <span [ngClass]="{'pending': user.status === 'pending', 'active': user.status === 'active'}">
+                      <i class="dot"
+                        [ngClass]="{'orange': user.status === 'pending', 'green': user.status === 'active'}"></i>
+                      <span
+                        [ngClass]="{'pending-text': user.status === 'pending', 'done-text': user.status === 'active'}">{{user.status}}</span>
+                    </span>
+                  </td>         
+                  <td *ngIf="showColumns.timeOpen">{{ user.refreshTokenExpiryTime !== '0001-01-01T00:00:00' ? (user.refreshTokenExpiryTime  | date:'dd-MM-yyyy / HH:mm:ss') : '  ' }}</td>
+                  <td *ngIf="showColumns.registerTime">{{ user.registerTime !== '0001-01-01T00:00:00' ? (user.registerTime | date:'dd-MM-yyyy / HH:mm:ss') : '  ' }}</td>
+                  <td *ngIf="showColumns.timeChangePassword">{{ user.timeChangePassword !== '0001-01-01T00:00:00' ? (user.timeChangePassword | date:'dd-MM-yyyy / HH:mm:ss') : '  ' }}</td>       
+                  <td *ngIf="showColumns.requestPassword">
+                    <button (click)="user.request !== null && request(user.id)"
+                            [style.background-color]="user.request === 'pending' ? 'orange' : (user.request === 'active' ? 'green' : '#BEBEBE')"
+                            [disabled]="user.request === null || user.commenterDelete !== null"
+                            style="border-radius: 2rem; width: 130px; height: 30px; font-size: 18px; color: white; border: none;">
+                      <span [style.font-weight]="user.request === 'pending' ? 'bold' : 'bold'">
+                        {{ user.request === 'pending' ? 'Pending' : (user.request === 'active' ? 'Active' : 'Pending') }}
+                      </span>
+                    </button>
+                  </td>
+                                  
+                    <td>
+                    <button pButton class="icon view" icon="fa fa-eye"
+                      (click)="selectView(user.id); openModelView(user.id)"[pTooltip]="'View user'" severity="secondary" tooltipPosition="top" >		
+                    </button>
+                    <button pButton class="icon edit" type="button" icon="fa fa-pencil-alt"
+                      (click)="selectGetUSerbyid(user.id); openModelUpdate(user.id)"
+                      [disabled]="user.commenterDelete"[pTooltip]="'Edit user'" severity="secondary" tooltipPosition="top" >									
+                    </button>
+                    <button pButton class="icon delete" type="button" icon="fa fa-ban"
+                      (click)="onDeleteUser(user.id)"
+                      [disabled]="user.commenterDelete"
+                      [pTooltip]="'Disable user'" severity="secondary"
+                      tooltipPosition="top" >									
+                    </button>
+                  </td> 
+              </tr>
+          </ng-template>
+          <ng-template pTemplate="emptymessage" let-columns>
+            <tr>
+            <td colspan="10">No User found</td>
+            </tr>
+          </ng-template>
+      </p-table>				
+      </div>
+      <div class="tab-pane fade" id="Active-Role" role="tabpanel" aria-labelledby="nav-Active-Role-tab">
+      <p-table
+      #dt1
+      [value]="getFilteredUsersAtive()"
+      [paginator]="true"
+      [rows]="5"
+      dataKey="id"
+      [loading]="loading"
+
+      styleClass="p-datatable-striped" 
+      [scrollable]="true" 
+      scrollHeight="450px"
+      [resizableColumns]="true"
+      [first]="first"
+      [showCurrentPageReport]="true"
+      [tableStyle]="{ 'min-width': '60rem' }"
+      currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+      (onPage)="pageChange($event)"
+      [rowsPerPageOptions]="[3, 5, 10, 20]"
+        [globalFilterFields]="['teid', 'firstName', 'lastName', 'phone', 'name_Role.name_Role', 'name_Title.name_Title', 'email', 'plant', 'Department', 'status', 'refreshTokenExpiryTime', 'registerTime', 'resetPasswordExpiryTime']" 
+        [responsiveLayout]="'scroll'">
+
+        <ng-template pTemplate="caption">
+
+          <div class="flex">
+            <p-button label="Clear" [outlined]="true" icon="fa fa-filter" (click)="clear(dt1)" />
+            <span class="p-input-icon-left ml-auto">
+              <i class="fa fa-search"></i>
+            
+              <input pInputText type="text" placeholder="Search" [(ngModel)]="searchText" (ngModelChange)="globalSearch()" />
+      
+            </span> 
+  
+            <!-- <div class="my-right-div">
+              <p-button
+                type="button"
+                icon="fa fa-chevron-left"
+                (click)="prev()"
+                [disabled]="isFirstPage()"
+                styleClass="p-button-text" />
+              <p-button
+                type="button"
+                icon="fa fa-refresh"
+                (click)="reset()"
+                styleClass="p-button-text" />
+              <p-button
+                type="button"
+                icon="fa fa-chevron-right"
+                (click)="next()"
+                [disabled]="isLastPage()"
+                styleClass="p-button-text" />
+            </div> -->
+        
+            </div>
+          </ng-template>	
+          <ng-template pTemplate="header">
+              <tr>
+                  <th pSortableColumn="teid" style="width:9%" *ngIf="showColumns.teid">							
+                    <div class="flex align-items-center">
+                      <p-columnFilter type="text" field="teid" display="menu"></p-columnFilter>
+                      TE ID 
+                      <p-sortIcon field="teid" />
+                    </div>
+                  </th>
+                <th pSortableColumn="badge_id" style="width:9%" *ngIf="showColumns.Badge_id">
+                  <div class="flex align-items-center">
+                    <p-columnFilter type="text" field="badge_id" display="menu"></p-columnFilter>
+                    Badge ID   
+                    <p-sortIcon field="badge_id" />
+                  </div>
+                </th>
+                  <th pSortableColumn="firstName" style="width:9%" *ngIf="showColumns.firstName">
+                    <div class="flex align-items-center">
+                      <p-columnFilter type="text" field="firstName" display="menu"></p-columnFilter>
+                      First Name
+                      <p-sortIcon field="firstName" />
+                    </div>
+                  </th>
+                  <th pSortableColumn="lastName" style="width:9%" *ngIf="showColumns.lastName">
+                    <div class="flex align-items-center">
+                      <p-columnFilter type="text" field="lastName" display="menu"></p-columnFilter>
+                      Last Name
+                      <p-sortIcon field="lastName" />
+                    </div>
+                  </th>
+                  <th pSortableColumn="phone" style="width:9%" *ngIf="showColumns.phone">
+                    <div class="flex align-items-center">
+                      <p-columnFilter type="text" field="phone" display="menu"></p-columnFilter>
+                      Phone
+                      <p-sortIcon field="phone" />
+                    </div>
+                  </th>
+                  <th pSortableColumn="name_Role.name_Role" style="width:9%" *ngIf="showColumns.role">
+                    <div class="flex align-items-center">
+                      <p-columnFilter type="text" field="name_Role.name_Role" display="menu"></p-columnFilter>
+                      Role
+                      <p-sortIcon field="name_Role.name_Role" />
+                    </div>
+                  </th>
+                  <th pSortableColumn="name_Title.name_Title" style="width:9%" *ngIf="showColumns.job">
+                    <div class="flex align-items-center">
+                      <p-columnFilter type="text" field="name_Title.name_Title" display="menu"></p-columnFilter>
+                      Job Title
+                      <p-sortIcon field="name_Title.name_Title" />
+                    </div>
+                  </th>
+                  <th pSortableColumn="email" style="width:9%" *ngIf="showColumns.email">
+                    <div class="flex align-items-center">
+                      <p-columnFilter type="text" field="email" display="menu"></p-columnFilter>
+                      Email
+                      <p-sortIcon field="email" />
+                    </div>
+                  </th>
+                  <th pSortableColumn="buildingID.buildingID" style="width:9%" *ngIf="showColumns.plant">
+                    <div class="flex align-items-center">
+                      <p-columnFilter type="text" field="buildingID.buildingID" display="menu"></p-columnFilter>
+                      Plant
+                      <p-sortIcon field="buildingID.buildingID" />
+                    </div>
+                  </th>
+                  <th pSortableColumn="name_Departement.name_Departement" style="width:9%" *ngIf="showColumns.department">
+                    <div class="flex align-items-center">
+                      <p-columnFilter type="text" field="name_Departement.name_Departement" display="menu"></p-columnFilter>
+                      Department
+                      <p-sortIcon field="name_Departement.name_Departement" />
+                    </div>
+                  </th>
+                  <th pSortableColumn="status" style="width:9%" *ngIf="showColumns.status">
+                    <div class="flex align-items-center">
+                      <p-columnFilter type="text" field="status" display="menu"></p-columnFilter>
+                      Status
+                      <p-sortIcon field="status" />
+                    </div>
+                  </th>
+                  <th pSortableColumn="refreshTokenExpiryTime" style="width:9%" *ngIf="showColumns.timeOpen">
+                    <div class="flex align-items-center">
+                      <p-columnFilter type="text" field="refreshTokenExpiryTime" display="menu"></p-columnFilter>
+                      Refresh Token Expiry Time
+                      <p-sortIcon field="refreshTokenExpiryTime" />
+                    </div>
+                  </th>
+                  <th pSortableColumn="registerTime" style="width:9%" *ngIf="showColumns.registerTime">
+                    <div class="flex align-items-center">
+                      <p-columnFilter type="text" field="registerTime" display="menu"></p-columnFilter>
+                      Register Time
+                      <p-sortIcon field="registerTime" />
+                    </div>
+                  </th>
+                  <th pSortableColumn="resetPasswordExpiryTime" style="width:9%" *ngIf="showColumns.timeChangePassword">
+                    <div class="flex align-items-center">
+                      <p-columnFilter type="text" field="resetPasswordExpiryTime" display="menu"></p-columnFilter>
+                      Reset Password Expiry Time
+                      <p-sortIcon field="resetPasswordExpiryTime" />
+                    </div>
+                  </th>
+                <th pSortableColumn="request" style="width:9%" *ngIf="showColumns.requestPassword">
+                  <div class="flex align-items-center">
+                    <p-columnFilter type="text" field="request" display="menu"></p-columnFilter>
+                    Password Reset Request
+                    <p-sortIcon field="request" />
+                  </div>
+                </th>
+                  <th style="width:9%">Action</th>
+
+                </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-user>
+            <tr [ngClass]="{'deactivated-row': user.commenterDelete}">
+                  <td *ngIf="showColumns.teid">{{user.teid}}</td>
+                  <td *ngIf="showColumns.Badge_id">{{user.badge_id}}</td>
+                  <td *ngIf="showColumns.firstName">{{user.firstName}}</td>
+                  <td *ngIf="showColumns.lastName">{{user.lastName}}</td>
+                  <td *ngIf="showColumns.phone">{{user.phone}}</td>
+                  <td *ngIf="showColumns.role">{{user.name_Role.name_Role}}</td>
+                  <td *ngIf="showColumns.job">{{user.name_Title.name_Title}}</td>
+                  <td *ngIf="showColumns.email">{{user.email}}</td>
+                  <td *ngIf="showColumns.plant">{{user.buildingID.buildingID}}</td>
+                  <td *ngIf="showColumns.department">{{user.name_Departement.name_Departement}}</td>
+                  <td *ngIf="showColumns.status">
+                    <span [ngClass]="{'pending': user.status === 'pending', 'active': user.status === 'active'}">
+                      <i class="dot"
+                        [ngClass]="{'orange': user.status === 'pending', 'green': user.status === 'active'}"></i>
+                      <span
+                        [ngClass]="{'pending-text': user.status === 'pending', 'done-text': user.status === 'active'}">{{user.status}}</span>
+                    </span>
+                  </td>  
+                  <td *ngIf="showColumns.timeOpen">{{ user.refreshTokenExpiryTime !== '0001-01-01T00:00:00' ? (user.refreshTokenExpiryTime  | date:'dd-MM-yyyy / HH:mm:ss') : '  ' }}</td>
+              <td *ngIf="showColumns.registerTime">{{ user.registerTime !== '0001-01-01T00:00:00' ? (user.registerTime | date:'dd-MM-yyyy / HH:mm:ss') : '  ' }}</td>
+              <td *ngIf="showColumns.timeChangePassword">{{ user.timeChangePassword !== '0001-01-01T00:00:00' ? (user.timeChangePassword | date:'dd-MM-yyyy / HH:mm:ss') : '  ' }}</td>       
+                  <td *ngIf="showColumns.requestPassword">
+
+                    <button (click)="user.request !== null && request(user.id)"
+                      [style.background-color]="user.request === 'pending' ? 'orange' : (user.request === 'active' ? 'green' : '#BEBEBE')"
+                      [disabled]="user.request === null || user.commenterDelete !== null"
+                      style="border-radius: 2rem; width: 130px; height: 30px; font-size: 18px;color: white;border: none;">
+                      <span [style.font-weight]="user.request === 'pending' ? 'bold' : 'bold'">
+                        {{ user.request === 'pending' ? 'Pending' : (user.request === 'active' ? 'active' : 'pending') }}
+                      </span>
+                    </button>
+                  </td>                 
+                    <td>
+                    <button pButton class="icon view" icon="fa fa-eye"
+                      (click)="selectView(user.id); openModelView(user.id)"[pTooltip]="'View user'" severity="secondary" tooltipPosition="top" >		
+                    </button>
+                    <button pButton class="icon edit" type="button" icon="fa fa-pencil-alt"
+                      (click)="selectGetUSerbyid(user.id); openModelUpdate(user.id)"
+                      [disabled]="user.commenterDelete"[pTooltip]="'Edit user'" severity="secondary" tooltipPosition="top" >									
+                    </button>
+                    <button pButton class="icon delete" type="button" icon="fa fa-ban"
+                      (click)="onDeleteUser(user.id)"
+                      [disabled]="user.commenterDelete"
+                      [pTooltip]="'Disable user'" severity="secondary"
+                      tooltipPosition="top" >									
+                    </button>
+                  </td> 
+              </tr>
+          </ng-template>
+          <ng-template pTemplate="emptymessage" let-columns>
+            <tr>
+            <td colspan="10">No User found</td>
+            </tr>
+          </ng-template>
+      </p-table>				
+      </div>
+      <div class="tab-pane fade" id="Users-Pending" role="tabpanel" aria-labelledby="nav-Users-Pending-tab">
+      <p-table
+      #dt1
+      [value]="getFilteredUsersPending()"
+      [paginator]="true"
+      [rows]="5"
+      dataKey="id"
+      [loading]="loading"
+
+      responsiveLayout="stack" 
+      styleClass="p-datatable-striped" 
+      [scrollable]="true" 
+      scrollHeight="450px"
+      [resizableColumns]="true"
+      [first]="first"
+      [showCurrentPageReport]="true"
+      [tableStyle]="{ 'min-width': '60rem' }"
+      currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+      (onPage)="pageChange($event)"
+      [rowsPerPageOptions]="[3, 5, 10, 20]"
+      [globalFilterFields]="['teid', 'firstName', 'lastName', 'phone', 'name_Role.name_Role', 'name_Title.name_Title', 'email', 'plant', 'Department', 'status', 'refreshTokenExpiryTime', 'registerTime', 'resetPasswordExpiryTime']" >
+        <ng-template pTemplate="caption">
+          <div class="flex">
+            <p-button label="Clear" [outlined]="true" icon="fa fa-filter" (click)="clear(dt1)" />
+            <span class="p-input-icon-left ml-auto">
+              <i class="fa fa-search"></i>
+              <input pInputText type="text" placeholder="Search" [(ngModel)]="searchText" (ngModelChange)="globalSearch()" />
+            </span> 
+  
+            </div>
+          </ng-template>	
+          <ng-template pTemplate="header">
+              <tr>
+                  <th pSortableColumn="teid" style="width:9%" *ngIf="showColumns.teid">							
+                    <div class="flex align-items-center">
+                      <p-columnFilter type="text" field="teid" display="menu"></p-columnFilter>
+                      TE ID 
+                      <p-sortIcon field="teid" />
+                    </div>
+                  </th>
+                <th pSortableColumn="badge_id" style="width:9%" *ngIf="showColumns.Badge_id">
+                  <div class="flex align-items-center">
+                    <p-columnFilter type="text" field="badge_id" display="menu"></p-columnFilter>
+                    Badge ID   
+                    <p-sortIcon field="badge_id" />
+                  </div>
+                </th>
+                  <th pSortableColumn="firstName" style="width:9%" *ngIf="showColumns.firstName">
+                    <div class="flex align-items-center">
+                      <p-columnFilter type="text" field="firstName" display="menu"></p-columnFilter>
+                      First Name
+                      <p-sortIcon field="firstName" />
+                    </div>
+                  </th>
+                  <th pSortableColumn="lastName" style="width:9%" *ngIf="showColumns.lastName">
+                    <div class="flex align-items-center">
+                      <p-columnFilter type="text" field="lastName" display="menu"></p-columnFilter>
+                      Last Name
+                      <p-sortIcon field="lastName" />
+                    </div>
+                  </th>
+                  <th pSortableColumn="phone" style="width:9%" *ngIf="showColumns.phone">
+                    <div class="flex align-items-center">
+                      <p-columnFilter type="text" field="phone" display="menu"></p-columnFilter>
+                      Phone
+                      <p-sortIcon field="phone" />
+                    </div>
+                  </th>
+                  <th pSortableColumn="name_Role.name_Role" style="width:9%" *ngIf="showColumns.role">
+                    <div class="flex align-items-center">
+                      <p-columnFilter type="text" field="name_Role.name_Role" display="menu"></p-columnFilter>
+                      Role
+                      <p-sortIcon field="name_Role.name_Role" />
+                    </div>
+                  </th>
+                  <th pSortableColumn="name_Title.name_Title" style="width:9%" *ngIf="showColumns.job">
+                    <div class="flex align-items-center">
+                      <p-columnFilter type="text" field="name_Title.name_Title" display="menu"></p-columnFilter>
+                      Job Title
+                      <p-sortIcon field="name_Title.name_Title" />
+                    </div>
+                  </th>
+                  <th pSortableColumn="email" style="width:9%" *ngIf="showColumns.email">
+                    <div class="flex align-items-center">
+                      <p-columnFilter type="text" field="email" display="menu"></p-columnFilter>
+                      Email
+                      <p-sortIcon field="email" />
+                    </div>
+                  </th>
+                  <th pSortableColumn="buildingID.buildingID" style="width:9%" *ngIf="showColumns.plant">
+                    <div class="flex align-items-center">
+                      <p-columnFilter type="text" field="buildingID.buildingID" display="menu"></p-columnFilter>
+                      Plant
+                      <p-sortIcon field="buildingID.buildingID" />
+                    </div>
+                  </th>
+                  <th pSortableColumn="name_Departement.name_Departement" style="width:9%" *ngIf="showColumns.department">
+                    <div class="flex align-items-center">
+                      <p-columnFilter type="text" field="name_Departement.name_Departement" display="menu"></p-columnFilter>
+                      Department
+                      <p-sortIcon field="name_Departement.name_Departement" />
+                    </div>
+                  </th>
+                  <th pSortableColumn="status" style="width:9%" *ngIf="showColumns.status">
+                    <div class="flex align-items-center">
+                      <p-columnFilter type="text" field="status" display="menu"></p-columnFilter>
+                      Status
+                      <p-sortIcon field="status" />
+                    </div>
+                  </th>
+                  <th pSortableColumn="refreshTokenExpiryTime" style="width:9%" *ngIf="showColumns.timeOpen">
+                    <div class="flex align-items-center">
+                      <p-columnFilter type="text" field="refreshTokenExpiryTime" display="menu"></p-columnFilter>
+                      Refresh Token Expiry Time
+                      <p-sortIcon field="refreshTokenExpiryTime" />
+                    </div>
+                  </th>
+                  <th pSortableColumn="registerTime" style="width:9%" *ngIf="showColumns.registerTime">
+                    <div class="flex align-items-center">
+                      <p-columnFilter type="text" field="registerTime" display="menu"></p-columnFilter>
+                      Register Time
+                      <p-sortIcon field="registerTime" />
+                    </div>
+                  </th>
+                  <th pSortableColumn="resetPasswordExpiryTime" style="width:9%" *ngIf="showColumns.timeChangePassword">
+                    <div class="flex align-items-center">
+                      <p-columnFilter type="text" field="resetPasswordExpiryTime" display="menu"></p-columnFilter>
+                      Reset Password Expiry Time
+                      <p-sortIcon field="resetPasswordExpiryTime" />
+                    </div>
+                  </th>
+                <th pSortableColumn="request" style="width:9%" *ngIf="showColumns.requestPassword">
+                  <div class="flex align-items-center">
+                    <p-columnFilter type="text" field="request" display="menu"></p-columnFilter>
+                    Password Reset Request
+                    <p-sortIcon field="request" />
+                  </div>
+                </th>
+                  <th style="width:9%">Action</th>
+
+                </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-user>
+            <tr [ngClass]="{'deactivated-row': user.commenterDelete}">
+                  <td *ngIf="showColumns.teid">{{user.teid}}</td>
+                  <td *ngIf="showColumns.Badge_id">{{user.badge_id}}</td>
+                  <td *ngIf="showColumns.firstName">{{user.firstName}}</td>
+                  <td *ngIf="showColumns.lastName">{{user.lastName}}</td>
+                  <td *ngIf="showColumns.phone">{{user.phone}}</td>
+                  <td *ngIf="showColumns.role">{{user.name_Role.name_Role}}</td>
+                  <td *ngIf="showColumns.job">{{user.name_Title.name_Title}}</td>
+                  <td *ngIf="showColumns.email">{{user.email}}</td>
+                  <td *ngIf="showColumns.plant">{{user.buildingID.buildingID}}</td>
+                  <td *ngIf="showColumns.department">{{user.name_Departement.name_Departement}}</td>
+                  <td *ngIf="showColumns.status">
+                    <span [ngClass]="{'pending': user.status === 'pending', 'active': user.status === 'active'}">
+                      <i class="dot"
+                        [ngClass]="{'orange': user.status === 'pending', 'green': user.status === 'active'}"></i>
+                      <span
+                        [ngClass]="{'pending-text': user.status === 'pending', 'done-text': user.status === 'active'}">{{user.status}}</span>
+                    </span>
+                  </td>         
+                  <td *ngIf="showColumns.timeOpen">{{ user.refreshTokenExpiryTime !== '0001-01-01T00:00:00' ? (user.refreshTokenExpiryTime  | date:'dd-MM-yyyy / HH:mm:ss') : '  ' }}</td>
+                  <td *ngIf="showColumns.registerTime">{{ user.registerTime !== '0001-01-01T00:00:00' ? (user.registerTime | date:'dd-MM-yyyy / HH:mm:ss') : '  ' }}</td>
+                  <td *ngIf="showColumns.timeChangePassword">{{ user.timeChangePassword !== '0001-01-01T00:00:00' ? (user.timeChangePassword | date:'dd-MM-yyyy / HH:mm:ss') : '  ' }}</td>       
+                  <td *ngIf="showColumns.requestPassword">
+
+                    <button (click)="user.request !== null && request(user.id)"
+                      [style.background-color]="user.request === 'pending' ? 'orange' : (user.request === 'active' ? 'green' : '#BEBEBE')"
+                      [disabled]="user.request === null || user.commenterDelete !== null"
+                      style="border-radius: 2rem; width: 130px; height: 30px; font-size: 18px;color: white;border: none;">
+                      <span [style.font-weight]="user.request === 'pending' ? 'bold' : 'bold'">
+                        {{ user.request === 'pending' ? 'Pending' : (user.request === 'active' ? 'active' : 'pending') }}
+                      </span>
+                    </button>
+                  </td>                 
+                    <td>
+                    <button pButton class="icon view" icon="fa fa-eye"
+                      (click)="selectView(user.id); openModelView(user.id)"[pTooltip]="'View user'" severity="secondary" tooltipPosition="top" >		
+                    </button>
+                    <button pButton class="icon edit" type="button" icon="fa fa-pencil-alt"
+                      (click)="selectGetUSerbyid(user.id); openModelUpdate(user.id)"
+                      [disabled]="user.commenterDelete"[pTooltip]="'Edit user'" severity="secondary" tooltipPosition="top" >									
+                    </button>
+                    <button pButton class="icon delete" type="button" icon="fa fa-ban"
+                      (click)="onDeleteUser(user.id)"
+                      [disabled]="user.commenterDelete"
+                      [pTooltip]="'Disable user'" severity="secondary"
+                      tooltipPosition="top" >									
+                    </button>
+                  </td> 
+              </tr>
+          </ng-template>
+          <ng-template pTemplate="emptymessage">
+            <tr>
+              <td colspan="7">No Users found.</td>
+            </tr>
+          </ng-template>
+      </p-table>					
+      </div>
+      <div class="tab-pane fade" id="Request-Password" role="tabpanel" aria-labelledby="nav-Request-Password-tab">
+        
+
+      <p-table
+      #dt1
+      [value]="getFilteredUsersRequest()"
+      [paginator]="true"
+      [rows]="5"
+      dataKey="id"
+      [loading]="loading"
+
+      styleClass="p-datatable-striped" 
+      [scrollable]="true" 
+      scrollHeight="450px"
+      [resizableColumns]="true"
+      [first]="first"
+      [showCurrentPageReport]="true"
+      [tableStyle]="{ 'min-width': '60rem' }"
+      currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+      (onPage)="pageChange($event)"
+      [rowsPerPageOptions]="[3, 5, 10, 20]"
+        [globalFilterFields]="['teid', 'firstName', 'lastName', 'phone', 'name_Role.name_Role', 'name_Title.name_Title', 'email', 'plant', 'Department', 'status', 'refreshTokenExpiryTime', 'registerTime', 'resetPasswordExpiryTime']" 
+        [responsiveLayout]="'scroll'">
+
+        <ng-template pTemplate="caption">
+
+          <div class="flex">
+            <p-button label="Clear" [outlined]="true" icon="fa fa-filter" (click)="clear(dt1)" />
+            <span class="p-input-icon-left ml-auto">
+              <i class="fa fa-search"></i>
+            
+              <input pInputText type="text" placeholder="Search" [(ngModel)]="searchText" (ngModelChange)="globalSearch()" />
+      
+            </span> 
+  
+          
+            </div>
+          </ng-template>	
+          <ng-template pTemplate="header">
+              <tr>
+                  <th pSortableColumn="teid" style="width:9%" *ngIf="showColumns.teid">							
+                    <div class="flex align-items-center">
+                      <p-columnFilter type="text" field="teid" display="menu"></p-columnFilter>
+                      TE ID 
+                      <p-sortIcon field="teid" />
+                    </div>
+                  </th>
+                <th pSortableColumn="badge_id" style="width:9%" *ngIf="showColumns.Badge_id">
+                  <div class="flex align-items-center">
+                    <p-columnFilter type="text" field="badge_id" display="menu"></p-columnFilter>
+                    Badge ID   
+                    <p-sortIcon field="badge_id" />
+                  </div>
+                </th>
+                  <th pSortableColumn="firstName" style="width:9%" *ngIf="showColumns.firstName">
+                    <div class="flex align-items-center">
+                      <p-columnFilter type="text" field="firstName" display="menu"></p-columnFilter>
+                      First Name
+                      <p-sortIcon field="firstName" />
+                    </div>
+                  </th>
+                  <th pSortableColumn="lastName" style="width:9%" *ngIf="showColumns.lastName">
+                    <div class="flex align-items-center">
+                      <p-columnFilter type="text" field="lastName" display="menu"></p-columnFilter>
+                      Last Name
+                      <p-sortIcon field="lastName" />
+                    </div>
+                  </th>
+                  <th pSortableColumn="phone" style="width:9%" *ngIf="showColumns.phone">
+                    <div class="flex align-items-center">
+                      <p-columnFilter type="text" field="phone" display="menu"></p-columnFilter>
+                      Phone
+                      <p-sortIcon field="phone" />
+                    </div>
+                  </th>
+                  <th pSortableColumn="name_Role.name_Role" style="width:9%" *ngIf="showColumns.role">
+                    <div class="flex align-items-center">
+                      <p-columnFilter type="text" field="name_Role.name_Role" display="menu"></p-columnFilter>
+                      Role
+                      <p-sortIcon field="name_Role.name_Role" />
+                    </div>
+                  </th>
+                  <th pSortableColumn="name_Title.name_Title" style="width:9%" *ngIf="showColumns.job">
+                    <div class="flex align-items-center">
+                      <p-columnFilter type="text" field="name_Title.name_Title" display="menu"></p-columnFilter>
+                      Job Title
+                      <p-sortIcon field="name_Title.name_Title" />
+                    </div>
+                  </th>
+                  <th pSortableColumn="email" style="width:9%" *ngIf="showColumns.email">
+                    <div class="flex align-items-center">
+                      <p-columnFilter type="text" field="email" display="menu"></p-columnFilter>
+                      Email
+                      <p-sortIcon field="email" />
+                    </div>
+                  </th>
+                  <th pSortableColumn="buildingID.buildingID" style="width:9%" *ngIf="showColumns.plant">
+                    <div class="flex align-items-center">
+                      <p-columnFilter type="text" field="buildingID.buildingID" display="menu"></p-columnFilter>
+                      Plant
+                      <p-sortIcon field="buildingID.buildingID" />
+                    </div>
+                  </th>
+                  <th pSortableColumn="name_Departement.name_Departement" style="width:9%" *ngIf="showColumns.department">
+                    <div class="flex align-items-center">
+                      <p-columnFilter type="text" field="name_Departement.name_Departement" display="menu"></p-columnFilter>
+                      Department
+                      <p-sortIcon field="name_Departement.name_Departement" />
+                    </div>
+                  </th>
+                  <th pSortableColumn="status" style="width:9%" *ngIf="showColumns.status">
+                    <div class="flex align-items-center">
+                      <p-columnFilter type="text" field="status" display="menu"></p-columnFilter>
+                      Status
+                      <p-sortIcon field="status" />
+                    </div>
+                  </th>
+                  <th pSortableColumn="refreshTokenExpiryTime" style="width:9%" *ngIf="showColumns.timeOpen">
+                    <div class="flex align-items-center">
+                      <p-columnFilter type="text" field="refreshTokenExpiryTime" display="menu"></p-columnFilter>
+                      Refresh Token Expiry Time
+                      <p-sortIcon field="refreshTokenExpiryTime" />
+                    </div>
+                  </th>
+                  <th pSortableColumn="registerTime" style="width:9%" *ngIf="showColumns.registerTime">
+                    <div class="flex align-items-center">
+                      <p-columnFilter type="text" field="registerTime" display="menu"></p-columnFilter>
+                      Register Time
+                      <p-sortIcon field="registerTime" />
+                    </div>
+                  </th>
+                  <th pSortableColumn="resetPasswordExpiryTime" style="width:9%" *ngIf="showColumns.timeChangePassword">
+                    <div class="flex align-items-center">
+                      <p-columnFilter type="text" field="resetPasswordExpiryTime" display="menu"></p-columnFilter>
+                      Reset Password Expiry Time
+                      <p-sortIcon field="resetPasswordExpiryTime" />
+                    </div>
+                  </th>
+                <th pSortableColumn="request" style="width:9%" *ngIf="showColumns.requestPassword">
+                  <div class="flex align-items-center">
+                    <p-columnFilter type="text" field="request" display="menu"></p-columnFilter>
+                    Password Reset Request
+                    <p-sortIcon field="request" />
+                  </div>
+                </th>
+                  <th style="width:9%">Action</th>
+
+                </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-user>
+            <tr [ngClass]="{'deactivated-row': user.commenterDelete}">
+                  <td *ngIf="showColumns.teid">{{user.teid}}</td>
+                  <td *ngIf="showColumns.Badge_id">{{user.badge_id}}</td>
+                  <td *ngIf="showColumns.firstName">{{user.firstName}}</td>
+                  <td *ngIf="showColumns.lastName">{{user.lastName}}</td>
+                  <td *ngIf="showColumns.phone">{{user.phone}}</td>
+                  <td *ngIf="showColumns.role">{{user.name_Role.name_Role}}</td>
+                  <td *ngIf="showColumns.job">{{user.name_Title.name_Title}}</td>
+                  <td *ngIf="showColumns.email">{{user.email}}</td>
+                  <td *ngIf="showColumns.plant">{{user.buildingID.buildingID}}</td>
+                  <td *ngIf="showColumns.department">{{user.name_Departement.name_Departement}}</td>
+                  <td *ngIf="showColumns.status">
+                    <span [ngClass]="{'pending': user.status === 'pending', 'active': user.status === 'active'}">
+                      <i class="dot"
+                        [ngClass]="{'orange': user.status === 'pending', 'green': user.status === 'active'}"></i>
+                      <span
+                        [ngClass]="{'pending-text': user.status === 'pending', 'done-text': user.status === 'active'}">{{user.status}}</span>
+                    </span>
+                  </td>         
+                  <td *ngIf="showColumns.timeOpen">{{ user.refreshTokenExpiryTime !== '0001-01-01T00:00:00' ? (user.refreshTokenExpiryTime  | date:'dd-MM-yyyy / HH:mm:ss') : '  ' }}</td>
+                  <td *ngIf="showColumns.registerTime">{{ user.registerTime !== '0001-01-01T00:00:00' ? (user.registerTime | date:'dd-MM-yyyy / HH:mm:ss') : '  ' }}</td>
+                  <td *ngIf="showColumns.timeChangePassword">{{ user.timeChangePassword !== '0001-01-01T00:00:00' ? (user.timeChangePassword | date:'dd-MM-yyyy / HH:mm:ss') : '  ' }}</td>       
+                  <td *ngIf="showColumns.requestPassword">
+
+                    <button (click)="user.request !== null && request(user.id)"
+                      [style.background-color]="user.request === 'pending' ? 'orange' : (user.request === 'active' ? 'green' : '#BEBEBE')"
+                      [disabled]="user.request === null || user.commenterDelete !== null"
+                      style="border-radius: 2rem; width: 130px; height: 30px; font-size: 18px;color: white;border: none;">
+                      <span [style.font-weight]="user.request === 'pending' ? 'bold' : 'bold'">
+                        {{ user.request === 'pending' ? 'Pending' : (user.request === 'active' ? 'active' : 'pending') }}
+                      </span>
+                    </button>
+                  </td>                 
+                    <td>
+                    <button pButton class="icon view" icon="fa fa-eye"
+                      (click)="selectView(user.id); openModelView(user.id)"[pTooltip]="'View user'" severity="secondary" tooltipPosition="top" >		
+                    </button>
+                    <button pButton class="icon edit" type="button" icon="fa fa-pencil-alt"
+                      (click)="selectGetUSerbyid(user.id); openModelUpdate(user.id)"
+                      [disabled]="user.commenterDelete"[pTooltip]="'Edit user'" severity="secondary" tooltipPosition="top" >									
+                    </button>
+                    <button pButton class="icon delete" type="button" icon="fa fa-ban"
+                      (click)="onDeleteUser(user.id)"
+                      [disabled]="user.commenterDelete"
+                      [pTooltip]="'Disable user'" severity="secondary"
+                      tooltipPosition="top" >									
+                    </button>
+                  </td> 
+              </tr>
+          </ng-template>
+          <ng-template pTemplate="emptymessage" let-columns>
+            <tr>
+            <td colspan="10">No User found</td>
+            </tr>
+          </ng-template>
+      </p-table>					
+      </div>
+      <div class="tab-pane fade" id="Deactivated-Users" role="tabpanel" aria-labelledby="nav-Deactivated-Users-tab">
+       
+
+      <p-table
+      #dt1
+      [value]="getFilteredUsers()"
+      [paginator]="true"
+      [rows]="5"
+      dataKey="id"
+      [loading]="loading"
+      responsiveLayout="stack" 
+
+      styleClass="p-datatable-striped" 
+      [scrollable]="true" 
+      scrollHeight="450px"
+      [resizableColumns]="true"
+      [first]="first"
+      [showCurrentPageReport]="true"
+      [tableStyle]="{ 'min-width': '60rem' }"
+      currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+      (onPage)="pageChange($event)"
+      [rowsPerPageOptions]="[3, 5, 10, 20]"
+        [globalFilterFields]="['teid', 'firstName', 'lastName', 'phone', 'name_Role.name_Role', 'name_Title.name_Title', 'email', 'plant', 'Department', 'status', 'refreshTokenExpiryTime', 'registerTime', 'resetPasswordExpiryTime']" 
+        >
+
+        <ng-template pTemplate="caption">
+
+          <div class="flex">
+            <p-button label="Clear" [outlined]="true" icon="fa fa-filter" (click)="clear(dt1)" />
+            <span class="p-input-icon-left ml-auto">
+              <i class="fa fa-search"></i>
+            
+              <input pInputText type="text" placeholder="Search" [(ngModel)]="searchText" (ngModelChange)="globalSearch()" />
+      
+            </span> 
+  
+           
+            </div>
+          </ng-template>	
+          <ng-template pTemplate="header">
+              <tr>
+                  <th pSortableColumn="teid" style="width:9%" *ngIf="showColumns.teid">							
+                    <div class="flex align-items-center">
+                      <p-columnFilter type="text" field="teid" display="menu"></p-columnFilter>
+                      TE ID 
+                      <p-sortIcon field="teid" />
+                    </div>
+                  </th>
+                <th pSortableColumn="badge_id" style="width:9%" *ngIf="showColumns.Badge_id">
+                  <div class="flex align-items-center">
+                    <p-columnFilter type="text" field="badge_id" display="menu"></p-columnFilter>
+                    Badge ID   
+                    <p-sortIcon field="badge_id" />
+                  </div>
+                </th>
+                  <th pSortableColumn="firstName" style="width:9%" *ngIf="showColumns.firstName">
+                    <div class="flex align-items-center">
+                      <p-columnFilter type="text" field="firstName" display="menu"></p-columnFilter>
+                      First Name
+                      <p-sortIcon field="firstName" />
+                    </div>
+                  </th>
+                  <th pSortableColumn="lastName" style="width:9%" *ngIf="showColumns.lastName">
+                    <div class="flex align-items-center">
+                      <p-columnFilter type="text" field="lastName" display="menu"></p-columnFilter>
+                      Last Name
+                      <p-sortIcon field="lastName" />
+                    </div>
+                  </th>
+                  <th pSortableColumn="phone" style="width:9%" *ngIf="showColumns.phone">
+                    <div class="flex align-items-center">
+                      <p-columnFilter type="text" field="phone" display="menu"></p-columnFilter>
+                      Phone
+                      <p-sortIcon field="phone" />
+                    </div>
+                  </th>
+
+                  <th pSortableColumn="name_Role.name_Role" style="width:9%" *ngIf="showColumns.role">
+                    <div class="flex align-items-center">
+                      <p-columnFilter type="text" field="name_Role.name_Role" display="menu"></p-columnFilter>
+                      Role
+                      <p-sortIcon field="name_Role.name_Role" />
+                    </div>
+                  </th>
+                  <th pSortableColumn="name_Title.name_Title" style="width:9%" *ngIf="showColumns.job">
+                    <div class="flex align-items-center">
+                      <p-columnFilter type="text" field="name_Title.name_Title" display="menu"></p-columnFilter>
+                      Job Title
+                      <p-sortIcon field="name_Title.name_Title" />
+                    </div>
+                  </th>
+                  <th pSortableColumn="email" style="width:9%" *ngIf="showColumns.email">
+                    <div class="flex align-items-center">
+                      <p-columnFilter type="text" field="email" display="menu"></p-columnFilter>
+                      Email
+                      <p-sortIcon field="email" />
+                    </div>
+                  </th>
+                  <th pSortableColumn="buildingID.buildingID" style="width:9%" *ngIf="showColumns.plant">
+                    <div class="flex align-items-center">
+                      <p-columnFilter type="text" field="buildingID.buildingID" display="menu"></p-columnFilter>
+                      Plant
+                      <p-sortIcon field="buildingID.buildingID" />
+                    </div>
+                  </th>
+
+
+                  <th pSortableColumn="name_Departement.name_Departement" style="width:9%" *ngIf="showColumns.department">
+                    <div class="flex align-items-center">
+                      <p-columnFilter type="text" field="name_Departement.name_Departement" display="menu"></p-columnFilter>
+                      Department
+                      <p-sortIcon field="name_Departement.name_Departement" />
+                    </div>
+                  </th>
+                  <th pSortableColumn="status" style="width:9%" *ngIf="showColumns.status">
+                    <div class="flex align-items-center">
+                      <p-columnFilter type="text" field="status" display="menu"></p-columnFilter>
+                      Status
+                      <p-sortIcon field="status" />
+                    </div>
+                  </th>
+             
+                  <th pSortableColumn="refreshTokenExpiryTime" style="width:9%" *ngIf="showColumns.timeOpen">
+                    <div class="flex align-items-center">
+                      <p-columnFilter type="text" field="refreshTokenExpiryTime" display="menu"></p-columnFilter>
+                      Refresh Token Expiry Time
+                      <p-sortIcon field="refreshTokenExpiryTime" />
+                    </div>
+                  </th>
+
+                  <th pSortableColumn="registerTime" style="width:9%" *ngIf="showColumns.registerTime">
+                    <div class="flex align-items-center">
+                      <p-columnFilter type="text" field="registerTime" display="menu"></p-columnFilter>
+                      Register Time
+                      <p-sortIcon field="registerTime" />
+                    </div>
+                  </th>
+
+              
+                  <th pSortableColumn="resetPasswordExpiryTime" style="width:9%" *ngIf="showColumns.timeChangePassword">
+                    <div class="flex align-items-center">
+                      <p-columnFilter type="text" field="resetPasswordExpiryTime" display="menu"></p-columnFilter>
+                      Reset Password Expiry Time
+                      <p-sortIcon field="resetPasswordExpiryTime" />
+                    </div>
+                  </th>
+            
+                <th pSortableColumn="request" style="width:9%" *ngIf="showColumns.requestPassword">
+                  <div class="flex align-items-center">
+                    <p-columnFilter type="text" field="request" display="menu"></p-columnFilter>
+                    Password Reset Request
+                    <p-sortIcon field="request" />
+                  </div>
+                </th>
+                  <th style="width:9%">Action</th>
+
+                </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-user>
+            <tr [ngClass]="{'deactivated-row': user.commenterDelete}">
+                  <td *ngIf="showColumns.teid">{{user.teid}}</td>
+                  <td *ngIf="showColumns.Badge_id">{{user.badge_id}}</td>
+                  <td *ngIf="showColumns.firstName">{{user.firstName}}</td>
+                  <td *ngIf="showColumns.lastName">{{user.lastName}}</td>
+                  <td *ngIf="showColumns.phone">{{user.phone}}</td>
+                  <td *ngIf="showColumns.role">{{user.name_Role.name_Role}}</td>
+                  <td *ngIf="showColumns.job">{{user.name_Title.name_Title}}</td>
+                  <td *ngIf="showColumns.email">{{user.email}}</td>
+                  <td *ngIf="showColumns.plant">{{user.buildingID.buildingID}}</td>
+                  <td *ngIf="showColumns.department">{{user.name_Departement.name_Departement}}</td>
+                  <td *ngIf="showColumns.status">
+                    <span [ngClass]="{'pending': user.status === 'pending', 'active': user.status === 'active'}">
+                      <i class="dot"
+                        [ngClass]="{'orange': user.status === 'pending', 'green': user.status === 'active'}"></i>
+                      <span
+                        [ngClass]="{'pending-text': user.status === 'pending', 'done-text': user.status === 'active'}">{{user.status}}</span>
+                    </span>
+                  </td>         
+                  <td *ngIf="showColumns.timeOpen">{{ user.refreshTokenExpiryTime !== '0001-01-01T00:00:00' ? (user.refreshTokenExpiryTime  | date:'dd-MM-yyyy / HH:mm:ss') : '  ' }}</td>
+                  <td *ngIf="showColumns.registerTime">{{ user.registerTime !== '0001-01-01T00:00:00' ? (user.registerTime | date:'dd-MM-yyyy / HH:mm:ss') : '  ' }}</td>
+                  <td *ngIf="showColumns.timeChangePassword">{{ user.timeChangePassword !== '0001-01-01T00:00:00' ? (user.timeChangePassword | date:'dd-MM-yyyy / HH:mm:ss') : '  ' }}</td>       
+                  <td *ngIf="showColumns.requestPassword">
+
+                    <button (click)="user.request !== null && request(user.id)"
+                      [style.background-color]="user.request === 'pending' ? 'orange' : (user.request === 'active' ? 'green' : '#BEBEBE')"
+                      [disabled]="user.request === null || user.commenterDelete !== null"
+                      style="border-radius: 2rem; width: 130px; height: 30px; font-size: 18px;color: white;border: none;">
+                      <span [style.font-weight]="user.request === 'pending' ? 'bold' : 'bold'">
+                        {{ user.request === 'pending' ? 'Pending' : (user.request === 'active' ? 'active' : 'pending') }}
+                      </span>
+                    </button>
+                  </td>                 
+                    <td>
+                    <button pButton class="icon view" icon="fa fa-eye"
+                      (click)="selectView(user.id); openModelView(user.id)"[pTooltip]="'View user'" severity="secondary" tooltipPosition="top" >		
+                    </button>
+                    <button pButton class="icon edit" type="button" icon="fa fa-pencil-alt"
+                      (click)="selectGetUSerbyid(user.id); openModelUpdate(user.id)"
+                      [disabled]="user.commenterDelete"[pTooltip]="'Edit user'" severity="secondary" tooltipPosition="top" >									
+                    </button>
+                    <button pButton class="icon delete" type="button" icon="fa fa-ban"
+                      (click)="onDeleteUser(user.id)"
+                      [disabled]="user.commenterDelete"
+                      [pTooltip]="'Disable user'" severity="secondary"
+                      tooltipPosition="top" >									
+                    </button>
+                  </td> 
+              </tr>
+          </ng-template>
+          <ng-template pTemplate="emptymessage" let-columns>
+            <tr>
+            <td colspan="10">No User found</td>
+            </tr>
+          </ng-template>
+      </p-table>						
+      </div>
+    </div>
+
+
+
+
+
+
+
+    
+    
+  </div>
+</p-card>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<p-dialog header="Add New Employee" id="myModal" [(visible)]="displayModal" [modal]="true" [style]="{width: '60%'}">
+      <form [formGroup]="signupForm">
+        <div class="p-fluid">
+            <p-splitter  [style]="{ 'border': '0px solid #3f3f46', 'border-radius': '6px', 'color': '#ffffff' }" styleClass="p-mb-2">
+                <ng-template pTemplate>
+                    <div class="col flex align-items-center justify-content-center" style="margin-right:10px">
+                      <div class="p-field">
+              
+                        <label for="" style="color: black;">TE ID<span style="color:red; font-weight: bold; ">*</span> </label>
+                        <input pInputText formControlName="TEID" type="text" placeholder="TEID" id="TEID" />
+                   
+                      </div>
+          
+          
+                      <div class="p-field">
+                        <label for="" style="color: black;">Badge ID</label>
+                       
+                        <input pInputText formControlName="Badge_id" type="text" placeholder="Badge ID" id="badge_id" />
+          
+                      </div> 
+          
+          
+                      <div class="p-field" >
+          
+                        <label for="" style="color: black;">First Name<span style="color:red; font-weight: bold; ">*</span> </label>
+                        <input pInputText formControlName="FirstName" type="text" placeholder="First Name" id="FirstName" >
+                      </div>
+          
+                      <div class="p-field">
+                        <label for="" style="color: black;">Last Name<span style="color:red; font-weight: bold; ">*</span> </label>
+                        <input pInputText formControlName="LastName" type="text" placeholder="Last Name" id="LastName" >
+                      </div>
+          
+                      <div class="p-field">
+                        <label for="" style="color: black;">Phone<span style="color:red; font-weight: bold; ">*</span> </label>
+                        <input  pInputText formControlName="Phone" type="text"  placeholder="Phone">
+                      </div>
+          
+                      <div class="p-field">
+                        <label for=""style="color: black;">Email<span style="color:red; font-weight: bold; ">*</span> </label>
+                        <input   pInputText formControlName="Email" type="text" placeholder="Email">
+                      </div>
+                    </div>
+                </ng-template>
+                <ng-template pTemplate>
+                    <div class="col flex align-items-center justify-content-center" style="margin-left:10px">
+                      <div class="p-field">
+                        <label for="" style="color: black;">Password<span style="color:red; font-weight: bold; ">*</span> </label>
+                        <input pInputText formControlName="Password" type="Password" placeholder="Password" id="Password">
+                      </div>
+          
+                      <div class="p-field" style="    margin-top: 10px;">
+                        <label for="status" style="color: black;">Status<span style="color:red; font-weight: bold; ">*</span> </label>
+                        <p-dropdown  id="status" formControlName="Status" [options]="statusOptions"  optionLabel="label" placeholder="Select Status"></p-dropdown>
+                      </div>
+          
+                      <div class="p-field" style="    margin-top: 10px;">
+                        <label for="PlantID" style="color: black;">Plant<span style="color:red; font-weight: bold; ">*</span> </label>
+                        <p-dropdown [options]="plantList" optionValue="id" optionLabel="buildingID" formControlName="PlantID" placeholder="Select Plant" id="PlantID"></p-dropdown>
+                      </div>
+          
+                      <div class="p-field" style="    margin-top: 10px;">
+                        <label for="DepartementID" style="color: black;">Department <span style="color:red; font-weight: bold; ">*</span> </label>
+                        <p-dropdown [options]="departementList" optionLabel="name_Departement" formControlName="DepartementID" placeholder="Select Departement" id="DepartementID"></p-dropdown>
+                      </div>
+          
+                      <div class="p-field" style="    margin-top: 10px;">
+                        <label for="TitleID" style="color: black;">Job<span style="color:red; font-weight: bold; ">*</span> </label>
+                        <p-dropdown [options]="titles" optionValue="id" optionLabel="name_Title" formControlName="TitleID" placeholder="Select Title Job" id="TitleID"></p-dropdown>
+                      </div>
+          
+                      <div class="p-field" style="    margin-top: 10px;">
+                        <label for="RoleID" style="color: black;">Role <span style="color:red; font-weight: bold; ">*</span> </label>
+                        <p-dropdown [options]="roles" optionValue="id" optionLabel="name_Role" formControlName="RoleID" placeholder="Select Role" id="RoleID"></p-dropdown>
+                      </div>
+                    </div>
+                </ng-template>
+            </p-splitter>
+        </div>
+        <div class="p-dialog-footer">
+          <button pButton (click)="onSignup()" label="Save" type="button" class="btn  btn-block mt-1 w-1 btn-save"></button>
+          <button pButton (click)="onClear()" label="Clear" type="button" class="mt-1 w-1 btn-close-clear"></button>
+          <button pButton (click)="displayModal=false" label="Close" type="button" class=" btn btn-danger mt-1 w-1 btn-close-down"></button>
+        </div>
+      </form>
+
+</p-dialog>
+
+<p-dialog header="Update Committee" id="updateUser" [(visible)]="displayUpdateModal" [modal]="true" [style]="{width: '60%'}">
+      <form [formGroup]="UpdateUsers">
+        <div class="p-fluid">
+          <p-splitter  [style]="{ 'border': '0px solid #3f3f46', 'border-radius': '6px', 'color': '#ffffff' }" styleClass="p-mb-2" >
+            <ng-template pTemplate>
+                <div class="col flex align-items-center justify-content-center" style="margin-right:10px">
+                  <div class="p-field">
+                    <label for="" style="color: black;">TE ID<span style="color:red; font-weight: bold; ">*</span> </label>
+                    <input pInputText formControlName="TEID" type="text" placeholder="TEID" id="TEID" />
+               
+                  </div>
+        
+        
+                  <div class="p-field">
+                    <label for="" style="color: black;">Badge ID </label>
+                    <input pInputText formControlName="Badge_id" type="text" placeholder="Badge ID" id="badge_id" />
+                  </div> 
+        
+        
+                  <div class="p-field">
+                    <label for="" style="color: black;">First Name <span style="color:red; font-weight: bold; ">*</span> </label>
+                    <input pInputText formControlName="FirstName" type="text" placeholder="First Name" id="FirstName" >
+                  </div>
+        
+                  <div class="p-field">
+                    <label for="" style="color: black;">Last Name <span style="color:red; font-weight: bold; ">*</span> </label>
+                    <input pInputText formControlName="LastName" type="text" placeholder="Last Name" id="LastName" >
+                  </div>
+        
+                  <div class="p-field">
+                    <label for="" style="color: black;">Phone <span style="color:red; font-weight: bold; ">*</span> </label>
+                    <input  pInputText formControlName="Phone" type="text"  placeholder="Phone">
+                  </div>
+        
+                  <div class="p-field">
+                    <label for="" style="color: black;">Email <span style="color:red; font-weight: bold; ">*</span> </label>
+                    <input   pInputText formControlName="Email" type="text" placeholder="Email">
+                  </div>
+                </div>
+            </ng-template>
+            <ng-template pTemplate>
+                <div class="col flex align-items-center justify-content-center" style="margin-left:10px">
+                <div class="p-field">
+                  <label for="Status" style="color: black;">Status <span style="color:red; font-weight: bold; ">*</span> </label>
+                  <p-dropdown id="Status" optionValue="value" formControlName="Status" [options]="statusOptions" optionLabel="label" placeholder="Select Status"></p-dropdown>
+                </div>
+      
+                <div class="p-field" style="    margin-top: 10px;">
+                  <label for="PlantID" style="color: black;">Plant <span style="color:red; font-weight: bold; ">*</span> </label>
+                  <p-dropdown [options]="plantList" optionValue="id" optionLabel="buildingID" formControlName="PlantID" placeholder="Select Plant" id="PlantID"></p-dropdown>
+                </div>
+      
+                <div class="p-field" style="    margin-top: 10px;">
+                  <label for="DepartementID" style="color: black;">Department<span style="color:red; font-weight: bold; ">*</span> </label>
+                  <p-dropdown [options]="departementList"  optionValue="id" optionLabel="name_Departement" formControlName="DepartementID" placeholder="Select Departement" id="DepartementID"></p-dropdown>
+                </div>
+      
+                <div class="p-field" style="    margin-top: 10px;">
+                  <label for="TitleID" style="color: black;">Job <span style="color:red; font-weight: bold; ">*</span> </label>
+                  <p-dropdown [options]="titles" optionValue="id" optionLabel="name_Title" formControlName="TitleID" placeholder="Select Title Job" id="TitleID"></p-dropdown>
+                </div>
+      
+                <div class="p-field" style="    margin-top: 10px;">
+                  <label for="RoleID" style="color: black;">Role <span style="color:red; font-weight: bold; ">*</span> </label>
+                  <p-dropdown [options]="roles" optionValue="id" optionLabel="name_Role" formControlName="RoleID" placeholder="Select Role" id="RoleID"></p-dropdown>
+                </div>
+                </div>
+            </ng-template>
+        </p-splitter>
+      </div>
+      <div class="p-dialog-footer">
+          <button pButton  (click)="UpdateUser(selectedUserId, UpdateUsers.value)" label="Update" type="button" style=" border-radius: 8px;" class="btn  btn-block mt-1 w-1 btn-update"></button>
+          <button pButton  (click)="onClear()" label="Clear" type="button"  style=" border-radius: 8px;" class="  mt-1 w-1 btn-close-clear"></button>
+          <button pButton  (click)="displayUpdateModal=false" label="Close" type="button"  style=" border-radius: 8px;" class=" btn btn-danger mt-1 w-1 btn-close-down"></button>
+        </div>
+
+      </form>
+ 
+
+</p-dialog>
+
+
+
+<p-dialog header="View Employee" id="ViewUser" [(visible)]="displayViewModal" [modal]="true" [style]="{width: '50%'}">
+      <form [formGroup]="ViewUsers">
+            <div class="p-field" *ngIf="ViewUsers.get('commenterDelete')?.value !== null">
+              <label for="commenterDelete" style="font-size: 20px;">Delete Reason</label>
+              <ng-container *ngIf="ViewUsers.get('commenterDelete')?.value.length > 20">
+              <textarea pInputTextarea formControlName="commenterDelete" id="commenterDelete" placeholder="Status" readonly style="font-weight: bold; font-size: 30px; color: white; background-color: #BC1F00;"></textarea>
+              </ng-container>
+              <ng-container *ngIf="ViewUsers.get('commenterDelete')?.value.length <= 20">
+              <input pInputText formControlName="commenterDelete" id="commenterDelete" type="text"
+               placeholder="Status" readonly style="font-weight: bold; font-size: 30px; color: white; background-color: #BC1F00;" />
+              </ng-container>
+            </div>
+            <p-splitter [style]="{ height: 'ml-auto'}" styleClass="mb-7 no-border">
+              <ng-template pTemplate>
+                  <div class="col flex align-items-center justify-content-center" style="margin-right:10px">
+
+                    <div class="p-field">
+                      <label for="">TE ID</label>
+                      <input pInputText formControlName="TEID" type="text" placeholder="View TEID" id="TEID" />
+                    </div>
+          
+                    <div class="p-field">
+                      <label for="">Badge ID</label>
+                      <input pInputText formControlName="Badge_id" type="text" placeholder="View Badge ID" id="badge_id" />
+                    </div> 
+          
+                    <div class="p-field">
+                      <label for="">First Name</label>
+                      <input pInputText formControlName="FirstName" type="text" placeholder="View First Name" id="FirstName" >
+                    </div>
+          
+                    <div class="p-field">
+                      <label for="">Last Name</label>
+                      <input pInputText formControlName="LastName" type="text" placeholder="view Last Name" id="LastName" >
+                    </div>
+          
+                    <div class="p-field">
+                      <label for="">Phone</label>
+                      <input  pInputText formControlName="Phone" type="text"  placeholder="View Phone">
+                    </div>
+          
+                    <div class="p-field">
+                      <label for="">Email</label>
+                      <input   pInputText formControlName="Email" type="text" placeholder="View Email">
+                    </div>
+                  </div>
+              </ng-template>
+              <ng-template pTemplate>
+                  <div class="col flex align-items-center justify-content-center" style="margin-left:10px">
+
+                    <div class="p-field">
+                      <label for="Status">Status</label>
+                      <p-dropdown id="Status" optionValue="value" formControlName="Status" [options]="statusOptions" optionLabel="label" placeholder="View Status" ></p-dropdown>
+                    </div>
+          
+                    <div class="p-field" style="    margin-top: 10px;">
+                      <label for="PlantID">Plant</label>
+                      <p-dropdown [options]="plantList" optionValue="id" optionLabel="buildingID" formControlName="PlantID" placeholder="View Plant" id="PlantID"></p-dropdown>
+                    </div>
+          
+                    <div class="p-field" style="    margin-top: 10px;">
+                      <label for="DepartementID">Department User</label>
+                      <p-dropdown [options]="departementList"  optionValue="id" optionLabel="name_Departement" formControlName="DepartementID" placeholder="View Departement" id="DepartementID"></p-dropdown>
+                    </div>
+          
+                    <div class="p-field" style="    margin-top: 10px;">
+                      <label for="TitleID">Title Job</label>
+                      <p-dropdown [options]="titles" optionValue="id" optionLabel="name_Title" formControlName="TitleID" placeholder="Select Title Job" id="TitleID"></p-dropdown>
+                    </div>
+          
+                    <div class="p-field" style="    margin-top: 10px;">
+                      <label for="RoleID">Role</label>
+                      <p-dropdown [options]="roles" optionValue="id" optionLabel="name_Role" formControlName="RoleID" placeholder="Select Role" id="RoleID"></p-dropdown>
+                    </div>
+
+                  </div>
+              </ng-template>
+          </p-splitter>
+        <div class="p-dialog-footer">         
+          <button pButton  (click)="displayViewModal=false" label="Close" type="button"  style=" border-radius: 8px;" class=" btn btn-danger mt-1 w-1 btn-close-down"></button>
+        </div>
+      </form>
+</p-dialog>
+
+<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-"></script>
+<script src="bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+<script src="bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.datatables.net/2.0.5/js/dataTables.js"></script>
+<script src="https://cdn.datatables.net/2.0.5/js/dataTables.bootstrap5.js"></script>
+<script> $(document).ready(function () {
+    $('#example').DataTable();
+  });
+</script>
+
+
+<script>
+
+  $(document).ready(function () {
+    $('#ingredients').multiselect();
+  });
+
+</script>
+
+
+
+
+<ng-template #userOverlay>
+  <div class="overlay overlay-user overlay-fall" cdkMenu>
+    <ul>
+      <li>
+        <label>
+          <input type="checkbox" [(ngModel)]="showColumns.teid" disabled>
+          TE ID
+        </label>
+      </li>
+
+       <li>
+        <label>
+          <input type="checkbox" [(ngModel)]="showColumns.Badge_id" >
+          Badge ID
+        </label>
+      </li>
+
+      <li>
+        <label>
+          <input type="checkbox" [(ngModel)]="showColumns.firstName">
+          First Name
+        </label>
+      </li>
+      <li>
+        <label>
+          <input type="checkbox" [(ngModel)]="showColumns.lastName">
+          Last Name
+        </label>
+      </li>
+      <li>
+        <label>
+          <input type="checkbox" [(ngModel)]="showColumns.phone">
+          Phone
+        </label>
+      </li>
+      <li>
+        <label>
+          <input type="checkbox" [(ngModel)]="showColumns.role">
+          Role
+        </label>
+      </li>
+      <li>
+        <label>
+          <input type="checkbox" [(ngModel)]="showColumns.job">
+          Job
+        </label>
+      </li>
+      <li>
+        <label>
+          <input type="checkbox" [(ngModel)]="showColumns.email">
+          Email
+        </label>
+      </li>
+      <li>
+        <label>
+          <input type="checkbox" [(ngModel)]="showColumns.plant">
+          Plant
+        </label>
+      </li>
+      <li>
+        <label>
+          <input type="checkbox" [(ngModel)]="showColumns.department">
+          Department
+        </label>
+      </li>
+      <li>
+        <label>
+          <input type="checkbox" [(ngModel)]="showColumns.status">
+          Status
+        </label>
+      </li>
+      <li>
+        <label>
+          <input type="checkbox" [(ngModel)]="showColumns.timeOpen">
+          Time Open
+        </label>
+      </li>
+      <li>
+        <label>
+          <input type="checkbox" [(ngModel)]="showColumns.registerTime">
+          Register Time
+        </label>
+      </li>
+      <li>
+        <label>
+          <input type="checkbox" [(ngModel)]="showColumns.timeChangePassword">
+          Time Change Password
+        </label>
+      </li>
+      <li>
+        <label>
+          <input type="checkbox" [(ngModel)]="showColumns.requestPassword">
+          Request Password
+        </label>
+      </li>
+    </ul>
+  </div>
+</ng-template>
+
+<ng-template #importexport>
+  <div class="overlay overlay-user overlay-fall" cdkMenu>
+    <ul >
+      <li (click)="Import()">Import</li>
+      <li (click)="Export()">Export</li>
+      <li (click)="downloadExcel()">Download Template</li>
+    </ul>
+  </div>
+</ng-template>
+
+
+<!-- plant -->
+
+<ng-template #PlantSelection>
+  <div class="overlay overlay-user overlay-fall" cdkMenu>
+    <input type="search" class="form-control" placeholder="Search"  [(ngModel)]="searchtextplantadd" placeholder="Search" [formControl]="searchControl">
+
+    <ul>
+      <li *ngFor="let plant of plantList ">
+        <label>
+          <input type="checkbox" [value]="plant.id" [checked]="isPlantSelected(plant)"
+            (change)="toggleSelection(plant)">
+          {{ plant.buildingID + ' (' + plant.sapBuildingNumber + ')' }}
+        </label>
+      </li>
+    </ul>
+  </div>
+</ng-template>
+
+<ng-template #PlantSelectionUpdate>
+  <div class="overlay overlay-user overlay-fall" cdkMenu>
+    <input type="search" class="form-control" placeholder="Search" [(ngModel)]="searchtextplantadd" placeholder="Search" [formControl]="searchControl">
+    <ul>
+      <li *ngFor="let plant of plantList">
+        <label>
+          <input type="checkbox" [value]="plant.id" [checked]="isPlantSelected(plant)"
+            (change)="toggleSelection(plant)">
+          {{ plant.buildingID + ' (' + plant.sapBuildingNumber + ')' }}
+        </label>
+      </li>
+    </ul>
+  </div>
+</ng-template>
+
+
+<ng-template #PlantSelectionView>
+  <div class="overlay overlay-user overlay-fall" cdkMenu>
+
+  </div>
+</ng-template>
+
+<!-- Department -->
+
+<ng-template #DepartmentSelection>
+  <div class="overlay overlay-user overlay-fall" cdkMenu>
+    <input type="search" class="form-control" placeholder="Search" [(ngModel)]="searchtextplantadd" placeholder="Search" [formControl]="searchControl"> 
+
+    <ul>
+      <li *ngFor="let Department of DepartementById">
+        <label>
+          <input type="checkbox" [value]="Department.id" [checked]="isDepartementSelected(Department)"
+            (change)="toggleSelectionDepartement(Department)">
+          {{ Department.name_Departement }}
+        </label>
+      </li>
+    </ul>
+  </div>
+</ng-template>
+
+<ng-template #DepartmentSelectionUpdate>
+  <div class="overlay overlay-user overlay-fall" cdkMenu>
+    <input type="search" class="form-control" placeholder="Search" [(ngModel)]="searchtextplantadd" placeholder="Search" [formControl]="searchControl">
+    <ul>
+      <li *ngFor="let Department of DepartementById">
+        <label>
+          <input type="checkbox" [value]="Department.id" [checked]="isDepartementSelected(Department)"
+            (change)="toggleSelectionDepartement(Department)">
+          {{ Department.name_Departement }}
+        </label>
+      </li>
+    </ul>
+  </div>
+</ng-template>
+
+
+<ng-template #DepartmentSelectionView>
+  <div class="overlay overlay-user overlay-fall" cdkMenu>
+
+  </div>
+</ng-template>
+
+
+<!-- Titles -->
+
+<ng-template #titleSelection>
+  <div class="overlay overlay-user overlay-fall" cdkMenu>
+    <input type="search" class="form-control" placeholder="Search" [(ngModel)]="searchtextplantadd" placeholder="Search" [formControl]="searchControl">
+
+    <ul>
+      <li *ngFor="let title of titles">
+        <label>
+          <input type="checkbox" [value]="title.id" [checked]="istitleSelected(title)"
+            (change)="toggleSelectiontitle(title)">
+          {{ title.name_Title }}
+        </label>
+      </li>
+    </ul>
+  </div>
+</ng-template>
+
+<ng-template #titleSelectionUpdate>
+  <div class="overlay overlay-user overlay-fall" cdkMenu>
+    <input type="search" class="form-control" placeholder="Search" [(ngModel)]="searchtextplantadd" placeholder="Search" [formControl]="searchControl">
+    <ul>
+      <li *ngFor="let title of titles">
+        <label>
+          <input type="checkbox" [value]="title.id" [checked]="istitleSelected(title)"
+            (change)="toggleSelectiontitle(title)">
+          {{ title.name_Title }}
+        </label>
+      </li>
+    </ul>
+  </div>
+</ng-template>
+
+
+<ng-template #titleSelectionView>
+  <div class="overlay overlay-user overlay-fall" cdkMenu>
+
+  </div>
+</ng-template>
+
+
+
+
+
+<!-- Roles -->
+
+<ng-template #roleSelection>
+  <div class="overlay overlay-user overlay-fall" cdkMenu>
+    <input type="search" class="form-control" placeholder="Search" [(ngModel)]="searchtextplantadd" placeholder="Search" [formControl]="searchControl">
+
+    <ul>
+      <li *ngFor="let role of roles">
+        <label>
+          <input type="checkbox" [value]="role.id" [checked]="isroleSelected(role)"
+            (change)="toggleSelectionrole(role)">
+          {{ role.name_Role }}
+        </label>
+      </li>
+    </ul>
+  </div>
+</ng-template>
+
+<ng-template #roleSelectionUpdate>
+  <div class="overlay overlay-user overlay-fall" cdkMenu>
+    <input type="search" class="form-control" placeholder="Search" [(ngModel)]="searchtextplantadd" placeholder="Search" [formControl]="searchControl">
+    <ul>
+      <li *ngFor="let role of roles">
+        <label>
+          <input type="checkbox" [value]="role.id" [checked]="isroleSelected(role)"
+            (change)="toggleSelectionrole(role)">
+          {{ role.name_Role }}
+        </label>
+      </li>
+    </ul>
+  </div>
+</ng-template>
+
+
+<ng-template #roleSelectionView>
+  <div class="overlay overlay-user overlay-fall" cdkMenu>
+
+  </div>
+</ng-template>
+
+
+
+
+
+
+
+
+
+

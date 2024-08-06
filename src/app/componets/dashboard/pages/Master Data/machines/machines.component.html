@@ -1,0 +1,396 @@
+<div class="card flex justify-content-center">
+  <p-card >
+    <div style="text-align: center; font-family:'Avenir, sans-serif';  font-size: 45px; font-weight: bold;"> 
+      <strong>Machines</strong>
+  </div>
+    <div class="card-body">
+		<div
+			style="display: flex; justify-content: space-between; align-items: center;margin: 5px;">
+			<div class="form-outline" style="flex: 1;">
+				
+<!-- 			
+					<input pInputText
+					type="text"
+					placeholder="Search Keyword..."
+					[(ngModel)]="searchText"
+					(ngModelChange)="globalSearch()"
+				  /> -->
+				</div>
+
+			<div class="head-user-avatar" [cdkMenuTriggerFor]="MachinesOverlay">
+				<div class="dropdown-text-end">
+					<a class="btn btn-outline-success" aria-expanded="false"
+						(click)="toggleDropdown()">
+						List of columns
+						<i *ngIf="!isMachinesOverlayOpen" class="fa fa-angle-left"></i>
+						<i *ngIf="isMachinesOverlayOpen" class="fa fa-angle-down"></i>
+					</a>
+				</div>
+			</div>
+			<div class="head-user-avatar" [cdkMenuTriggerFor]="importexport">
+				<div class="dropdown-text-end">
+					<a class="btn btn-outline-success" aria-expanded="false"
+						(click)="importexportopen()">
+						<i class="fa fa-download" aria-hidden="true"></i>
+						<i *ngIf="!isimportexportopen" class="fa fa-angle-left"></i>
+						<i *ngIf="isimportexportopen" class="fa fa-angle-down"></i>
+					</a>
+				</div>
+			</div>
+			<button class="btn btn-outline-success-" pButton type="button"
+				label="Add New Machines" icon="fa fa-plus" (click)="openModel()"
+				style="margin: 0 10px;"></button>
+		</div>
+
+			<p-table
+				#dt1
+
+				[value]="Machines"
+				[paginator]="true"
+				[rows]="5"
+				dataKey="id"
+				[loading]="loading"
+
+				responsiveLayout="stack" 
+				styleClass="p-datatable-striped" 
+
+				[resizableColumns]="true"
+				[first]="first"
+				[showCurrentPageReport]="true"
+				[tableStyle]="{ 'min-width': '60rem' }"
+				currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+				(onPage)="pageChange($event)"
+				[rowsPerPageOptions]="[3, 5, 10, 20]"
+				[globalFilterFields]="['Machines', 'Responsible', 'Replacement', 'Departement User','Plant','Area','Type']"
+
+				>
+
+				<ng-template pTemplate="caption">
+					<div class="flex">
+						<p-button label="Clear" [outlined]="true" icon="fa fa-filter" (click)="clear(dt1)" />
+						<span class="p-input-icon-left ml-auto">
+							<i class="fa fa-search"></i>
+              <input pInputText type="text" placeholder="Search" [(ngModel)]="searchText" (ngModelChange)="globalSearch()" />
+
+						</span>
+					</div>
+				</ng-template>	
+
+				<ng-template pTemplate="header" let-columns>
+					<tr>
+						<th pSortableColumn="machine_Name" style="min-width:12%">
+							<div class="flex align-items-center">
+								<p-columnFilter type="text" field="machine_Name" display="menu"></p-columnFilter>
+								Machine Name
+                <p-sortIcon field="machine_Name" />
+
+							</div>
+						</th>
+            
+            <th pSortableColumn="building_ID" style="width:12%" *ngIf="showColumns.Building_ID">
+              <p-columnFilter type="text" field="building_ID" display="menu"></p-columnFilter>
+
+              Plant
+              <p-sortIcon field="building_ID" />
+            </th>
+						<th pSortableColumn="areaID" style="width:12%" *ngIf="showColumns.areaID">
+              <p-columnFilter type="text" field="areaID" display="menu"></p-columnFilter>
+
+              Area
+              <p-sortIcon field="areaID" />
+
+            </th>
+            <th pSortableColumn="project_Name.project_Name" style="width:12%" *ngIf="showColumns.projectID">
+              <p-columnFilter type="text" field="project_Name.project_Name" display="menu"></p-columnFilter>
+              Project
+               <p-sortIcon field="project_Name.project_Name" />
+            </th>
+						<th pSortableColumn="date_Create" style="width:12%" *ngIf="showColumns.date_Create">
+              Create Date
+              <p-sortIcon field="date_Create" />
+            </th>
+						<th pSortableColumn="date_Update" style="width:12%" *ngIf="showColumns.date_Update">
+              Update Date
+              <p-sortIcon field="date_Update" />
+            </th>
+						<th pSortableColumn="date_delete" style="width:12%" *ngIf="showColumns.date_delete">
+              Delete Date
+              <p-sortIcon field="date_delete" />
+            </th>
+						<th style="width:10%">Action</th>
+					</tr>
+				</ng-template>
+				<ng-template pTemplate="body" let-Machines >
+          <tr [ngClass]="{'deactivated-row': Machines.commenterDelete}">
+						<td *ngIf="showColumns.machine_Name">
+							<span class="ml-1 vertical-align-middle">{{ Machines.machine_Name}}</span>
+						</td>
+           	
+            <td *ngIf="showColumns.Building_ID">{{Machines.building_ID}}</td>
+            <!-- <td *ngIf="showColumns.Building_ID">{{Machines.project_Name.building_ID}}</td> -->
+						<td *ngIf="showColumns.areaID">{{ Machines.areaID }}</td>
+            <td *ngIf="showColumns.projectID">{{ Machines.project_Name.project_Name }}</td>		
+						<td *ngIf="showColumns.date_Create">{{ Machines.date_Create !==
+							'0001-01-01T00:00:00' ? (Machines.date_Create |
+							date:'dd-MM-yyyy / HH:mm:ss') : '  ' }}</td>
+						<td *ngIf="showColumns.date_Update">{{ Machines.date_Update !==
+							'0001-01-01T00:00:00' ? (Machines.date_Update |
+							date:'dd-MM-yyyy / HH:mm:ss') : '  ' }}</td>
+						<td *ngIf="showColumns.date_delete">{{ Machines.date_delete !==
+							'0001-01-01T00:00:00' ? (Machines.date_delete |
+							date:'dd-MM-yyyy / HH:mm:ss') : '  ' }}</td>
+            <td>
+              <button pButton class="icon view" icon="fa fa-eye"
+                (click)="selectView(Machines.id); openModelView(Machines.id)"[pTooltip]="'View Machines'" severity="secondary" tooltipPosition="top" >		
+              </button>
+              <button pButton class="icon edit" type="button" icon="fa fa-pencil-alt"
+                (click)="selectGetMachinebyid(Machines.id); openModelUpdate(Machines.id)"
+                [disabled]="Machines.commenterDelete"[pTooltip]="'Edit Machines'" severity="secondary" tooltipPosition="top" >									
+              </button>
+              <button pButton class="icon delete" type="button" icon="fa fa-ban"
+                  (click)="DeleteMachine(Machines.id)"
+                  [disabled]="Machines.commenterDelete"
+                  [pTooltip]="'Disable Machines'" severity="secondary"
+                  tooltipPosition="top" >									
+              </button>
+            </td>
+					</tr>
+				</ng-template>
+				<ng-template pTemplate="emptymessage">
+					<tr>
+						<td colspan="7">No customers found.</td>
+					</tr>
+				</ng-template>
+		
+				
+			</p-table>
+		</div>
+
+	</p-card>
+
+  <p-dialog header="Add New Machine" id="AddMachine" [(visible)]="displayModal" [modal]="true" [style]="{width: '40%'}">
+    <form [formGroup]="MachineForm">
+        <div class="p-fluid">
+            <div class="p-field">
+                <label for="machine_Name">Name machine <span style="color:red; font-weight: bold; ">*</span> </label>
+                <input pInputText formControlName="machine_Name" type="text" placeholder="Name">
+            </div>
+            <div class="p-field">
+                <label for="building_ID">Plant <span style="color:red; font-weight: bold; ">*</span> </label>
+                <p-dropdown 
+                    [options]="plants" 
+                    optionValue="buildingID" 
+                    optionLabel="buildingID" 
+                    formControlName="building_ID" 
+                    placeholder="Select Plant" 
+                    (onChange)="onBuildingIDSelected($event.value)">
+                </p-dropdown>
+            </div>
+            <div class="p-field" *ngIf="AreasById && AreasById.length > 0">
+                <label for="areaID">Area <span style="color:red; font-weight: bold; ">*</span> </label>
+                <p-dropdown 
+                    [options]="AreasById" 
+                    optionValue="name_Area" 
+                    optionLabel="name_Area" 
+                    formControlName="areaID" 
+                    placeholder="Select Area" 
+                    (onChange)="onAreIDSelected($event.value)">
+                </p-dropdown>
+            </div>
+            <div class="p-field" *ngIf="ProjectById && ProjectById.length > 0">
+                <label for="projectID">Project <span style="color:red; font-weight: bold; ">*</span> </label>
+                <p-dropdown 
+                    [options]="ProjectById" 
+                    optionValue="id" 
+                    optionLabel="project_Name" 
+                    formControlName="projectID" 
+                    placeholder="Select Project">
+                </p-dropdown>
+            </div>
+        </div>
+        <div class="p-dialog-footer">
+            <button pButton (click)="SaveMachine()" label="Save" type="button" style="border-radius: 8px;" class="btn btn-block mt-1 w-1 btn-save"></button>
+            <button pButton label="Clear" type="button" style="border-radius: 8px;" class="mt-1 w-1 btn-close-clear"></button>
+            <button pButton (click)="displayModal=false ; Close()" label="Close" type="button" style="border-radius: 8px;" class="btn btn-danger mt-1 w-1 btn-close-down"></button>
+        </div>
+    </form>
+</p-dialog>
+
+
+
+
+<p-dialog header="Update Machine" [(visible)]="displayUpdateModal" [modal]="true" [style]="{ 'width': '40%', 'height': 'auto' }">
+  <form [formGroup]="UpdateMachineFrom">
+    <div class="p-fluid">
+      <div class="p-field">
+          <label for="">Name machine <span style="color:red; font-weight: bold; ">*</span> </label>
+          <input pInputText formControlName="machine_Name" type="text" placeholder="Machine Name" id="machine_Name">
+      </div>
+      <div class="p-field">
+        <label for="building_ID">Plant <span style="color:red; font-weight: bold; ">*</span> </label>
+        <p-dropdown 
+          [options]="plants" 
+          optionValue="buildingID" 
+          optionLabel="buildingID" 
+          formControlName="building_ID" 
+          placeholder="Select Plant" 
+          (onChange)="onBuildingIDSelected($event.value)"
+          [style]="{'height': 'auto' }">
+        </p-dropdown>
+    </div>
+    <div class="p-field" *ngIf="AreasById && AreasById.length > 0">
+        <label for="areaID">Area <span style="color:red; font-weight: bold; ">*</span> </label>
+        <p-dropdown 
+            [options]="AreasById" 
+            optionValue="name_Area" 
+            optionLabel="name_Area" 
+            formControlName="areaID" 
+            placeholder="Select Area" 
+            (onChange)="onAreIDSelected($event.value)">
+        </p-dropdown>
+    </div>
+    <div class="p-field" *ngIf="ProjectById && ProjectById.length > 0">
+        <label for="projectID">Project <span style="color:red; font-weight: bold; ">*</span> </label>
+        <p-dropdown 
+            [options]="ProjectById" 
+            optionValue="id" 
+            optionLabel="project_Name" 
+            formControlName="projectID" 
+            placeholder="Select Project">
+        </p-dropdown>
+    </div>
+    </div>
+    
+      <div class="p-dialog-footer">
+        <button pButton  (click)="updateMachine(UMachineId, UpdateMachineFrom.value)" label="Save" type="button" style=" border-radius: 8px;" class="btn  btn-block mt-1 w-1  btn-update"></button>
+        <button pButton  label="Clear" type="button"  style=" border-radius: 8px;" class="  mt-1 w-1 btn-close-clear"></button>
+        <button pButton  (click)="displayUpdateModal=false ; Close()" label="Close" type="button"  style=" border-radius: 8px;" class=" btn btn-danger mt-1 w-1 btn-close-down"></button>
+      </div>
+  </form>
+</p-dialog>
+<p-dialog header="View Machine" [(visible)]="displayViewModal" [modal]="true" [style]="{width: '40vw'}">
+      <form [formGroup]="ViewMachine">
+        <div class="p-fluid">
+          <div class="p-field" *ngIf="ViewMachine.get('commenterDelete')?.value !== null">
+            <label for="commenterDelete" style="font-size: 20px;">Delete Reason</label>
+            <ng-container *ngIf="ViewMachine.get('commenterDelete')?.value.length > 20">
+              <textarea pInputTextarea formControlName="commenterDelete" id="commenterDelete" placeholder="Status" readonly style="font-weight: bold; font-size: 30px; color: white; background-color: #BC1F00;"></textarea>
+            </ng-container>
+            <ng-container *ngIf="ViewMachine.get('commenterDelete')?.value.length <= 20">
+              <input pInputText formControlName="commenterDelete" id="commenterDelete" type="text"
+               placeholder="Status" readonly style="font-weight: bold; font-size: 30px; color: white; background-color: #BC1F00;" />
+            </ng-container>
+          </div>
+          <div class="p-field">       
+              <label for="">Name machine</label>
+              <input pInputText formControlName="machine_Name" type="text"  placeholder="Name" >          
+          </div>
+          <div class="p-field">
+            <label for="">Plant</label>
+            <input pInputText formControlName="building_ID" type="text"  placeholder="Name" >          
+          </div>
+          <div class="p-field">
+            <label for="areaID">Area</label>
+            <input pInputText formControlName="areaID" type="text"  placeholder="Name" >          
+          </div>
+        	<div class="p-field">
+            <label>Project</label>
+            <input pInputText  type="text" placeholder="project Name" [value]="getProjectName(ViewMachine.get('projectID')?.value)" disabled >
+      
+          </div>
+        </div>
+          <div class="p-dialog-footer">
+            <button pButton  (click)="displayViewModal=false ; Close()" label="Close" type="button"  style=" border-radius: 8px;" class=" btn btn-danger mt-1 w-1 btn-close-down"></button>
+
+          </div>
+      </form>
+
+</p-dialog>
+
+<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-"></script>
+<script src="bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+<script src="bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.datatables.net/2.0.5/js/dataTables.js"></script>
+<script src="https://cdn.datatables.net/2.0.5/js/dataTables.bootstrap5.js"></script>
+<script > $(document).ready(function() {
+$('#example').DataTable();
+});
+</script>
+
+
+<script >
+
+$(document).ready(function() {
+    $('#ingredients').multiselect();
+});
+
+</script>
+    
+    
+    
+    
+<ng-template #MachinesOverlay>
+<div class="overlay overlay-user overlay-fall" cdkMenu>
+<ul>
+  <li>
+    <label>
+      <input type="checkbox" [(ngModel)]="showColumns.machine_Name" disabled>
+      Name machine
+    </label>
+  </li>
+  <li>
+    <label>
+      <input type="checkbox" [(ngModel)]="showColumns.Building_ID" disabled>
+      Building_ID
+    </label>
+  </li>
+  <li>
+    <label>
+      <input type="checkbox" [(ngModel)]="showColumns.areaID" disabled>
+      areaID
+    </label>
+  </li>
+  <li>
+    <label>
+      <input type="checkbox" [(ngModel)]="showColumns.projectID">
+      project ID
+    </label>
+  </li>
+
+  <li>
+    <label>
+      <input type="checkbox" [(ngModel)]="showColumns.date_Create">
+      Date_Create
+    </label>
+  </li>
+  <li>
+    <label>
+      <input type="checkbox" [(ngModel)]="showColumns.date_Update">
+      Date Update
+    </label>
+  </li>
+  <li>
+    <label>
+      <input type="checkbox" [(ngModel)]="showColumns.date_delete">
+      Date Delete
+    </label>
+  </li>
+</ul>
+</div>
+</ng-template>
+    
+<ng-template #importexport>
+  <div class="overlay overlay-user overlay-fall" cdkMenu>
+      <ul>
+          <li (click)="Import()">Import</li>
+          <li (click)="Export()">Export</li>
+          <li (click)="downloadExcel()">Download</li>
+          <li>pdf</li>
+      </ul>
+  </div>
+</ng-template>
+  
+  
+  
+  
